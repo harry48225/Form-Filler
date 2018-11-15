@@ -1,0 +1,13 @@
+Q71983400,1,Gender
+Q81558701,1,Name
+Q61686048,1,Gender
+Q53560658,2,Phone
+Q47136949,3,Birthday
+Q47753468,3,Photo upload
+Q07218815,3,Video upload
+Q02468955,4,Country of Birth
+Q34809197,4,Password
+Q91158524,4,File Upload
+Q41608457,6,Email
+Q48773770,8,File Upload
+Q61686048,1,Gender
