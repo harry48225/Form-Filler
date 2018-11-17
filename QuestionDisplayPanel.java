@@ -287,6 +287,13 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		return typeSelected;
 	}
 	
+	private void resetTable()
+	{
+		typeRadioButtonGroup.clearSelection();
+		populateTable(questions.getArray()); // Populate the table with the questions
+		
+	}
+	
 	public void actionPerformed(ActionEvent evt)
 	{
 		
@@ -327,6 +334,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
 			questions.removeQuestion(selectedQuestion); // Delete the question
 			*/
+		}
+		else if (evt.getSource() == resetButton)
+		{
+			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> resetButton pressed"); // Debug
+			resetTable();
 		}
 		else if (evt.getSource() == helpButton)
 		{
