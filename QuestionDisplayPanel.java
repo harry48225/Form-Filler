@@ -211,7 +211,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> Moved attempt question button from sorts and filters panel
 		//buttonPanel.add(deleteButton);
 		mainPanelConstraints.gridheight = 1;
 		mainPanelConstraints.weightx = 0.1;
@@ -223,7 +227,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.gridx = 1;
 		mainPanelConstraints.gridy = 1;
 		mainPanel.add(attemptButton, mainPanelConstraints);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> Moved attempt question button from sorts and filters panel
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
