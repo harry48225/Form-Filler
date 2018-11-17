@@ -33,11 +33,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JPanel difficultyFilterPanel; // To hold the sliders
 	private JPanel typeFilterPanel;
 	private JSlider difficultySlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1); // Filter slider
-	private JButton difficultyFilterButton = new JButton("Filter by difficulty"); // JButton that will apply the filter
+	private JButton difficultyFilterButton = new JButton("Apply difficulty filter"); // JButton that will apply the filter
 	private JRadioButton[] typeRadioButtons; // Holds the radio buttons for the types
 	private JPanel typeRadioButtonPanel = new JPanel();
 	private ButtonGroup typeRadioButtonGroup = new ButtonGroup();
-	private JButton typeFilterButton = new JButton("Filter by type");
+	private JButton typeFilterButton = new JButton("Apply type filter");
 	
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
 	
@@ -183,10 +183,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
 		
-		//buttonPanel.add(attemptButton);
+		attemptButton.addActionListener(this);
+		attemptButton.setBackground(new Color(130,183,75));
+		
+		sortAndFilterPanelConstraints.gridy = 4;
+		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
+		sortAndFilterPanel.add(attemptButton, sortAndFilterPanelConstraints);
 		//buttonPanel.add(deleteButton);
 		
-		// SET C
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
 		
