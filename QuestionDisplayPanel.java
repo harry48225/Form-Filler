@@ -3,6 +3,10 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+
 public class QuestionDisplayPanel extends JPanel implements ActionListener
 {
 	private QuestionList questions;
@@ -24,13 +28,20 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JButton attemptButton = new JButton("Attempt Question"); // User presses this to attempt the selected question
 	private JButton deleteButton = new JButton("Delete Question"); // To delete the question
 	// Filters
-	private JPanel filterPanel; // To hold the sliders
+	private JPanel sortAndFilterPanel;
+	private JPanel sortPanel;
+	private JPanel difficultyFilterPanel; // To hold the sliders
+	private JPanel typeFilterPanel;
 	private JSlider difficultySlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1); // Filter slider
 	private JButton difficultyFilterButton = new JButton("Filter by difficulty"); // JButton that will apply the filter
 	private JRadioButton[] typeRadioButtons; // Holds the radio buttons for the types
 	private JPanel typeRadioButtonPanel = new JPanel();
 	private ButtonGroup typeRadioButtonGroup = new ButtonGroup();
 	private JButton typeFilterButton = new JButton("Filter by type");
+	
+	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
+	
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI) // Constructor
 	{
@@ -46,11 +57,15 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 			
 		this.setLayout(new BorderLayout());
 			
-		GridLayout layout = new GridLayout(1,2); // Create a new grid layout
-			
+		GridBagLayout layout = new GridBagLayout(); // Create a new grid bag layout
+		
 		mainPanel.setLayout(layout); // Get the layout
-			
-		mainPanel.add(questionTableScrollPane); // Add the table to the view
+		
+		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
+		mainPanelConstraints.fill = GridBagConstraints.BOTH;
+		mainPanelConstraints.gridx = 0;
+		mainPanelConstraints.gridy = 0;
+		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
 		
 		// Add action listeners 
 		sortDifficultyButton.addActionListener(this);
@@ -58,18 +73,56 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		attemptButton.addActionListener(this);
 		deleteButton.addActionListener(this);
 		
-		buttonPanel = new JPanel(); // Create a new JPanel
-		buttonPanel.setLayout(new GridLayout(4,1)); // Create a grid layout with 4 rows and 1 column
-		buttonPanel.add(sortDifficultyButton);
-		buttonPanel.add(sortTypeButton);
-		buttonPanel.add(attemptButton);
-		buttonPanel.add(deleteButton);
-		 
-		mainPanel.add(buttonPanel);
+		sortAndFilterPanel = new JPanel(); // Create a new JPanel
+		sortAndFilterPanel.setLayout(new GridBagLayout());
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		sortAndFilterPanel.setBorder(border); // Set the border
+		
+		GridBagConstraints sortAndFilterPanelConstraints = new GridBagConstraints();
+		sortAndFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		sortAndFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		sortAndFilterPanelConstraints.gridx = 0;
+		sortAndFilterPanelConstraints.gridy = 0;
+		
+		sortPanel = new JPanel();
+		sortPanel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints sortPanelConstraints = new GridBagConstraints();
+		sortPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		sortPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		sortPanelConstraints.gridx = 0;
+		sortPanelConstraints.gridy = 0;
+		
+		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
+		sortPanel.add(sortsLabel, sortPanelConstraints);
+		sortPanelConstraints.gridy = 1;
+		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
+		sortPanelConstraints.gridy = 2;
+		sortPanel.add(sortTypeButton, sortPanelConstraints);
+		
+		sortAndFilterPanel.add(sortPanel, sortAndFilterPanelConstraints);
 		
 		// Prepare the filters
-		filterPanel = new JPanel();
-		filterPanel.setLayout(new GridLayout(0,1)); // Create a grid layout with 1 column
+		
+		// Prepare the difficulty filter
+		difficultyFilterPanel = new JPanel();
+		difficultyFilterPanel.setLayout(new GridBagLayout()); // Create a grid bag layout
+		
+		GridBagConstraints difficultyFilterPanelConstraints = new GridBagConstraints();
+		difficultyFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		difficultyFilterPanelConstraints.weightx = 1;
+		difficultyFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		difficultyFilterPanelConstraints.gridx = 0;
+		difficultyFilterPanelConstraints.gridy = 0;
+		
+		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
+		
+		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
+		difficultyFilterPanelConstraints.gridy += 1;
 		
 		difficultySlider.setMajorTickSpacing(1);
 		difficultySlider.setPaintTicks(true); // Add the ticks
@@ -77,17 +130,67 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		difficultyFilterButton.addActionListener(this);
 		
-		filterPanel.add(difficultySlider);
-		filterPanel.add(difficultyFilterButton);
-
+		difficultyFilterPanel.add(difficultySlider, difficultyFilterPanelConstraints);
+		difficultyFilterPanelConstraints.gridy += 1;
+		
+		difficultyFilterPanel.add(difficultyFilterButton, difficultyFilterPanelConstraints);
+		difficultyFilterPanelConstraints.gridy += 1;
+		
+		sortAndFilterPanelConstraints.gridx = 1;
+		sortAndFilterPanelConstraints.gridwidth = 2; // Span two columns
+		
+		sortAndFilterPanel.add(difficultyFilterPanel, sortAndFilterPanelConstraints);
+		
+		// Prepare the type filter
+		
 		prepareTypeRadioButtons();
 
 		typeFilterButton.addActionListener(this);
-
-		filterPanel.add(typeRadioButtonPanel);
-		filterPanel.add(typeFilterButton);
 		
-		mainPanel.add(filterPanel);
+		typeFilterPanel = new JPanel();
+		typeFilterPanel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints typeFilterPanelConstraints = new GridBagConstraints();
+		typeFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		typeFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		typeFilterPanelConstraints.gridx = 0;
+		typeFilterPanelConstraints.gridy = 0;
+		
+		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
+		
+		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
+		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
+		
+		typeFilterPanelConstraints.gridx = 0;
+		typeFilterPanelConstraints.gridy = 1;
+		typeFilterPanelConstraints.gridwidth = 3; // Span 3 columns
+		typeFilterPanel.add(typeRadioButtonPanel, typeFilterPanelConstraints);
+		
+		typeFilterPanelConstraints.gridy = 2;
+		typeFilterPanel.add(typeFilterButton, typeFilterPanelConstraints);
+		
+		sortAndFilterPanelConstraints.gridx = 0;
+		sortAndFilterPanelConstraints.gridy = 1;
+		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
+		
+		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints);
+		
+		resetButton.addActionListener(this);
+		resetButton.setBackground(Color.RED);
+		resetButton.setForeground(Color.WHITE);
+		sortAndFilterPanelConstraints.gridy = 2;
+		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
+		
+		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
+		
+		//buttonPanel.add(attemptButton);
+		//buttonPanel.add(deleteButton);
+		
+		// SET C
+		mainPanelConstraints.gridx = 1;
+		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
+		
+		
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
