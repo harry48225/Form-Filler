@@ -1,5 +1,5 @@
 @echo off
-javac -cp .;LGoodDatePicker-10.3.1.jar *.java 
+javac *.java 
 cd components
-javac -cp .;LGoodDatePicker-10.3.1.jar *.java 
+javac *.java 
 cd ..
