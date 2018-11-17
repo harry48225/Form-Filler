@@ -189,8 +189,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanelConstraints.gridy = 4;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		sortAndFilterPanel.add(attemptButton, sortAndFilterPanelConstraints);
-		//buttonPanel.add(deleteButton);
-		
+
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
 		
