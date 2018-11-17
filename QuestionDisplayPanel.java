@@ -43,10 +43,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
-	
-	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
-	
 	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI) // Constructor
 	{
 		questions = tempList; // Store the question list
@@ -187,21 +183,16 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
 		
-<<<<<<< HEAD
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
 		
 		sortAndFilterPanelConstraints.gridy = 4;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		sortAndFilterPanel.add(attemptButton, sortAndFilterPanelConstraints);
-		//buttonPanel.add(deleteButton);
-		
-=======
-		//buttonPanel.add(attemptButton);
+
 		//buttonPanel.add(deleteButton);
 		
 		// SET C
->>>>>>> 5acf65fd09f3dbb43c1c23a66ddc4114db034a75
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
 		
