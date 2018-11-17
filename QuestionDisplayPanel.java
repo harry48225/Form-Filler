@@ -67,6 +67,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
+		mainPanelConstraints.gridheight = 2;
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
@@ -199,16 +200,17 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
 		
-		sortAndFilterPanelConstraints.gridy = 4;
-		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
-		sortAndFilterPanel.add(attemptButton, sortAndFilterPanelConstraints);
 
 		//buttonPanel.add(deleteButton);
-		
+		mainPanelConstraints.gridheight = 1;
 		mainPanelConstraints.weightx = 0.1;
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
 		
+		mainPanelConstraints.weighty = 0.2;
+		mainPanelConstraints.gridx = 1;
+		mainPanelConstraints.gridy = 1;
+		mainPanel.add(attemptButton, mainPanelConstraints);
 		
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
