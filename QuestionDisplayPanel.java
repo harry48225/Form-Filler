@@ -38,10 +38,13 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JPanel typeRadioButtonPanel = new JPanel();
 	private ButtonGroup typeRadioButtonGroup = new ButtonGroup();
 	private JButton typeFilterButton = new JButton("Apply type filter");
+<<<<<<< HEAD
 	
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
+=======
+>>>>>>> Button tweaks
 	
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
 	
@@ -208,7 +211,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
-		
 
 		//buttonPanel.add(deleteButton);
 		mainPanelConstraints.gridheight = 1;
