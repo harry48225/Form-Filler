@@ -43,6 +43,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
+	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
+	
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
+	
 	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI) // Constructor
 	{
 		questions = tempList; // Store the question list
@@ -63,13 +67,16 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
 		mainPanelConstraints.fill = GridBagConstraints.BOTH;
+
 		mainPanelConstraints.weightx = 1;
 		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
 		mainPanelConstraints.gridheight = 2;
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
-		
+
+		mainPanelConstraints.gridx = 0;
+		mainPanelConstraints.gridy = 0;
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
 		
 		// Add action listeners 
@@ -88,13 +95,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanel.setBorder(border); // Set the border
 		
 		GridBagConstraints sortAndFilterPanelConstraints = new GridBagConstraints();
+		
 		sortAndFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		sortAndFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		sortAndFilterPanelConstraints.gridx = 0;
 		sortAndFilterPanelConstraints.gridy = 0;
 		sortAndFilterPanelConstraints.weightx = 1;
 		sortAndFilterPanelConstraints.weighty = 1; 
-		
+
 		sortPanel = new JPanel();
 		sortPanel.setLayout(new GridBagLayout());
 		
@@ -105,7 +113,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortPanelConstraints.gridy = 0;
 		sortPanelConstraints.weightx = 1;
 		sortPanelConstraints.weighty = 1; 
-		
+
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		sortPanelConstraints.gridy = 1;
@@ -123,13 +131,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		GridBagConstraints difficultyFilterPanelConstraints = new GridBagConstraints();
 		difficultyFilterPanelConstraints.fill = GridBagConstraints.BOTH;
+
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		difficultyFilterPanelConstraints.gridx = 0;
 		difficultyFilterPanelConstraints.gridy = 0;
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.weighty = 1; 
-		
+
 		
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		
@@ -212,7 +221,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.gridx = 1;
 		mainPanelConstraints.gridy = 1;
 		mainPanel.add(attemptButton, mainPanelConstraints);
-		
+
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
