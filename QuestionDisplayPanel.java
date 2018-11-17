@@ -63,8 +63,12 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
 		mainPanelConstraints.fill = GridBagConstraints.BOTH;
+		mainPanelConstraints.weightx = 1;
+		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
+		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
 		
 		// Add action listeners 
@@ -83,19 +87,23 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanel.setBorder(border); // Set the border
 		
 		GridBagConstraints sortAndFilterPanelConstraints = new GridBagConstraints();
-		sortAndFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		sortAndFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		sortAndFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		sortAndFilterPanelConstraints.gridx = 0;
 		sortAndFilterPanelConstraints.gridy = 0;
+		sortAndFilterPanelConstraints.weightx = 1;
+		sortAndFilterPanelConstraints.weighty = 1; 
 		
 		sortPanel = new JPanel();
 		sortPanel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints sortPanelConstraints = new GridBagConstraints();
-		sortPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		sortPanelConstraints.fill = GridBagConstraints.BOTH;
 		sortPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		sortPanelConstraints.gridx = 0;
 		sortPanelConstraints.gridy = 0;
+		sortPanelConstraints.weightx = 1;
+		sortPanelConstraints.weighty = 1; 
 		
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		sortPanel.add(sortsLabel, sortPanelConstraints);
@@ -113,11 +121,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		difficultyFilterPanel.setLayout(new GridBagLayout()); // Create a grid bag layout
 		
 		GridBagConstraints difficultyFilterPanelConstraints = new GridBagConstraints();
-		difficultyFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		difficultyFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		difficultyFilterPanelConstraints.gridx = 0;
 		difficultyFilterPanelConstraints.gridy = 0;
+		difficultyFilterPanelConstraints.weightx = 1;
+		difficultyFilterPanelConstraints.weighty = 1; 
+		
 		
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		
@@ -151,10 +162,12 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		typeFilterPanel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints typeFilterPanelConstraints = new GridBagConstraints();
-		typeFilterPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		typeFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		typeFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		typeFilterPanelConstraints.gridx = 0;
 		typeFilterPanelConstraints.gridy = 0;
+		typeFilterPanelConstraints.weightx = 1;
+		typeFilterPanelConstraints.weighty = 1; 
 		
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
 		
@@ -189,6 +202,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanelConstraints.gridy = 4;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		sortAndFilterPanel.add(attemptButton, sortAndFilterPanelConstraints);
+
+		//buttonPanel.add(deleteButton);
+		
+		mainPanelConstraints.weightx = 0.1;
 
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
