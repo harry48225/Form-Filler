@@ -12,12 +12,14 @@ public class User
 	private String dateOfBirth;
 	private String phoneNumber;
 	
+	private boolean admin;
+	
 	private String[] sessionsPresentAt;
 	
 	private QuestionStatList questionStats;
 	
 	public User(String tempId, String tempUsername, String tempPassword, String tempFirstName, 
-					String tempLastName, String tempDateOfBirth, String tempPhoneNumber,
+					String tempLastName, String tempDateOfBirth, String tempPhoneNumber, boolean tempAdmin,
 					String[] tempSessionsPresentAt, QuestionStatList tempQuestionStats)
 	{
 		id = tempId;
@@ -28,9 +30,16 @@ public class User
 		dateOfBirth = tempDateOfBirth;
 		phoneNumber = tempPhoneNumber;
 		
+		admin = tempAdmin;
+		
 		sessionsPresentAt = tempSessionsPresentAt;
 		
 		questionStats = tempQuestionStats;
+	}
+	
+	public boolean isAdmin()
+	{
+		return admin;
 	}
 	
 	public void addPresentToday() // Adds today's date to the user's sessions present at array
@@ -74,7 +83,7 @@ public class User
 	
 	public String toString()
 	{
-		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + "," + sessionsToString();
+		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + "," + admin + "," + sessionsToString();
 	}
 	
 	public String[] toStringArray()

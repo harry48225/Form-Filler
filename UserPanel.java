@@ -108,7 +108,7 @@ public class UserPanel extends JPanel implements ActionListener
 		String dateOfBirth = JOptionPane.showInputDialog("Please enter your date of birth as dd/mm/yyyy");
 		String phoneNumber = JOptionPane.showInputDialog("Please enter your phone number");
 			
-		users.addUser(new User(id,username,password,firstName,lastName,dateOfBirth,phoneNumber, new String[0], new QuestionStatList()));
+		users.addUser(new User(id,username,password,firstName,lastName,dateOfBirth,phoneNumber, false, new String[0], new QuestionStatList()));
 		
 		users.writeDatabase();
 		
