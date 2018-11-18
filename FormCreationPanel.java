@@ -358,11 +358,13 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running getFinalDetails"); // Debug
 		
+		String title = "PLACEHOLDER";
+		
 		String description = JOptionPane.showInputDialog("Please provide a description of the form. "); // Get a description of the form
 		
 		int difficulty = Integer.parseInt(JOptionPane.showInputDialog("What's the form's difficulty?")); // Get the form's difficulty
 		
-		formBeingCreated = formBeingCreated.setFinalDetails(description, difficulty);
+		formBeingCreated = formBeingCreated.setFinalDetails(title, description, difficulty);
 	}
 	
 	private class QuestionSelectionPanel extends JPanel implements ActionListener

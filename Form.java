@@ -7,6 +7,8 @@ public class Form implements Serializable
 	
 	private String[] questions; // Stores the ids of the questions that are in the form
 	
+	private String title;
+	
 	private String description;
 	
 	private String[] mainSkillsTested;
@@ -17,6 +19,7 @@ public class Form implements Serializable
 	{
 		id = builder.id; // Store the id
 		questions = builder.questions; // Get the questions added
+		title = builder.title;
 		description = builder.description;
 		mainSkillsTested = builder.mainSkillsTested;
 		difficulty = builder.difficulty;
@@ -29,10 +32,9 @@ public class Form implements Serializable
 		id = data[0]; // The first item is the id
 		questions = data[1].split("\\."); // Questions are delimited by a .
 		description = data[2];
-		System.out.println(data[3]);
-		System.out.println(data[3].split("\\."));
 		mainSkillsTested = data[3].split("\\.");
 		difficulty = Integer.parseInt(data[4]);
+		title = data[5];
 	}
 	
 	public String[] getQuestionIDs() // Returns the question array
@@ -71,12 +73,17 @@ public class Form implements Serializable
 	
 	public String toString() // Outputs attributes as String
 	{
-		return id + ","  + questionArrayToString() + "," + description + "," + mainSkillsTestedToString() + "," + difficulty; 
+		return id + ","  + questionArrayToString() + "," + description + "," + mainSkillsTestedToString() + "," + difficulty + "," + title; 
 	}
 	
 	public String getID()
 	{
 		return id;
+	}
+	
+	public String getTitle()
+	{
+		return title;
 	}
 	
 	public int getDifficulty()
@@ -100,9 +107,10 @@ public class Form implements Serializable
 		private final String id; // Must be set in constructor
 		private final QuestionList questionList;
 
-		private  String description;
-		private  String[] mainSkillsTested;
-		private  int difficulty; 
+		private String title;
+		private String description;
+		private String[] mainSkillsTested;
+		private int difficulty; 
 		
 		private String[] questions = new String[50]; // Store 50 questions
 		private int nextQuestionLocation = 0;
@@ -113,8 +121,9 @@ public class Form implements Serializable
 			questionList = tempQuestions;
 		}
 		
-		public FormBuilder setFinalDetails(String tempDescription, int tempDifficulty)
+		public FormBuilder setFinalDetails(String tempTitle, String tempDescription, int tempDifficulty)
 		{
+			title = tempTitle;
 			description = tempDescription;
 			difficulty = tempDifficulty;
 			
