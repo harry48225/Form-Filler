@@ -7,12 +7,14 @@ public class Question implements Serializable
 	
 	private int difficulty = -1; // The difficulty of the question 1 - 10
 	private String type = ""; // The type of the question
+	private String title = ""; // The title of the question 
 	
-	public Question(String tempID, int tempDiff, String tempType) // Constructor
+	public Question(String tempID, int tempDiff, String tempType, String tempTitle) // Constructor
 	{
 		id = tempID; // Store the ID
 		difficulty = tempDiff; // Store the difficulty
 		type = tempType; // Store the type
+		title = tempTitle; // Store the title
 	}
 	
 	public int getDifficulty() // Getter for difficulty
@@ -25,9 +27,14 @@ public class Question implements Serializable
 		return type; // Return the type
 	}
 	
+	public String getTitle()
+	{
+		return title;
+	}
+	
 	public String toString() // Returns a string of the attributes
 	{
-		return id + "," + difficulty + "," + type; // Return a string of the attributes concatenated
+		return id + "," + difficulty + "," + type + "," + title; // Return a string of the attributes concatenated
 	}
 	
 	public String[] toStringArray() // Returns a string array

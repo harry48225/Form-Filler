@@ -105,8 +105,8 @@ public class QuestionList
 				String id = splitQuestionData[0];
 				int difficulty = Integer.parseInt(splitQuestionData[1]); // Convert the first part to an integer
 				String type = splitQuestionData[2]; // Get the type
-				
-				Question tempRead = new Question(id, difficulty, type); // Create a new question with the data read from the file
+				String title = splitQuestionData[3];
+				Question tempRead = new Question(id, difficulty, type, title); // Create a new question with the data read from the file
 				
 				addQuestion(tempRead); // Add the question to the array
 				

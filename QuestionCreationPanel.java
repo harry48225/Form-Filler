@@ -176,7 +176,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			
 			getFinalDetails();
 			
-			questionBeingCreated = new Question(questionID, difficulty, type); // Create the question
+			questionBeingCreated = new Question(questionID, difficulty, type, "PLACE HOLDER TITLE"); // Create the question
 			
 			questions.addQuestion(questionBeingCreated, questionPanelBeingCreated.build()); // Add the question being created along with the question panel to the database
 		
