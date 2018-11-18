@@ -46,7 +46,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	// Sorts which sorts and filters have been applied
+	// Store which sorts and filters have been applied
 	private boolean typeSort = false;
 	private boolean difficultySort = false;
 	private boolean typeFilter = false;
