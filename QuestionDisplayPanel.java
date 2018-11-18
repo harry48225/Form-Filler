@@ -208,50 +208,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 
 		mainPanelConstraints.gridheight = 1;
 		mainPanelConstraints.weightx = 0.1;
-
-		typeFilterPanel = new JPanel();
-		typeFilterPanel.setLayout(new GridBagLayout());
-		
-		GridBagConstraints typeFilterPanelConstraints = new GridBagConstraints();
-		typeFilterPanelConstraints.fill = GridBagConstraints.BOTH;
-		typeFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
-		typeFilterPanelConstraints.gridx = 0;
-		typeFilterPanelConstraints.gridy = 0;
-		typeFilterPanelConstraints.weightx = 1;
-		typeFilterPanelConstraints.weighty = 1; 
-		
-		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
-		
-		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
-		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
-		
-		typeFilterPanelConstraints.gridx = 0;
-		typeFilterPanelConstraints.gridy = 1;
-		typeFilterPanelConstraints.gridwidth = 3; // Span 3 columns
-		typeFilterPanel.add(typeRadioButtonPanel, typeFilterPanelConstraints);
-		
-		typeFilterPanelConstraints.gridy = 2;
-		typeFilterPanel.add(typeFilterButton, typeFilterPanelConstraints);
-		
-		sortAndFilterPanelConstraints.gridx = 0;
-		sortAndFilterPanelConstraints.gridy = 1;
-		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
-		
-		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints);
-		
-		resetButton.addActionListener(this);
-		resetButton.setBackground(Color.RED);
-		resetButton.setForeground(Color.WHITE);
-		sortAndFilterPanelConstraints.gridy = 2;
-		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
-		
-		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
-		
-		attemptButton.addActionListener(this);
-		attemptButton.setBackground(new Color(130,183,75));
-		
-		mainPanelConstraints.gridheight = 1;
-		mainPanelConstraints.weightx = 0.1;
 		
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
