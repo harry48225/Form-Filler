@@ -45,7 +45,13 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
-
+	
+	// Sorts which sorts and filters have been applied
+	private boolean typeSort = false;
+	private boolean difficultySort = false;
+	private boolean typeFilter = false;
+	private boolean difficultyFilter = false;
+	
 	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI, boolean tempAdminMode) // Constructor
 	{
 		questions = tempList; // Store the question list
@@ -79,12 +85,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
 		
-		// Add action listeners 
-		sortDifficultyButton.addActionListener(this);
-		sortTypeButton.addActionListener(this);
-		attemptButton.addActionListener(this);
-		deleteButton.addActionListener(this);
-		
 		sortAndFilterPanel = new JPanel(); // Create a new JPanel
 		sortAndFilterPanel.setLayout(new GridBagLayout());
 		
@@ -113,12 +113,15 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortPanelConstraints.gridy = 0;
 		sortPanelConstraints.weightx = 1;
 		sortPanelConstraints.weighty = 1; 
-
+		
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		sortPanelConstraints.gridy = 1;
+		
+		sortDifficultyButton.addActionListener(this);
 		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
 		sortPanelConstraints.gridy = 2;
+		sortTypeButton.addActionListener(this);
 		sortPanel.add(sortTypeButton, sortPanelConstraints);
 		
 		sortAndFilterPanel.add(sortPanel, sortAndFilterPanelConstraints);
@@ -244,6 +247,62 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		this.setVisible(true);
 	}
 	
+	private void refreshTable() // Refreshes the table. Preserves sorts and filters
+	{
+		Question[] questionData = questions.getArray();
+		
+		if (typeSort)
+		{
+			questions.sortByType();
+			questionData = questions.getArray();
+		}
+		if (difficultySort)
+		{
+			questions.sortByDifficulty();
+			questionData = questions.getArray();
+		}
+		
+		if (difficultyFilter && typeFilter) // If they selected both filters we need to find the intersection of the filters
+		{
+			Question[] difficulty = questions.filterByDifficulty(difficultySlider.getValue());
+			Question[] type = questions.filterByType(getTypeSelected());
+			
+			Question[] intersection = new Question[questions.getArray().length]; // At most it could contain every question
+			int nextIntersectionLocation = 0;
+			
+			for (Question qD : difficulty)
+			{
+				for (Question qT : type)
+				{
+					if (qD == qT) // If they are the same question
+					{
+						intersection[nextIntersectionLocation] = qT;
+						nextIntersectionLocation++;
+					}
+				}
+			}
+			
+			// Trim the array
+			
+			questionData = new Question[nextIntersectionLocation];
+			
+			for (int i = 0; i < nextIntersectionLocation; i++)
+			{
+				questionData[i] = intersection[i];
+			}
+		}
+		else if (difficultyFilter)
+		{
+			questionData = questions.filterByDifficulty(difficultySlider.getValue());
+		}
+		else if (typeFilter)
+		{
+			questionData = questions.filterByType(getTypeSelected());
+		}
+		
+		populateTable(questionData);
+	}
+	
 	private void prepareTypeRadioButtons()
 	{
 		typeRadioButtonPanel.setLayout(new GridLayout(0,4)); // 4 rows infinite columns
@@ -310,7 +369,13 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private void resetTable()
 	{
 		typeRadioButtonGroup.clearSelection();
-		populateTable(questions.getArray()); // Populate the table with the questions
+		
+		typeSort = false;
+		typeFilter = false;
+		difficultySort = false;
+		difficultyFilter = false;
+		
+		refreshTable();
 		
 	}
 	
@@ -320,24 +385,28 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		if (evt.getSource() == sortDifficultyButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> sortDifficultyButton pressed"); // Debug
-			questions.sortByDifficulty(); // Sort the list by type
-			populateTable(questions.getArray());
+			typeSort = false;
+			difficultySort = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == sortTypeButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> sortTypeButton pressed"); // Debug
-			questions.sortByType();
-			populateTable(questions.getArray());
+			typeSort = true;
+			difficultySort = false;
+			refreshTable();
 		}
 		else if (evt.getSource() == typeFilterButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> typeFilterButton pressed"); // Debug
-			populateTable(questions.filterByType(getTypeSelected()));
+			typeFilter = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == difficultyFilterButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> difficultyFilterButton pressed"); // Debug
-			populateTable(questions.filterByDifficulty(difficultySlider.getValue()));
+			difficultyFilter = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == attemptButton)
 		{
@@ -352,12 +421,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 			int row = questionTable.getSelectedRow();
 			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
 			questions.removeQuestion(selectedQuestion); // Delete the question
+			refreshTable();
 			
-		}
-		else if (evt.getSource() == resetButton)
-		{
-			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> resetButton pressed"); // Debug
-			resetTable();
 		}
 		else if (evt.getSource() == resetButton)
 		{
