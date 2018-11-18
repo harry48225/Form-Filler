@@ -41,6 +41,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JButton typeFilterButton = new JButton("Apply type filter");
 	
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
+<<<<<<< HEAD
+=======
+	
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
+>>>>>>> 4418aba7b0d0af27335e9f4d9310c3d2f1f26887
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
@@ -69,7 +74,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
+<<<<<<< HEAD
 		mainPanelConstraints.gridheight = 3;
+=======
+		mainPanelConstraints.gridheight = 2;
+>>>>>>> 4418aba7b0d0af27335e9f4d9310c3d2f1f26887
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
@@ -160,7 +169,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		prepareTypeRadioButtons();
 
 		typeFilterButton.addActionListener(this);
-		
+
 		typeFilterPanel = new JPanel();
 		typeFilterPanel.setLayout(new GridBagLayout());
 		
@@ -222,7 +231,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		
 		mainPanelConstraints.gridy = 2;
 		mainPanel.add(attemptButton, mainPanelConstraints);
-		
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
@@ -345,6 +353,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
 			questions.removeQuestion(selectedQuestion); // Delete the question
 			
+		}
+		else if (evt.getSource() == resetButton)
+		{
+			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> resetButton pressed"); // Debug
+			resetTable();
 		}
 		else if (evt.getSource() == resetButton)
 		{
