@@ -7,6 +7,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 
+import java.util.*;
+
 public class QuestionDisplayPanel extends JPanel implements ActionListener
 {
 	private QuestionList questions;
@@ -16,7 +18,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	private JPanel mainPanel = new JPanel(); // Holds all of the components apart from the help button
 	private JButton helpButton = new JButton("Help");
 	// For the view table
-	private String[] tableHeaders = new String[] {"ID","Difficulty", "Type"}; // The headers for the table
+	private String[] tableHeaders = new String[] {"ID","Title", "Difficulty", "Type"}; // The headers for the table
 	private String[][] questionData = new String[0][0];
 	private DefaultTableModel questionTableModel = new DefaultTableModel(questionData, tableHeaders);
 	private JTable questionTable = new JTable(questionTableModel); // Create a table to hold the questions
@@ -270,7 +272,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		{
 			if(data[i] != null) // If there is data
 			{
-				String[] question = data[i].toStringArray(); // Convert the question to a String array
+				Question currentQuestion = data[i];
+				
+				String[] question = {currentQuestion.getID(), currentQuestion.getTitle(), 
+									 currentQuestion.getDifficulty() + "", currentQuestion.getType()}; // Convert the question to a String array
 				questionTableModel.addRow(question); // Add the question to the table
 			}
 		}

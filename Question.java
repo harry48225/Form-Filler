@@ -34,7 +34,7 @@ public class Question implements Serializable
 	
 	public String toString() // Returns a string of the attributes
 	{
-		return id + "," + difficulty + "," + type + "," + title; // Return a string of the attributes concatenated
+		return id + "," + title + "," + difficulty + "," + type; // Return a string of the attributes concatenated
 	}
 	
 	public String[] toStringArray() // Returns a string array
