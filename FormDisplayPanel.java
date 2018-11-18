@@ -83,7 +83,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
 
-		mainPanelConstraints.gridheight = 3;
+		mainPanelConstraints.gridheight = 4;
 
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		
@@ -159,7 +159,12 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 			mainPanel.add(deleteButton, mainPanelConstraints);
 		}
 		
+		attemptUserWeaknessesFormButton.setBackground(new Color(139, 102, 153));
+		attemptUserWeaknessesFormButton.addActionListener(this);
 		mainPanelConstraints.gridy = 2;
+		mainPanel.add(attemptUserWeaknessesFormButton, mainPanelConstraints);
+		
+		mainPanelConstraints.gridy = 3;
 		mainPanel.add(attemptButton, mainPanelConstraints);
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
