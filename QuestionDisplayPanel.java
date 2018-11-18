@@ -322,7 +322,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	
 	private void prepareTypeRadioButtons()
 	{
-		typeRadioButtonPanel.setLayout(new GridLayout(0,4)); // 4 rows infinite columns
+		typeRadioButtonPanel.setLayout(new GridLayout(0,3)); // 3 rows infinite columns
 		
 		String[] questionTypes = questions.getTypes(); // Get the types
 
