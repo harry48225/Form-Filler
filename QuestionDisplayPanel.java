@@ -247,7 +247,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		this.setVisible(true);
 	}
 	
-	private void refreshTable() // Refreshes the table. Preserves sorts and filters
+	public void refreshTable() // Refreshes the table. Preserves sorts and filters
 	{
 		Question[] questionData = questions.getArray();
 		

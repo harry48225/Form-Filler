@@ -1,10 +1,10 @@
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
 
-public class GUI extends JFrame // Main GUI class
+public class GUI extends JFrame implements ChangeListener// Main GUI class
 {
 	private QuestionList questions; // The question list
 	
@@ -86,6 +86,8 @@ public class GUI extends JFrame // Main GUI class
 		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
 		
+		tabs.addChangeListener(this);
+		
 		this.add(tabs);
 		
 		this.setVisible(true);
@@ -145,6 +147,19 @@ public class GUI extends JFrame // Main GUI class
 		formsInProgress.getByID(f.getID()).setPercentComplete(percentComplete);
 		formsInProgress.writeDatabase();
 		System.out.println("[INFO] <GUI> Form saved"); // Debug
+		
+	}
+	
+	public void stateChanged(ChangeEvent changeEvent)
+	{
+		JTabbedPane sourcePane = (JTabbedPane) changeEvent.getSource();
+		Component selectedComponent = sourcePane.getSelectedComponent();
+		
+		if (selectedComponent instanceof QuestionDisplayPanel)
+		{
+			QuestionDisplayPanel qDP = (QuestionDisplayPanel) selectedComponent;
+			 qDP.refreshTable(); // Refresh the table
+		}
 		
 	}
 }
