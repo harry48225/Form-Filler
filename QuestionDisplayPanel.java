@@ -11,6 +11,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 {
 	private QuestionList questions;
 	private GUI gui;
+	private boolean adminMode;
 	
 	private JPanel mainPanel = new JPanel(); // Holds all of the components apart from the help button
 	private JButton helpButton = new JButton("Help");
@@ -43,10 +44,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI) // Constructor
+	public QuestionDisplayPanel(QuestionList tempList, GUI tempGUI, boolean tempAdminMode) // Constructor
 	{
 		questions = tempList; // Store the question list
 		gui = tempGUI;
+		adminMode = tempAdminMode;
 		
 		prepareGUI();
 	}
@@ -67,7 +69,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
-		mainPanelConstraints.gridheight = 2;
+		mainPanelConstraints.gridheight = 3;
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
@@ -200,7 +202,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
 		
-		//buttonPanel.add(deleteButton);
 		mainPanelConstraints.gridheight = 1;
 		mainPanelConstraints.weightx = 0.1;
 		
@@ -210,6 +211,16 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.weighty = 0.2;
 		mainPanelConstraints.gridx = 1;
 		mainPanelConstraints.gridy = 1;
+		
+		if (adminMode) // Add the delete question button if the user is an admin
+		{
+			deleteButton.addActionListener(this);
+			deleteButton.setBackground(new Color(174,59,46));
+			deleteButton.setForeground(Color.WHITE);
+			mainPanel.add(deleteButton, mainPanelConstraints);
+		}
+		
+		mainPanelConstraints.gridy = 2;
 		mainPanel.add(attemptButton, mainPanelConstraints);
 		
 		
@@ -329,12 +340,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		}
 		else if (evt.getSource() == deleteButton)
 		{
-			/*
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> deleteButton pressed"); // Debug
 			int row = questionTable.getSelectedRow();
 			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
 			questions.removeQuestion(selectedQuestion); // Delete the question
-			*/
+			
 		}
 		else if (evt.getSource() == resetButton)
 		{
