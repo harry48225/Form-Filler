@@ -210,12 +210,13 @@ public class UserList
 				String lastName = splitUserData[4];
 				String dateOfBirth = splitUserData[5];
 				String phoneNumber = splitUserData[6];
+				boolean admin = Boolean.parseBoolean(splitUserData[7]);
 				
 				String[] sessionsPresentAt = new String[0];
 				
-				if (splitUserData.length > 7) // If this data is present in the file.
+				if (splitUserData.length > 8) // If this data is present in the file.
 				{
-					sessionsPresentAt = splitUserData[7].split("\\.");
+					sessionsPresentAt = splitUserData[8].split("\\.");
 				}
 				
 				QuestionStatList questionStats = new QuestionStatList(); // Empty question stat list
@@ -226,7 +227,7 @@ public class UserList
 					questionStats = new QuestionStatList(splitData[1]); // Load the question stat list 
 				}
 				
-				addUser(new User(id, username, password, firstName, lastName, dateOfBirth, phoneNumber,sessionsPresentAt, questionStats));
+				addUser(new User(id, username, password, firstName, lastName, dateOfBirth, phoneNumber, admin, sessionsPresentAt, questionStats));
 				
 				line = br.readLine();
 				
