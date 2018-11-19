@@ -22,7 +22,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 	private JButton helpButton = new JButton("Help");
 	
 	// For the view table
-	private String[] tableHeaders = new String[] {"ID","Questions","Description","Main Skills Tested","Difficulty", "Percent Complete"}; // The headers for the table
+	private String[] tableHeaders = new String[] {"ID","Title", "Description", "Main Skills Tested","Difficulty", "Percent Complete", "Times completed"}; // The headers for the table
 	private String[][] formData = new String[0][0];
 	private DefaultTableModel formTableModel = new DefaultTableModel(formData, tableHeaders);
 	private JTable formTable = new JTable(formTableModel); // Create a table to hold the questions
@@ -169,6 +169,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
 		tcm.removeColumn(tcm.getColumn(0));
+		tcm.getColumn(3).setCellRenderer(new WordWrapCellRenderer());
 		
 		populateTable(forms.getArray()); // Populate the table with the questions
 	
@@ -366,27 +367,27 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		{
 			if(data[i] != null) // If there is data
 			{
-				String[] formData = data[i].toStringArray(); // Convert the form to a String array
-				
-				String[] rowData = new String[formData.length + 1]; // Add one more space for the percentage complete
-				
-				for (int j = 0; j < formData.length; j++)
-				{
-					rowData[j] = formData[j]; // Copy across the data
-				}
-				
-				String formID = rowData[0]; // The first item is the formId
-				
+				Form f = data[i]; // The current form. The name is f as it'll be called a large amount of time. f is to make the calls 
+								  // less cluttered
+								  
+				String percentageComplete = "0%";
+				String formID = f.getID();
 				if (formsInProgress.isFormPresent(formID)) // If the form is partially completed / has already been attempted by the user
 				{
-					rowData[formData.length] = formsInProgress.getByID(formID).getPercentComplete() + "%"; // Get the percentage that the form is complete, append %, and add it to the end of the array
-				}
-				else // The form hasn't been started
-				{
-					rowData[formData.length] = "0%"; // Add 0% to the end of the array
+					percentageComplete = formsInProgress.getByID(formID).getPercentComplete() + "%"; // Get the percentage that the form is complete, append %, and add it to the end of the array
 				}
 				
-				formTableModel.addRow(rowData); // Add the form to the table
+				// "ID","Title", "Description", "Main Skills Tested","Difficulty", "Percent Complete", "Times completed"
+				// This is the column order
+				
+				// The default output is just a . between the skills
+				// A , and a space looks better for outputting to the user
+				String betterLookingMainskillsTested = f.mainSkillsTestedToString().replace(".", ", ");
+				
+				String[] formData = {f.getID(), f.getTitle(), f.getDescription(), betterLookingMainskillsTested, 
+									f.getDifficulty() + "", percentageComplete, "PLACEHOLDER"}; // Convert the form to a String array
+				
+				formTableModel.addRow(formData); // Add the form to the table
 			}
 		}
 	}
@@ -468,6 +469,26 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> helpButton pressed");
 			JOptionPane.showMessageDialog(null,"This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. \r\n By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. \r\n You can filter and sort forms using the buttons on the right.");
+		}
+	}
+	
+	static class WordWrapCellRenderer extends JTextArea implements TableCellRenderer 
+	{
+		public WordWrapCellRenderer() 
+		{
+			setLineWrap(true);
+			setWrapStyleWord(true);
+		}
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			setText(value.toString());
+			setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+			if (table.getRowHeight(row) != getPreferredSize().height) 
+			{
+				table.setRowHeight(row, getPreferredSize().height);
+			}
+			return this;
 		}
 	}
 
