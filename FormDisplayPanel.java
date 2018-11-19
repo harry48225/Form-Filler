@@ -50,7 +50,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	// Store which sorts and filters have been applied
-	private boolean typeSort = false;
 	private boolean difficultySort = false;
 	private boolean typeFilter = false;
 	private boolean difficultyFilter = false;
@@ -285,6 +284,77 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		}
 	}
 	
+	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	{
+		Form[] formData = forms.getArray();
+		
+		if (difficultySort)
+		{
+			forms.sortByDifficulty();
+			formData = forms.getArray();
+		}
+		
+		if (difficultyFilter && typeFilter) // If they selected both filters we need to find the intersection of the filters
+		{
+			Form[] difficulty = forms.filterByDifficulty(difficultySlider.getValue());
+			Form[] type = forms.filterByType(getTypesSelected());
+			
+			Form[] intersection = new Form[forms.getArray().length]; // At most it could contain every question
+			int nextIntersectionLocation = 0;
+			
+			for (Form fD : difficulty)
+			{
+				for (Form fT : type)
+				{
+					if (fD == fT) // If they are the same question
+					{
+						intersection[nextIntersectionLocation] = fT;
+						nextIntersectionLocation++;
+					}
+				}
+			}
+			
+			// Trim the array
+			
+			formData = new Form[nextIntersectionLocation];
+			
+			for (int i = 0; i < nextIntersectionLocation; i++)
+			{
+				formData[i] = intersection[i];
+			}
+		}
+		else if (difficultyFilter)
+		{
+			formData = forms.filterByDifficulty(difficultySlider.getValue());
+		}
+		else if (typeFilter)
+		{
+			formData = forms.filterByType(getTypesSelected());
+		}
+		
+		populateTable(formData);
+	}
+	
+	private void clearCheckboxes()
+	{
+		for (JCheckBox checkbox : typeCheckBoxes)
+		{
+			checkbox.setSelected(false);
+		}
+	}
+	
+	private void resetTable()
+	{
+		clearCheckboxes();
+
+		typeFilter = false;
+		difficultySort = false;
+		difficultyFilter = false;
+		
+		refreshTable();
+		
+	}
+	
 	private void populateTable(Form[] data) // Populates the table with data
 	{
 		
@@ -352,18 +422,20 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		if (evt.getSource() == sortDifficultyButton)
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> sortDifficultyButton pressed"); // Debug
-			forms.sortByDifficulty(); // Sort the list by type
-			populateTable(forms.getArray());
+			difficultySort = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == typeFilterButton)
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> typeFilterButton pressed"); // Debug
-			populateTable(forms.filterByType(getTypesSelected()));
+			typeFilter = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == difficultyFilterButton)
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> difficultyFilterButton pressed"); // Debug
-			populateTable(forms.filterByDifficulty(difficultySlider.getValue()));
+			difficultyFilter = true;
+			refreshTable();
 		}
 		else if (evt.getSource() == attemptButton)
 		{
@@ -371,6 +443,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 			int row = formTable.getSelectedRow();
 			Form selectedForm = forms.getFormByID(formTable.getModel().getValueAt(row, 0).toString()); // Get the form id and get the form
 			gui.openForm(selectedForm); // Open the form
+		}
+		else if (evt.getSource() == resetButton)
+		{
+			System.out.println("[INFO] <FORM_DISPLAY_PANEL> resetButton pressed"); // Debug
+			resetTable();
 		}
 		else if (evt.getSource() == deleteButton)
 		{
