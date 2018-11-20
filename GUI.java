@@ -25,7 +25,6 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void setup()
 	{
-		
 		System.out.println("[INFO] <GUI> Running setup"); // Debug
 		
 		//this.addWindowListener(this);
@@ -79,7 +78,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
-		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress));
+		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
 		tabs.add("Create questions", new QuestionCreationPanel(questions));
 		tabs.add("Create forms", new FormCreationPanel(questions, forms));
 		tabs.add("Users", new UserPanel(users));
@@ -159,6 +158,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			QuestionDisplayPanel qDP = (QuestionDisplayPanel) selectedComponent;
 			 qDP.refreshTable(); // Refresh the table
+		}
+		else if (selectedComponent instanceof FormDisplayPanel)
+		{
+			FormDisplayPanel fDP = (FormDisplayPanel) selectedComponent;
+			fDP.refreshTable(); // Refresh the table
 		}
 		
 	}

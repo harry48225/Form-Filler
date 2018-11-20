@@ -57,7 +57,7 @@ public class Form implements Serializable
 		
 	}
 	
-	private String mainSkillsTestedToString() // Converts the skills array to string
+	public String mainSkillsTestedToString() // Converts the skills array to string
 	{
 		String arrayAsString = "";
 		
@@ -84,6 +84,11 @@ public class Form implements Serializable
 	public String getTitle()
 	{
 		return title;
+	}
+	
+	public String getDescription()
+	{
+		return description;
 	}
 	
 	public int getDifficulty()
