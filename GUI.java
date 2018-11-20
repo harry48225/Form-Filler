@@ -160,6 +160,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			QuestionDisplayPanel qDP = (QuestionDisplayPanel) selectedComponent;
 			 qDP.refreshTable(); // Refresh the table
 		}
+		else if (selectedComponent instanceof FormDisplayPanel)
+		{
+			FormDisplayPanel fDP = (FormDisplayPanel) selectedComponent;
+			fDP.refreshTable(); // Refresh the table
+		}
 		
 	}
 }
