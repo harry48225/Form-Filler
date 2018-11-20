@@ -170,7 +170,20 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		mainPanelConstraints.gridy = 3;
 		mainPanel.add(attemptButton, mainPanelConstraints);
+	
+		prepareTable();
 		
+		this.add(mainPanel, BorderLayout.CENTER);
+		
+		helpButton.addActionListener(this);
+		
+		this.add(helpButton, BorderLayout.NORTH);
+		
+		this.setVisible(true);
+	}
+	
+	private void prepareTable()
+	{
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
 
@@ -194,16 +207,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		tcm.getColumn(5).setMaxWidth(90);
 		
 		populateTable(forms.getArray()); // Populate the table with the questions
-	
-		this.add(mainPanel, BorderLayout.CENTER);
-		
-		helpButton.addActionListener(this);
-		
-		this.add(helpButton, BorderLayout.NORTH);
-		
-		this.setVisible(true);
 	}
-	
+		
 	private void prepareSortPanel()
 	{
 		sortPanel = new JPanel();
@@ -356,6 +361,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 		
 		populateTable(formData);
+		
+		this.repaint();
 	}
 	
 	private void clearCheckboxes()
@@ -412,6 +419,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				formTableModel.addRow(formData); // Add the form to the table
 			}
 		}
+		
+		resizeRows();
 	}
 
 	private String[] getTypesSelected() // Gets which type checkboxes are selected
@@ -554,7 +563,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 	}
 	
-	public void columnMarginChanged(ChangeEvent e)
+	private void resizeRows()
 	{
 		for (int row = 0; row < formTable.getRowCount(); row ++)
 		{
@@ -581,6 +590,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				formTable.setRowHeight(row, requiredHeight);
 			}
 		}
+	}
+	
+	public void columnMarginChanged(ChangeEvent e)
+	{
+		resizeRows();
 	}
 	public void columnAdded(TableColumnModelEvent e) {}
 	
