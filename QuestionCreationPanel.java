@@ -52,6 +52,17 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 										 addComboboxButton, addCheckboxesButton, addPasswordFieldButton,
 										 addCalendarEntryButton, addFileChooserButton}; // To handle the buttons all at once more easily
 	
+	
+	// For the add final details panel
+	private JLabel questionTitleLabel = new JLabel("Question title");
+	private JLabel questionTypeLabel = new JLabel("Question type");
+	private JLabel questionDifficultyLabel = new JLabel("Question difficulty");
+	
+	private JTextField questionTitleField = new JTextField();
+	private JComboBox<String> questionTypeCombobox = new JComboBox<String>();
+	private JComboBox<String> questionDifficultyCombobox = new JComboBox<String>();
+	private JButton newTypeButton = new JButton("New type");
+	
 	private JButton saveQuestionButton = new JButton("Save Question");
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
@@ -116,6 +127,42 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private void prepareEnterFinalDetailsPanel()
 	{
 		addFinalDetailsPanel = new JPanel();
+		addFinalDetailsPanel.setLayout(new GridBagLayout());
+		
+		
+		GridBagConstraints addFinalDetailsConstraints = new GridBagConstraints();
+		addFinalDetailsConstraints.fill = GridBagConstraints.BOTH;
+		addFinalDetailsConstraints.weightx = 1;
+		addFinalDetailsConstraints.weighty = 1;
+		addFinalDetailsConstraints.gridx = 0;
+		addFinalDetailsConstraints.gridy = 0;
+		addFinalDetailsConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		
+		// Question title
+		addFinalDetailsPanel.add(questionTitleLabel, addFinalDetailsConstraints);
+		addFinalDetailsConstraints.gridx = 1;
+		addFinalDetailsPanel.add(questionTitleField, addFinalDetailsConstraints);
+		
+		// Question Type
+		addFinalDetailsConstraints.gridy = 1;
+		addFinalDetailsConstraints.gridx = 0;
+		addFinalDetailsPanel.add(questionTypeLabel, addFinalDetailsConstraints);
+		addFinalDetailsConstraints.gridx = 1;
+		addFinalDetailsPanel.add(questionTypeCombobox, addFinalDetailsConstraints);
+		addFinalDetailsConstraints.gridx = 2;
+		newTypeButton.addActionListener(this);
+		newTypeButton.setBackground(new Color(169,196,235));
+		addFinalDetailsPanel.add(newTypeButton, addFinalDetailsConstraints);
+		
+		// Question difficulty
+		addFinalDetailsConstraints.gridy = 2;
+		addFinalDetailsConstraints.gridx = 0;
+		addFinalDetailsPanel.add(questionDifficultyLabel, addFinalDetailsConstraints);
+		addFinalDetailsConstraints.gridx = 1;
+		addFinalDetailsPanel.add(questionDifficultyCombobox, addFinalDetailsConstraints);
+		
+		addFinalDetailsPanel.setMaximumSize(new Dimension(1000, 180));
+		addFinalDetailsPanel.setPreferredSize(new Dimension(1000, 180));
 	}
 	
 	private void prepareCreateQuestionPanel() // The lower half of the screen concerned with inputting the information
@@ -142,6 +189,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addComponentPanel.setVisible(false);
 		
 		prepareEnterFinalDetailsPanel();
+		addFinalDetailsPanel.setVisible(false);
 		
 		questionCreationStages = new JPanel[] {addLabelPanel, addComponentPanel, addFinalDetailsPanel};
 		
@@ -161,6 +209,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		createQuestionPanel.add(Box.createVerticalGlue());
 		createQuestionPanel.add(addLabelPanel);
 		createQuestionPanel.add(addComponentPanel);
+		createQuestionPanel.add(addFinalDetailsPanel);
 		createQuestionPanel.add(Box.createVerticalGlue());
 		
 		// Setup the next back and finish buttons
