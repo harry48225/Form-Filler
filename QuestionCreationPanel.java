@@ -22,6 +22,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private Question questionBeingCreated; // Store the question that is currently being created
 	private QuestionPanel.QuestionPanelBuilder questionPanelBeingCreated; // Store the questionPanel that is currently being created
 
+	private JComponent[] questionComponents = new JComponent[2]; // Each question will only have 2 components
+	
 	private JPanel questionPreview; // To show the question being created to the user
 	private JPanel createQuestionPanel; // To store the three steps and the buttons
 	private JPanel addLabelPanel; // The first step of the process
@@ -192,19 +194,6 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addFinalDetailsPanel.setVisible(false);
 		
 		questionCreationStages = new JPanel[] {addLabelPanel, addComponentPanel, addFinalDetailsPanel};
-		
-		/*
-		
-		prepareComponentCreationButtons();
-
-		saveQuestionButton.addActionListener(this);
-		
-		JPanel allButtons = new JPanel(); // To hold all of the buttons
-		allButtons.setLayout(new GridLayout(1,2));
-		
-		allButtons.add(componentCreationButtons);
-		allButtons.add(saveQuestionButton);
-		*/
 		
 		createQuestionPanel.add(Box.createVerticalGlue());
 		createQuestionPanel.add(addLabelPanel);
@@ -421,49 +410,74 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> nextButton pressed");
 			
-			questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
-			currentStage++;
-			questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
-			
-			if (currentStage > 0) // Show the back button if we're not on the first stage
+			// Check to see if the label has been added if we are moving from the first screen
+			if (currentStage == 0)
 			{
-				backButton.setVisible(true);
+				if (labelTextField.getText().isEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Please enter some text for the label to have before continuing", "No label text", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					addComponent(new JLabel(labelTextField.getText())); // Add a label with the entered text to the question
+					goForward();
+				}
+			}
+			else if (currentStage == 1) // Check to see if a component has been added before moving to the final screen
+			{
+				if (questionComponents[1] == null) // If no component has been added
+				{
+					JOptionPane.showMessageDialog(null, "Please add a component before continuing", "No component", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					goForward();
+				}
 			}
 			
-			if (currentStage == questionCreationStages.length-1) // If we're at the last stage
-			{
-				nextButton.setVisible(false);
-				finishButton.setVisible(true);
-			}
+			
 		}
 		else if (evt.getSource() == backButton)
 		{
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> backButton pressed");
-			
-			questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
-			currentStage--;
-			questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
-			
-			if (currentStage == 0) // Show the back button if we're not on the first stage
-			{
-				backButton.setVisible(false);
-			}
-			
-			if (currentStage < questionCreationStages.length-1) // If we're not at the last stage
-			{
-				nextButton.setVisible(true);
-				finishButton.setVisible(false);
-			}
+			goBackward();
 		}
 	}
 	
-	private void addLabel() // Adds a label component to the question
+	private void goForward() // Goes forward a step
 	{
-		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addLabel"); // Debug
+		questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
+		currentStage++;
+		questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
 		
-		String text = JOptionPane.showInputDialog("What should the text be?"); // Create a pop up window to ask for the text
+		if (currentStage > 0) // Show the back button if we're not on the first stage
+		{
+			backButton.setVisible(true);
+		}
 		
-		addComponent(new JLabel(text)); // Create a new JLabel with the required text and add it
+		if (currentStage == questionCreationStages.length-1) // If we're at the last stage
+		{
+			nextButton.setVisible(false);
+			finishButton.setVisible(true);
+		}
+	}
+	
+	private void goBackward() // Goes backward a step
+	{
+		questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
+		currentStage--;
+		questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
+		
+		if (currentStage == 0) // Show the back button if we're not on the first stage
+		{
+			backButton.setVisible(false);
+		}
+		
+		if (currentStage < questionCreationStages.length-1) // If we're not at the last stage
+		{
+			nextButton.setVisible(true);
+			finishButton.setVisible(false);
+		}
 	}
 	
 	private void addTextField() // Adds a text field to the question
@@ -596,13 +610,35 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		return options;
 	}
 	
-	private void addComponent(JComponent component) // Adds the component to the question
+	private void updatePreview()
 	{
-		// Add the label to both the visual representation and the builder
-		questionPreview.add(component);
+		questionPreview.removeAll();
+		
+		// Add the non-null components to the question preview
+		for (JComponent c : questionComponents)
+		{
+			if (c != null)
+			{
+				questionPreview.add(c);
+			}
+		}
+		
 		questionPreview.revalidate();
 		
-		questionPanelBeingCreated = questionPanelBeingCreated.add(component);
+	}
+	
+	private void addComponent(JComponent component) // Adds the component to the question
+	{
+		if (component instanceof JLabel) // If it's a label
+		{
+			questionComponents[0] = component; // Overwrite the label
+		}
+		else
+		{
+			questionComponents[1] = component;
+		}
+		
+		updatePreview(); // Update the question preview
 	}
 	
 	private void getFinalDetails() // Gets the type and difficulty of the question from the user
