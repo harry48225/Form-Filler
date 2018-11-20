@@ -107,6 +107,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		addLabelConstraints.gridx = 1;
 		
+		labelTextField.addActionListener(this);
+		
 		addLabelPanel.add(labelTextField, addLabelConstraints);
 		
 		addLabelPanel.setMaximumSize(new Dimension(1000, 80));
@@ -406,25 +408,57 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 
 			addFileChooser();
 		}
-		else if (evt.getSource() == saveQuestionButton) // If the save question button was pressed
+		else if (evt.getSource() == finishButton) // If the finish button was pressed
 		{
-			System.out.println("[INFO] <QUESTION_CREATION_PANEL> saveQuestionButton pressed");
+			System.out.println("[INFO] <QUESTION_CREATION_PANEL> finishButton pressed");
 			
-			getFinalDetails();
+			String errorString = "";
 			
-			questionBeingCreated = new Question(questionID, difficulty, type, "PLACE HOLDER TITLE"); // Create the question
-			
-			questions.addQuestion(questionBeingCreated, questionPanelBeingCreated.build()); // Add the question being created along with the question panel to the database
-		
-			int save = JOptionPane.showConfirmDialog(null, "Question added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
-			
-			if (save == 0) // If they selected yes
+			// Check to see that they've filled it all in
+			if (questionTitleField.getText().isEmpty())
 			{
-				questions.writeDatabase();
-				
-				
-				JOptionPane.showMessageDialog(null, "Question saved!");
+				errorString += "Please enter a title. ";
 			}
+			if (questionTypeCombobox.getSelectedIndex() == 0)
+			{
+				errorString += "Please select a type. ";
+			}
+			if (questionDifficultyCombobox.getSelectedIndex() == 0)
+			{
+				errorString += "Please select a difficulty";
+			}
+			
+			if (errorString != "") // If the user failed to fill something in
+			{
+				JOptionPane.showMessageDialog(null, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
+			}
+			else // They entered everything correctly
+			{
+				// Get the info that the user has entered
+				String title = questionTitleField.getText();
+				int difficulty = Integer.parseInt((String) questionDifficultyCombobox.getSelectedItem());
+				String type = (String) questionTypeCombobox.getSelectedItem();
+				
+				questionBeingCreated = new Question(questionID, difficulty, type, title); // Create the question
+				
+				questionPanelBeingCreated = questionPanelBeingCreated.add(questionComponents[0]).add(questionComponents[1]);
+				questions.addQuestion(questionBeingCreated, questionPanelBeingCreated.build()); // Add the question being created along with the question panel to the database
+			
+				int save = JOptionPane.showConfirmDialog(null, "Question added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+				
+				if (save == 0) // If they selected yes
+				{
+					questions.writeDatabase();
+					
+					
+					JOptionPane.showMessageDialog(null, "Question saved!");
+				}
+				
+			}
+		}
+		else if (evt.getSource() == labelTextField) // Make pressing enter in the label text field the same as pressing next
+		{
+			nextButton.doClick();
 		}
 		else if (evt.getSource() == nextButton)
 		{
