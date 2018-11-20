@@ -183,9 +183,15 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 		tcm.addColumnModelListener(this);
 		
-		//formTable.setColumnWidth(3, 50);
-		//formTable.setColumnWidth(4, 50);
-		//formTable.setColumnWidth(5, 50);
+		// Make the Title column as small as possible
+		tcm.getColumn(0).setMaxWidth(120);
+		tcm.getColumn(0).setPreferredWidth(100);
+		// Fix the difficulty, percentage complete, and time completed columns to the required size
+		tcm.getColumn(3).setMaxWidth(80);
+		
+		tcm.getColumn(4).setMaxWidth(80);
+		
+		tcm.getColumn(5).setMaxWidth(90);
 		
 		populateTable(forms.getArray()); // Populate the table with the questions
 	
