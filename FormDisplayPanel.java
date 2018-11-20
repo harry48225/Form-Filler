@@ -100,6 +100,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortAndFilterPanel.setLayout(new GridBagLayout());
 		
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
@@ -202,13 +204,13 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		// Make the Title column as small as possible
 		tcm.getColumn(0).setMaxWidth(120);
-		tcm.getColumn(0).setPreferredWidth(100);
+		tcm.getColumn(0).setPreferredWidth(90);
 		// Fix the difficulty, percentage complete, and time completed columns to the required size
-		tcm.getColumn(3).setMaxWidth(80);
+		tcm.getColumn(3).setMaxWidth(90);
 		
-		tcm.getColumn(4).setMaxWidth(80);
+		tcm.getColumn(4).setMaxWidth(90);
 		
-		tcm.getColumn(5).setMaxWidth(90);
+		tcm.getColumn(5).setMaxWidth(100);
 		
 		populateTable(forms.getArray()); // Populate the table with the questions
 	}
@@ -238,6 +240,9 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortPanelConstraints.weighty = 1; 
 		
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
+		Font currentFont = sortsLabel.getFont();
+		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		
 		sortPanel.add(filterIconLabel, sortPanelConstraints);
@@ -264,6 +269,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		difficultyFilterPanelConstraints.weighty = 1; 
 		
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
+		Font currentFont = difficultyFilterLabel.getFont();
+		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
 		
 		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -301,6 +308,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		typeFilterPanelConstraints.weighty = 1; 
 		
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
+		Font currentFont = typeFilterLabel.getFont();
+		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
 		
 		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
 		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
@@ -535,6 +544,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		public WordWrapHeaderRenderer()
 		{
 			LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(Font.BOLD, 13)); // Make the headers bold
 		}
 		
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
@@ -560,6 +571,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	}
 	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
 	{
+		public WordWrapCellRenderer()
+		{
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(11)); // Make the text larger
+		}
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 		{
 			if (value != null) 
