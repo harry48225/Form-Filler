@@ -14,6 +14,7 @@ import java.io.*;
 public class QuestionCreationPanel extends JPanel implements ActionListener
 {		
 	private QuestionList questions;
+	private GUI gui;
 	
 	private String questionID = "";
 	private int difficulty = -1;
@@ -69,10 +70,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public QuestionCreationPanel(QuestionList tempQuestions)
+	public QuestionCreationPanel(QuestionList tempQuestions, GUI tempGUI)
 	{
 		questions = tempQuestions;
-		
+		gui = tempGUI;
 		questionID = questions.getFreeID(); // Get a unique id for the question
 		
 		questionPanelBeingCreated = new QuestionPanel.QuestionPanelBuilder(questionID);
@@ -453,6 +454,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 					
 					JOptionPane.showMessageDialog(null, "Question saved!");
 				}
+				
+				gui.resetTab(this); // Reset the questionCreationPanel
 				
 			}
 		}
