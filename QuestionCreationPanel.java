@@ -179,7 +179,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		// Setup the layout
 		createQuestionPanel.setLayout(new BoxLayout(createQuestionPanel, BoxLayout.PAGE_AXIS)); // Create a new box layout that adds components top to bottom
 		
-		createQuestionPanel.setMaximumSize(new Dimension(1500, 900));
+		createQuestionPanel.setMaximumSize(new Dimension(1100, 1100));
 		createQuestionPanel.setPreferredSize(new Dimension(900, 300));
 		
 		
@@ -296,7 +296,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		componentCreationButtons.setLayout(new GridLayout(2,1)); // 2 rows 1 column
 		
-		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Create components");
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Add Component");
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
