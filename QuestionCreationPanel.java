@@ -346,6 +346,25 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 				finishButton.setVisible(true);
 			}
 		}
+		else if (evt.getSource() == backButton)
+		{
+			System.out.println("[INFO] <QUESTION_CREATION_PANEL> backButton pressed");
+			
+			questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
+			currentStage--;
+			questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
+			
+			if (currentStage == 0) // Show the back button if we're not on the first stage
+			{
+				backButton.setVisible(false);
+			}
+			
+			if (currentStage < questionCreationStages.length-1) // If we're not at the last stage
+			{
+				nextButton.setVisible(true);
+				finishButton.setVisible(false);
+			}
+		}
 	}
 	
 	private void addLabel() // Adds a label component to the question
