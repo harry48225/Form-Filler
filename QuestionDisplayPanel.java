@@ -1,5 +1,7 @@
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -9,7 +11,7 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class QuestionDisplayPanel extends JPanel implements ActionListener
+public class QuestionDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private QuestionList questions;
 	private GUI gui;
@@ -89,6 +91,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanel.setLayout(new GridBagLayout());
 		
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
@@ -127,7 +131,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints);
 		
 		resetButton.addActionListener(this);
-		resetButton.setBackground(Color.RED);
+		resetButton.setBackground(new Color(255,127,127)); // Make the button red
 		resetButton.setForeground(Color.WHITE);
 		sortAndFilterPanelConstraints.gridy = 2;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
@@ -158,9 +162,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		mainPanelConstraints.gridy = 2;
 		mainPanel.add(attemptButton, mainPanelConstraints);
 		
-		// Hide the first column as it contains the id and we don't want that displayed to the user
-		TableColumnModel tcm = questionTable.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(0));
+		prepareTable();
 		
 		populateTable(questions.getArray()); // Populate the table with the questions
 	
@@ -171,6 +173,23 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		this.add(helpButton, BorderLayout.NORTH);
 		
 		this.setVisible(true);
+	}
+	
+	private void prepareTable()
+	{
+		// Hide the first column as it contains the id and we don't want that displayed to the user
+		TableColumnModel tcm = questionTable.getColumnModel();
+
+		tcm.removeColumn(tcm.getColumn(0));
+		
+		for (int i = 0; i < questionTable.getColumnCount(); i++)
+		{
+			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
+		}
+		tcm.addColumnModelListener(this);
+		
+		populateTable(questions.getArray()); // Populate the table with the questions
 	}
 	
 	private void prepareSortPanel()
@@ -187,13 +206,17 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		sortPanelConstraints.weighty = 1; 
 		
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
+		Font currentFont = sortsLabel.getFont();
+		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		sortPanelConstraints.gridy = 1;
 		
 		sortDifficultyButton.addActionListener(this);
+		sortDifficultyButton.setBackground(new Color(169,196,235));
 		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
 		sortPanelConstraints.gridy = 2;
 		sortTypeButton.addActionListener(this);
+		sortTypeButton.setBackground(new Color(169,196,235));
 		sortPanel.add(sortTypeButton, sortPanelConstraints);
 	}
 	
@@ -214,6 +237,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		difficultyFilterPanelConstraints.weighty = 1; 
 		
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
+		Font currentFont = difficultyFilterLabel.getFont();
+		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
 		
 		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -223,6 +248,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		difficultySlider.setPaintLabels(true);
 		
 		difficultyFilterButton.addActionListener(this);
+		difficultyFilterButton.setBackground(new Color(169,196,235));
 		
 		difficultyFilterPanel.add(difficultySlider, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -238,6 +264,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		prepareTypeRadioButtons();
 
 		typeFilterButton.addActionListener(this);
+		typeFilterButton.setBackground(new Color(169,196,235));
 		
 		typeFilterPanel = new JPanel();
 		typeFilterPanel.setLayout(new GridBagLayout());
@@ -251,6 +278,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 		typeFilterPanelConstraints.weighty = 1; 
 		
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
+		Font currentFont = typeFilterLabel.getFont();
+		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
 		
 		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
 		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
@@ -355,6 +384,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 				questionTableModel.addRow(question); // Add the question to the table
 			}
 		}
+		
+		resizeRows();
 	}
 	
 	private void openQuestionInWindow(String questionID) // Opens a question to practise in a window
@@ -452,5 +483,113 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener
 			JOptionPane.showMessageDialog(null, "This is the view questions screen. From here you can select questions and attempt them by \r\n selecting them in the table and pressing the attempt button. You can \r\n filter and sort questions by using the buttons on the right.");
 		}
 	}
+	
+	static class WordWrapHeaderRenderer extends JTextPane implements TableCellRenderer 
+	{
+		public WordWrapHeaderRenderer()
+		{
+			LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(Font.BOLD, 13)); // Make the headers bold
+		}
+		
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			if (value != null) 
+			{
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				setOpaque(false);
+				
+			}
+			return this;
+		}
+		
+		
+	}
+	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
+	{
+		public WordWrapCellRenderer()
+		{
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(11)); // Make the text larger
+		}
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			if (value != null) 
+			{
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				
+				// Colour the cell the highlight colour if it's selected.
+				if(isSelected)
+				{
+					setBackground(table.getSelectionBackground());
+				}
+				else
+				{
+					setBackground(table.getBackground());
+				}
+				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				
+			}
+			return this;
+		}
+	}
+	
+	private void resizeRows()
+	{
+		for (int row = 0; row < questionTable.getRowCount(); row ++)
+		{
+			int requiredHeight = 0;
+			
+			// Go through the columns and get the largest height of all of the components
+			for (int col = 0; col < questionTable.getColumnCount(); col++)
+			{
+				TableCellRenderer cellRenderer = questionTable.getCellRenderer(row, col);
+				Component c = questionTable.prepareRenderer(cellRenderer, row, col);
+				
+				int preferredHeight = c.getPreferredSize().height;
+				
+				if (preferredHeight > requiredHeight)
+				{
+					requiredHeight = preferredHeight;
+				}
+
+			}
+			
+			// Set the height of the row to that height if that's not already the height
+			if (questionTable.getRowHeight(row) != requiredHeight)
+			{
+				questionTable.setRowHeight(row, requiredHeight);
+			}
+		}
+	}
+	
+	public void columnMarginChanged(ChangeEvent e)
+	{
+		resizeRows();
+	}
+	public void columnAdded(TableColumnModelEvent e) {}
+	
+	public void columnRemoved(TableColumnModelEvent e) {}
+	
+	public void columnMoved(TableColumnModelEvent e) {}
+	
+	public void columnSelectionChanged(ListSelectionEvent e) {}
 
 }
