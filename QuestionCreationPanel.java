@@ -23,9 +23,21 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private QuestionPanel.QuestionPanelBuilder questionPanelBeingCreated; // Store the questionPanel that is currently being created
 
 	private JPanel questionPreview; // To show the question being created to the user
+	private JPanel createQuestionPanel; // To store the three steps and the buttons
+	private JPanel addLabelPanel; // The first step of the process
+	private JPanel addComponentPanel; // The second step of the process
+	private JPanel addFinalDetailsPanel; // The final step of the process
+	private JPanel buttonNavigationPanel; // Allows the user to move between parts of the process
+	
+	private JButton nextButton = new JButton("Next"); // Allows the user to go to the next step
+	private JButton backButton = new JButton("Back"); // Allows the user to go to the previous step
+	private JButton finishButton = new JButton("Finish"); // Allows the user to complete the process
+	
+	// For the addLabelPanel
+	private JLabel labelTextLabel = new JLabel("Label text: ");
+	private JTextField labelTextField = new JTextField();
 	
 	private JPanel componentCreationButtons; // Stores the buttons that are used to add components to the question
-	private JButton addLabelButton = new JButton("Add label");
 	private JButton addTextFieldButton = new JButton("Add text field");
 	private JButton addRadioButtonsButton = new JButton("Add radio buttons");
 	private JButton addComboboxButton = new JButton("Add drop-down");
@@ -33,7 +45,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private JButton addPasswordFieldButton = new JButton("Add password field");
 	private JButton addCalendarEntryButton = new JButton("Add calendar entry");
 	private JButton addFileChooserButton = new JButton("Add file chooser");
-	private JButton[] creationButtons = {addLabelButton, addTextFieldButton, addRadioButtonsButton,
+	private JButton[] creationButtons = {addTextFieldButton, addRadioButtonsButton,
 										 addComboboxButton, addCheckboxesButton, addPasswordFieldButton,
 										 addCalendarEntryButton, addFileChooserButton}; // To handle the buttons all at once more easily
 	
@@ -61,15 +73,60 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	}
 	
-	private void prepareMainPanel()
+	private void prepareAddLabelPanel()
+	{
+		addLabelPanel = new JPanel();
+		addLabelPanel.setLayout(new GridBagLayout());
+		GridBagConstraints addLabelConstraints = new GridBagConstraints();
+		
+		
+		addLabelConstraints.fill = GridBagConstraints.BOTH;
+		addLabelConstraints.weightx = 1;
+		addLabelConstraints.weighty = 1;
+		addLabelConstraints.gridx = 0;
+		addLabelConstraints.gridy = 0;
+		addLabelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		
+		addLabelPanel.add(labelTextLabel, addLabelConstraints);
+		
+		addLabelConstraints.gridx = 1;
+		
+		addLabelPanel.add(labelTextField, addLabelConstraints);
+		
+		addLabelPanel.setMaximumSize(new Dimension(1000, 80));
+		addLabelPanel.setPreferredSize(new Dimension(1000, 80));
+	}
+	
+	private void prepareAddComponentPanel()
 	{
 		
-		this.setLayout(new GridLayout(0,1));
+	}
+	
+	private void prepareEnterFinalDetailsPanel()
+	{
+	}
+	
+	private void prepareCreateQuestionPanel() // The lower half of the screen concerned with inputting the information
+	{
+		createQuestionPanel = new JPanel();
 		
-	
-		prepareVisualRepresentation();
-	
-		this.add(questionPreview);
+		// Setup the border
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Create question");
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		createQuestionPanel.setBorder(border); // Set the border
+		
+		// Setup the layout
+		createQuestionPanel.setLayout(new BoxLayout(createQuestionPanel, BoxLayout.PAGE_AXIS)); // Create a new box layout that adds components top to bottom
+		
+		prepareAddLabelPanel();
+		
+		prepareAddComponentPanel();
+		
+		prepareEnterFinalDetailsPanel();
+		
+		/*
 		
 		prepareComponentCreationButtons();
 
@@ -80,8 +137,87 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		allButtons.add(componentCreationButtons);
 		allButtons.add(saveQuestionButton);
+		*/
+		
+		createQuestionPanel.add(Box.createVerticalGlue());
+		createQuestionPanel.add(addLabelPanel);
+		createQuestionPanel.add(Box.createVerticalGlue());
+		
+		// Setup the next back and finish buttons
+		prepareButtonNavigationPanel();
+		
+		createQuestionPanel.add(buttonNavigationPanel);
+		
+	}
 	
-		this.add(allButtons);
+	private void prepareButtonNavigationPanel()
+	{
+		buttonNavigationPanel = new JPanel();
+		buttonNavigationPanel.setLayout(new BoxLayout(buttonNavigationPanel, BoxLayout.LINE_AXIS)); // Create a new box layout left to right
+		
+		// Set the correct colours
+		nextButton.setBackground(new Color(169,196,235));
+		backButton.setBackground(new Color(255,127,127));
+		finishButton.setBackground(new Color(130,183,75));
+		
+		// Add the action listener
+		nextButton.addActionListener(this);
+		backButton.addActionListener(this);
+		finishButton.addActionListener(this);
+		
+		// Set the correct preferred sizes for the buttons
+		nextButton.setMaximumSize(new Dimension(175, 60));
+		nextButton.setPreferredSize(new Dimension(175, 60));
+		
+		backButton.setMaximumSize(new Dimension(175, 60));
+		backButton.setPreferredSize(new Dimension(175, 60));
+		
+		finishButton.setMaximumSize(new Dimension(175, 60));
+		finishButton.setPreferredSize(new Dimension(175, 60));
+		
+		// Hide the back and finish button
+		nextButton.setVisible(true);
+		backButton.setVisible(false);
+		finishButton.setVisible(false);
+		
+		buttonNavigationPanel.add(backButton);
+		buttonNavigationPanel.add(Box.createHorizontalGlue()); // This is invisible and will fill the space between the buttons as the window is resized.
+		// It keeps the buttons at the far edges.
+		
+		buttonNavigationPanel.add(nextButton);
+		buttonNavigationPanel.add(finishButton);
+		
+		buttonNavigationPanel.setMaximumSize(new Dimension(1000, 60));
+	}
+	
+	private void prepareMainPanel()
+	{
+		
+		this.setLayout(new GridBagLayout());
+		
+		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
+		mainPanelConstraints.fill = GridBagConstraints.BOTH;
+
+		mainPanelConstraints.weightx = 1;
+		mainPanelConstraints.weighty = 1;
+		mainPanelConstraints.gridx = 0;
+		mainPanelConstraints.gridy = 0;
+
+		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		
+	
+		prepareVisualRepresentation();
+	
+		this.add(questionPreview, mainPanelConstraints);
+		
+		prepareCreateQuestionPanel();
+		
+		mainPanelConstraints.gridy = 1;
+		
+		this.add(createQuestionPanel, mainPanelConstraints);
+		
+	
+		//this.add(allButtons);
 		
 		this.setVisible(true);
 	}
@@ -122,13 +258,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	public void actionPerformed(ActionEvent evt)
 	{
-		if (evt.getSource() == addLabelButton) // If the add label button was pressed
-		{
-			System.out.println("[INFO] <QUESTION_CREATION_PANEL> addLabelButton pressed");
-			
-			addLabel();
-		}
-		else if (evt.getSource() == addTextFieldButton) // If the add text field button was pressed
+		if (evt.getSource() == addTextFieldButton) // If the add text field button was pressed
 		{
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> addTextFieldButton pressed");
 			
@@ -189,6 +319,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 				
 				JOptionPane.showMessageDialog(null, "Question saved!");
 			}
+		}
+		else if (evt.getSource() == nextButton)
+		{
+			System.out.println("[INFO] <QUESTION_CREATION_PANEL> nextButton pressed");
 		}
 	}
 	
