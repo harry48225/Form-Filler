@@ -50,6 +50,9 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	private JPanel typeCheckBoxPanel = new JPanel();
 	private JButton typeFilterButton = new JButton("Apply main skills tested filter");
 	
+	private ImageIcon filterIcon;
+	private JLabel filterIconLabel;
+	
 	private JButton resetButton = new JButton("Reset sorts and filters"); // To reset the sorts and filters
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
@@ -145,14 +148,15 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		attemptButton.addActionListener(this);
 		attemptButton.setBackground(new Color(130,183,75));
 
+	
 		mainPanelConstraints.gridheight = 1;
 		mainPanelConstraints.weightx = 0.1;
 		
-		mainPanelConstraints.gridx = 1;
+		mainPanelConstraints.gridx = 2;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
 		
 		mainPanelConstraints.weighty = 0.2;
-		mainPanelConstraints.gridx = 1;
+		mainPanelConstraints.gridx = 2;
 		mainPanelConstraints.gridy = 1;
 		
 		if (adminMode) // Add the delete question button if the user is an admin
@@ -211,6 +215,17 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 	private void prepareSortPanel()
 	{
+		
+		// Setup the filter icon
+		// Even though this is the sorts panel and not a filter panel we are putting 
+		// the icon here because this is the place that looks
+		// best and most closely matches the design.
+		filterIcon = new ImageIcon("filter.png");
+		filterIcon = new ImageIcon(filterIcon.getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT)); // Make the icon smaller
+		filterIconLabel = new JLabel();
+		filterIconLabel.setIcon(filterIcon);
+		filterIconLabel.setVisible(false); // Make it invisble by default
+		
 		sortPanel = new JPanel();
 		sortPanel.setLayout(new GridBagLayout());
 		
@@ -224,6 +239,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		sortPanel.add(sortsLabel, sortPanelConstraints);
+		
+		sortPanel.add(filterIconLabel, sortPanelConstraints);
 		sortPanelConstraints.gridy = 1;
 		
 		sortDifficultyButton.addActionListener(this);
@@ -358,6 +375,16 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		else if (typeFilter)
 		{
 			formData = forms.filterByType(getTypesSelected());
+		}
+		
+		// Show the sort icon if a sort has been applied
+		if (difficultyFilter || typeFilter)
+		{
+			filterIconLabel.setVisible(true);
+		}
+		else
+		{
+			filterIconLabel.setVisible(false);
 		}
 		
 		populateTable(formData);
