@@ -497,6 +497,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				setText(value.toString());
 				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
 				
+				
 				if(isSelected)
 				{
 					setBackground(table.getSelectionBackground());
@@ -505,6 +506,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				{
 					setBackground(table.getBackground());
 				}
+				
 				
 			}
 			return this;
