@@ -140,7 +140,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints);
 		
 		resetButton.addActionListener(this);
-		resetButton.setBackground(Color.RED);
+		resetButton.setBackground(new Color(255,127,127)); // Make the button red
 		resetButton.setForeground(Color.WHITE);
 		sortAndFilterPanelConstraints.gridy = 2;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
