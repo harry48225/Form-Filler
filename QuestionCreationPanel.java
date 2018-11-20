@@ -29,6 +29,9 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private JPanel addFinalDetailsPanel; // The final step of the process
 	private JPanel buttonNavigationPanel; // Allows the user to move between parts of the process
 	
+	private JPanel[] questionCreationStages;
+	private int currentStage = 0;
+	
 	private JButton nextButton = new JButton("Next"); // Allows the user to go to the next step
 	private JButton backButton = new JButton("Back"); // Allows the user to go to the previous step
 	private JButton finishButton = new JButton("Finish"); // Allows the user to complete the process
@@ -99,11 +102,12 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareAddComponentPanel()
 	{
-		
+		addComponentPanel = new JPanel();
 	}
 	
 	private void prepareEnterFinalDetailsPanel()
 	{
+		addFinalDetailsPanel = new JPanel();
 	}
 	
 	private void prepareCreateQuestionPanel() // The lower half of the screen concerned with inputting the information
@@ -126,6 +130,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		prepareEnterFinalDetailsPanel();
 		
+		questionCreationStages = new JPanel[] {addLabelPanel, addComponentPanel, addFinalDetailsPanel};
+		
 		/*
 		
 		prepareComponentCreationButtons();
@@ -145,6 +151,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		// Setup the next back and finish buttons
 		prepareButtonNavigationPanel();
+		
 		
 		createQuestionPanel.add(buttonNavigationPanel);
 		
@@ -323,6 +330,21 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		else if (evt.getSource() == nextButton)
 		{
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> nextButton pressed");
+			
+			questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
+			currentStage++;
+			questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
+			
+			if (currentStage > 0) // Show the back button if we're not on the first stage
+			{
+				backButton.setVisible(true);
+			}
+			
+			if (currentStage == questionCreationStages.length-1) // If we're at the last stage
+			{
+				nextButton.setVisible(false);
+				finishButton.setVisible(true);
+			}
 		}
 	}
 	
