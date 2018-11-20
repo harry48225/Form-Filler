@@ -249,6 +249,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortPanelConstraints.gridy = 1;
 		
 		sortDifficultyButton.addActionListener(this);
+		sortDifficultyButton.setBackground(new Color(169,196,235));
 		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
 	}
 	
@@ -280,6 +281,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		difficultySlider.setPaintLabels(true);
 		
 		difficultyFilterButton.addActionListener(this);
+		difficultyFilterButton.setBackground(new Color(169,196,235));
 		
 		difficultyFilterPanel.add(difficultySlider, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -295,6 +297,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		prepareTypeCheckBoxes();
 
 		typeFilterButton.addActionListener(this);
+		typeFilterButton.setBackground(new Color(169,196,235));
 		
 		typeFilterPanel = new JPanel();
 		typeFilterPanel.setLayout(new GridBagLayout());

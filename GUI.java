@@ -25,7 +25,6 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void setup()
 	{
-		
 		System.out.println("[INFO] <GUI> Running setup"); // Debug
 		
 		//this.addWindowListener(this);
