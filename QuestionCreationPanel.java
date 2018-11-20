@@ -102,7 +102,15 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareAddComponentPanel()
 	{
+		prepareComponentCreationButtons();
+		
 		addComponentPanel = new JPanel();
+		addComponentPanel.setLayout(new GridLayout(1,1));
+		
+		addComponentPanel.add(componentCreationButtons);
+		
+		addComponentPanel.setMaximumSize(new Dimension(800, 200));
+		addComponentPanel.setPreferredSize(new Dimension(800, 200));
 	}
 	
 	private void prepareEnterFinalDetailsPanel()
@@ -124,9 +132,14 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		// Setup the layout
 		createQuestionPanel.setLayout(new BoxLayout(createQuestionPanel, BoxLayout.PAGE_AXIS)); // Create a new box layout that adds components top to bottom
 		
+		createQuestionPanel.setMaximumSize(new Dimension(1500, 900));
+		createQuestionPanel.setPreferredSize(new Dimension(900, 300));
+		
+		
 		prepareAddLabelPanel();
 		
 		prepareAddComponentPanel();
+		addComponentPanel.setVisible(false);
 		
 		prepareEnterFinalDetailsPanel();
 		
@@ -147,6 +160,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		createQuestionPanel.add(Box.createVerticalGlue());
 		createQuestionPanel.add(addLabelPanel);
+		createQuestionPanel.add(addComponentPanel);
 		createQuestionPanel.add(Box.createVerticalGlue());
 		
 		// Setup the next back and finish buttons
@@ -200,29 +214,21 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private void prepareMainPanel()
 	{
 		
-		this.setLayout(new GridBagLayout());
-		
-		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
-		mainPanelConstraints.fill = GridBagConstraints.BOTH;
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		mainPanelConstraints.weightx = 1;
-		mainPanelConstraints.weighty = 1;
-		mainPanelConstraints.gridx = 0;
-		mainPanelConstraints.gridy = 0;
-
-		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
+		this.add(Box.createVerticalGlue());
 		
-	
 		prepareVisualRepresentation();
 	
-		this.add(questionPreview, mainPanelConstraints);
+		this.add(questionPreview);
+		
+		this.add(Box.createVerticalGlue());
 		
 		prepareCreateQuestionPanel();
 		
-		mainPanelConstraints.gridy = 1;
+		this.add(createQuestionPanel);
 		
-		this.add(createQuestionPanel, mainPanelConstraints);
-		
+		this.add(Box.createVerticalGlue());
 	
 		//this.add(allButtons);
 		
@@ -233,7 +239,13 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	{
 		componentCreationButtons = new JPanel();
 		
-		componentCreationButtons.setLayout(new GridLayout(0,2)); // Infinite rows only 2 columns
+		JPanel row1 = new JPanel();
+		JPanel row2 = new JPanel();
+		
+		row1.setLayout(new BoxLayout(row1, BoxLayout.LINE_AXIS));
+		row2.setLayout(new BoxLayout(row2, BoxLayout.LINE_AXIS));
+		
+		componentCreationButtons.setLayout(new GridLayout(2,1)); // 2 rows 1 column
 		
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Create components");
 		
@@ -241,11 +253,37 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		componentCreationButtons.setBorder(border); // Set the border
 		
+		// Add action listeners to all buttons
+		// Also set the sizes and colours
+		Dimension buttonSize = new Dimension(175,60);
 		for (JButton b : creationButtons) // For each button
 		{
 			b.addActionListener(this);
-			componentCreationButtons.add(b);
+			b.setMaximumSize(buttonSize);
+			b.setPreferredSize(buttonSize);
+			b.setBackground(new Color(169,196,235));
 		}
+		
+		// 4 Buttons on row 1
+		row1.add(creationButtons[0]);
+		row1.add(Box.createHorizontalGlue());
+		row1.add(creationButtons[1]);
+		row1.add(Box.createHorizontalGlue());
+		row1.add(creationButtons[2]);
+		row1.add(Box.createHorizontalGlue());
+		row1.add(creationButtons[3]);
+		
+		// 3 Buttons on row 2
+		row2.add(Box.createHorizontalGlue());
+		row2.add(creationButtons[4]);
+		row2.add(Box.createHorizontalGlue());
+		row2.add(creationButtons[5]);
+		row2.add(Box.createHorizontalGlue());
+		row2.add(creationButtons[6]);
+		row2.add(Box.createHorizontalGlue());
+		
+		componentCreationButtons.add(row1);
+		componentCreationButtons.add(row2);
 		
 	}
 	
@@ -260,6 +298,9 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
 		questionPreview.setBorder(border); // Set the border
+		
+		questionPreview.setPreferredSize(new Dimension(600,300));
+		questionPreview.setMaximumSize(new Dimension(800,700));
 		
 	}
 	
