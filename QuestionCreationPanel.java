@@ -126,6 +126,21 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addComponentPanel.setPreferredSize(new Dimension(800, 200));
 	}
 	
+	private void updateTypeComboBox()
+	{
+		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running updateTypeComboBox");
+		// Add all of the type to the combo box and  
+		// a "Please select an option"
+		
+		questionTypeCombobox.removeAllItems();
+		questionTypeCombobox.addItem("Please select a type");
+		for (String type : questions.getTypes())
+		{
+			questionTypeCombobox.addItem(type);
+		}
+		
+	}
+	
 	private void prepareEnterFinalDetailsPanel()
 	{
 		addFinalDetailsPanel = new JPanel();
@@ -150,6 +165,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addFinalDetailsConstraints.gridx = 0;
 		addFinalDetailsPanel.add(questionTypeLabel, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 1;
+		
+		updateTypeComboBox();
 		addFinalDetailsPanel.add(questionTypeCombobox, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 2;
 		newTypeButton.addActionListener(this);
@@ -161,6 +178,9 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addFinalDetailsConstraints.gridx = 0;
 		addFinalDetailsPanel.add(questionDifficultyLabel, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 1;
+		
+		questionDifficultyCombobox = new JComboBox<String>(new String[] {"Please select a difficulty", "1", "2", "3", "4", "5", 
+																	      "6", "7", "8", "9", "10"});
 		addFinalDetailsPanel.add(questionDifficultyCombobox, addFinalDetailsConstraints);
 		
 		addFinalDetailsPanel.setMaximumSize(new Dimension(1000, 180));
@@ -442,6 +462,20 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> backButton pressed");
 			goBackward();
 		}
+		else if (evt.getSource() == newTypeButton)
+		{
+			System.out.println("[INFO] <QUESTION_CREATION_PANEL> newTypeButton pressed");
+			addNewType();
+		}
+	}
+	
+	private void addNewType()
+	{
+		type = JOptionPane.showInputDialog("What's the question's type?"); // Get the type
+		questions.addType(type); // Add the type to the type list
+		updateTypeComboBox();
+		questionTypeCombobox.setSelectedIndex(questions.getTypes().length); // Select the most recently added type
+		this.revalidate(); // Update the window
 	}
 	
 	private void goForward() // Goes forward a step
@@ -644,45 +678,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private void getFinalDetails() // Gets the type and difficulty of the question from the user
 	{
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running getFinalDetails"); // Debug
-		getType();
+		//getType();
 		difficulty = Integer.parseInt(JOptionPane.showInputDialog("What's the question's difficulty?")); // Get the question's difficulty
 	}
-	
-	private void getType()
-	{
-		String[] types = questions.getTypes();
-		String[] options = new String[types.length + 1];
-		
-		for (int i = 0; i <= types.length; i++) // For each type of question
-		{
-			
-			if (i == types.length)
-			{
-				options[i] = "New type"; // Add a new type opiton
-			}
-			else
-			{
-				options[i] = types[i]; 
-			}
-		}
-		
-		type = (String)JOptionPane.showInputDialog(
-                    null,
-                    "What's the question's type?",
-                    "Type?",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    options,
-                    options[0]); // Show the user a dropdown with all the current question types
-
-		if (type.equals("New type")) // If they selected new type
-		{
-			System.out.println(type);
-			type = JOptionPane.showInputDialog("What's the question's type?"); // Get the type
-			questions.addType(type); // Add the type to the type list
-		}
-		
-	}
-	
 	
 }
