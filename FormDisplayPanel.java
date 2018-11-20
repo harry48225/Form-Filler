@@ -24,7 +24,10 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	private JButton helpButton = new JButton("Help");
 	
 	// For the view table
-	private String[] tableHeaders = new String[] {"ID","Title", "Description", "Main Skills Tested","Difficulty", "Percent Complete", "Times completed"}; // The headers for the table
+	private String[] tableHeaders = new String[] {"ID","Title", "Description", 
+												  "Main Skills Tested",
+												  "Difficulty", "Percent Complete",
+												  "Times Completed"}; // The headers for the table
 	private String[][] formData = new String[0][0];
 	private DefaultTableModel formTableModel = new DefaultTableModel(formData, tableHeaders);
 	private JTable formTable = new JTable(formTableModel); // Create a table to hold the questions
@@ -175,10 +178,15 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		for (int i = 0; i < formTable.getColumnCount(); i++)
 		{
-			WordWrapCellRenderer cRenderer = new WordWrapCellRenderer();
-			tcm.getColumn(i).setCellRenderer(cRenderer);
+			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
 		}
 		tcm.addColumnModelListener(this);
+		
+		//formTable.setColumnWidth(3, 50);
+		//formTable.setColumnWidth(4, 50);
+		//formTable.setColumnWidth(5, 50);
+		
 		populateTable(forms.getArray()); // Populate the table with the questions
 	
 		this.add(mainPanel, BorderLayout.CENTER);
@@ -480,6 +488,34 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 	}
 	
+	static class WordWrapHeaderRenderer extends JTextPane implements TableCellRenderer 
+	{
+		public WordWrapHeaderRenderer()
+		{
+			LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
+		}
+		
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			if (value != null) 
+			{
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				setOpaque(false);
+				
+			}
+			return this;
+		}
+		
+		
+	}
 	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
 	{
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
@@ -509,7 +545,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				
 			}
 			return this;
-
 		}
 	}
 	
