@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +10,7 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class FormDisplayPanel extends JPanel implements ActionListener
+public class FormDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private FormList forms;
 	private QuestionList questions;
@@ -168,9 +169,16 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
+
 		tcm.removeColumn(tcm.getColumn(0));
-		tcm.getColumn(3).setCellRenderer(new WordWrapCellRenderer());
-		
+		//formTable.setDefaultRenderer(String.class, new WordWrapCellRenderer());
+		for (int i = 0; i < formTable.getColumnCount(); i++)
+		{
+			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+		}
+		//tcm.getColumn(2).setCellRenderer(new WordWrapCellRenderer());
+		//tcm.getColumn(0).setCellRenderer(new WordWrapCellRenderer());
+		tcm.addColumnModelListener(this);
 		populateTable(forms.getArray()); // Populate the table with the questions
 	
 		this.add(mainPanel, BorderLayout.CENTER);
@@ -474,6 +482,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 	
 	static class WordWrapCellRenderer extends JTextArea implements TableCellRenderer 
 	{
+		
 		public WordWrapCellRenderer() 
 		{
 			setLineWrap(true);
@@ -482,14 +491,61 @@ public class FormDisplayPanel extends JPanel implements ActionListener
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 		{
-			setText(value.toString());
-			setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
-			if (table.getRowHeight(row) != getPreferredSize().height) 
+			if (value != null) 
 			{
-				table.setRowHeight(row, getPreferredSize().height);
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				if(isSelected)
+				{
+					setBackground(table.getSelectionBackground());
+				}
+				else
+				{
+					setBackground(table.getBackground());
+				}
+				
 			}
 			return this;
+
 		}
 	}
+	
+	public void columnMarginChanged(ChangeEvent e)
+	{
+		for (int row = 0; row < formTable.getRowCount(); row ++)
+		{
+			int requiredHeight = 0;
+			
+			// Go through the columns and get the largest height of all of the components
+			for (int col = 0; col < formTable.getColumnCount(); col++)
+			{
+				TableCellRenderer cellRenderer = formTable.getCellRenderer(row, col);
+				Component c = formTable.prepareRenderer(cellRenderer, row, col);
+				
+				int preferredHeight = c.getPreferredSize().height;
+				
+				if (preferredHeight > requiredHeight)
+				{
+					requiredHeight = preferredHeight;
+				}
+
+			}
+			
+			// Set the height of the row to that height if that's not already the height
+			if (formTable.getRowHeight(row) != requiredHeight)
+			{
+				formTable.setRowHeight(row, requiredHeight);
+			}
+		}
+	}
+	public void columnAdded(TableColumnModelEvent e) {}
+	
+	public void columnRemoved(TableColumnModelEvent e) {}
+	
+	public void columnMoved(TableColumnModelEvent e) {}
+	
+	public void columnSelectionChanged(ListSelectionEvent e) {}
 
 }
