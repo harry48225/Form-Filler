@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -171,13 +172,12 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		TableColumnModel tcm = formTable.getColumnModel();
 
 		tcm.removeColumn(tcm.getColumn(0));
-		//formTable.setDefaultRenderer(String.class, new WordWrapCellRenderer());
+		
 		for (int i = 0; i < formTable.getColumnCount(); i++)
 		{
-			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+			WordWrapCellRenderer cRenderer = new WordWrapCellRenderer();
+			tcm.getColumn(i).setCellRenderer(cRenderer);
 		}
-		//tcm.getColumn(2).setCellRenderer(new WordWrapCellRenderer());
-		//tcm.getColumn(0).setCellRenderer(new WordWrapCellRenderer());
 		tcm.addColumnModelListener(this);
 		populateTable(forms.getArray()); // Populate the table with the questions
 	
@@ -480,15 +480,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 	}
 	
-	static class WordWrapCellRenderer extends JTextArea implements TableCellRenderer 
+	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
 	{
-		
-		public WordWrapCellRenderer() 
-		{
-			setLineWrap(true);
-			setWrapStyleWord(true);
-		}
-
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
 		{
 			if (value != null) 
@@ -498,6 +491,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
 				
 				
+				// Colour the cell the highlight colour if it's selected.
 				if(isSelected)
 				{
 					setBackground(table.getSelectionBackground());
@@ -507,6 +501,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 					setBackground(table.getBackground());
 				}
 				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
 				
 			}
 			return this;
