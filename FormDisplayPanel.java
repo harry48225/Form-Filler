@@ -400,8 +400,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 		
 		populateTable(formData);
-		
-		this.repaint();
 	}
 	
 	private void clearCheckboxes()
