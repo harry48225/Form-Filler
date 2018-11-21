@@ -26,6 +26,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private JComponent[] questionComponents = new JComponent[2]; // Each question will only have 2 components
 	
 	private JPanel questionPreview; // To show the question being created to the user
+	private JPanel questionPreviewOuter;
 	private JPanel createQuestionPanel; // To store the three steps and the buttons
 	private JPanel addLabelPanel; // The first step of the process
 	private JPanel addComponentPanel; // The second step of the process
@@ -281,7 +282,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		prepareVisualRepresentation();
 	
-		this.add(questionPreview);
+		this.add(questionPreviewOuter);
 		
 		this.add(Box.createVerticalGlue());
 		
@@ -350,7 +351,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareVisualRepresentation()
 	{
+		questionPreviewOuter = new JPanel();
 		questionPreview = new JPanel(); // Make the panel
+		
+		questionPreviewOuter.setLayout(new BoxLayout(questionPreviewOuter, BoxLayout.LINE_AXIS)); // Horizontal box layout
 		
 		questionPreview.setLayout(new GridLayout(0,2)); // Set the correct layout
 		
@@ -358,10 +362,17 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
-		questionPreview.setBorder(border); // Set the border
+		questionPreviewOuter.setBorder(border); // Set the border
 		
-		questionPreview.setPreferredSize(new Dimension(600,300));
-		questionPreview.setMaximumSize(new Dimension(800,700));
+		questionPreviewOuter.add(Box.createHorizontalGlue());
+		questionPreviewOuter.add(questionPreview);
+		questionPreviewOuter.add(Box.createHorizontalGlue());
+		
+		questionPreviewOuter.setPreferredSize(new Dimension(600,300));
+		questionPreviewOuter.setMaximumSize(new Dimension(800,700));
+		
+		questionPreview.setPreferredSize(new Dimension(400,50));
+		questionPreview.setMaximumSize(new Dimension(600,80));
 		
 	}
 	
