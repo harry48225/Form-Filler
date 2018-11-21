@@ -4,12 +4,10 @@ import java.awt.event.*;
 
 public class EnterOptionsPanel extends JPanel implements ActionListener
 {
-	private String[] options = new String[100];
-	private int nextOptionLocation = 0;
-	
 	private JLabel optionListHeader = new JLabel("Options", SwingConstants.CENTER); 
 	private DefaultListModel<String> optionListModel = new DefaultListModel<String>();
 	private JList<String> optionList = new JList<String>(optionListModel);
+	private JScrollPane optionScoller = new JScrollPane();
 	
 	private JLabel headerLabel = new JLabel("What options are required?", SwingConstants.CENTER);
 	private JLabel optionLabel = new JLabel("Option:", SwingConstants.CENTER);
@@ -53,7 +51,8 @@ public class EnterOptionsPanel extends JPanel implements ActionListener
 		constraints.gridy = 2;
 		this.add(optionLabel, constraints);
 		constraints.gridx = 1;
-		constraints.weightx = 0.5;
+		constraints.weightx = 1;
+		optionField.addActionListener(this);
 		this.add(optionField, constraints);
 		
 		// Add the buttons
@@ -81,21 +80,47 @@ public class EnterOptionsPanel extends JPanel implements ActionListener
 		this.add(optionListHeader, constraints);
 		
 		// Add the JList
+		optionScoller.setViewportView(optionList);
+		optionList.setLayoutOrientation(JList.VERTICAL);
 		constraints.weighty = 1;
 		constraints.gridy = 2;
 		constraints.gridheight = 3;
-		this.add(optionList, constraints);
+		this.add(optionScoller, constraints);
 
 	}
 	
 	public String[] getOptions()
 	{
-		return null;
-		// Returns a trimmed list of the options
+		return (String[]) optionListModel.toArray();
 	}
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		
+		if (e.getSource() == addOptionButton)
+		{
+			System.out.println("[INFO] <ENTER_OPTIONS_PANEL> addOptionButton pressed"); // Debug
+			
+			// Only add the option if the user has actually entered an option
+			if (!optionField.getText().isEmpty())
+			{
+				optionListModel.addElement(optionField.getText());
+				optionField.setText(""); // Clear the text field
+				System.out.println("[INFO] <ENTER_OPTIONS_PANEL> Option added"); // Debug
+			}
+		}
+		else if (e.getSource() == optionField) // If enter was pressed in the text field simulate a click of the addOption button
+		{
+			addOptionButton.doClick();
+		}
+		else if (e.getSource() == deleteOptionButton)
+		{
+			System.out.println("[INFO] <ENTER_OPTIONS_PANEL> deleteOptionButton pressed"); // Debug
+			// Only add the option if the user has actually entered an option
+			if (optionList.getSelectedValue() != null)
+			{
+				optionListModel.removeElement(optionList.getSelectedValue()); // Remove the selected value
+				System.out.println("[INFO] <ENTER_OPTIONS_PANEL> Option deleted"); // Debug
+			}
+		}
 	}
 }
