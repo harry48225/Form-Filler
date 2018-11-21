@@ -71,7 +71,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 			
 		GridBagLayout layout = new GridBagLayout(); // Create a new grid bag layout
 		
-		mainPanel.setLayout(layout); // Get the layout
+		mainPanel.setLayout(layout); // Set the layout
 		
 		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
 		mainPanelConstraints.fill = GridBagConstraints.BOTH;

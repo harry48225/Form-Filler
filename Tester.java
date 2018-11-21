@@ -25,7 +25,13 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testDatePicker();
 		//t.testUser();
 		//t.testQuestionStat();
-		t.testFormInProgress();
+		//t.testFormInProgress();
+		t.testOptionsPanel();
+	}
+	
+	public void testOptionsPanel()
+	{
+		int result = JOptionPane.showConfirmDialog(null, new EnterOptionsPanel(), "Enter options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	public void testFormInProgress()
