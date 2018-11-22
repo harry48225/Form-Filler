@@ -65,7 +65,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private JTextField questionTitleField = new JTextField();
 	private JComboBox<String> questionTypeCombobox = new JComboBox<String>();
-	private JComboBox<String> questionDifficultyCombobox = new JComboBox<String>();
+	private JComboBox<String> questionDifficultyCombobox = new JComboBox<String>(new String[] {"Please select a difficulty", "1", "2", "3", "4", "5", 
+																								"6", "7", "8", "9", "10"});
 	private JButton newTypeButton = new JButton("New type");
 	
 	private JButton saveQuestionButton = new JButton("Save Question");
@@ -184,8 +185,6 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addFinalDetailsPanel.add(questionDifficultyLabel, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 1;
 		
-		questionDifficultyCombobox = new JComboBox<String>(new String[] {"Please select a difficulty", "1", "2", "3", "4", "5", 
-																	      "6", "7", "8", "9", "10"});
 		addFinalDetailsPanel.add(questionDifficultyCombobox, addFinalDetailsConstraints);
 		
 		addFinalDetailsPanel.setMaximumSize(new Dimension(1000, 180));

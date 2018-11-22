@@ -28,7 +28,19 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private JButton addQuestionButton = new JButton("Add");
 	
-	private JPanel editFormPanel;
+	// Form information panel
+	private JPanel formInformationPanel = new JPanel();
+	private JLabel formTitleLabel = new JLabel("Form title");
+	private JLabel formDifficultyLabel = new JLabel("Form difficulty");
+	private JLabel formDescriptionLabel = new JLabel("Form description");
+	private JTextField formTitleField = new JTextField();
+	private JComboBox<String> formDifficultyCombobox = new JComboBox<String>(new String[] {"Please select a difficulty", "1", "2", "3", "4", "5", 
+																								"6", "7", "8", "9", "10"});
+	private JTextArea formDescriptionField = new JTextArea(5, 20); // 5 rows 20 columns (hints)
+	private JScrollPane formDescriptionScroller = new JScrollPane(formDescriptionField);
+	
+	// Edit form panel
+	private JPanel editFormPanel = new JPanel();
 	private JLabel editFormLabel = new JLabel("Select a form to edit");
 	private JComboBox<String> editFormComboBox;
 	private JButton editFormButton = new JButton("Edit form");
@@ -58,6 +70,53 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	}
 	
+	private void prepareInformationPanel()
+	{
+		formInformationPanel.setLayout(new BoxLayout(formInformationPanel, BoxLayout.PAGE_AXIS));
+		
+		// Add the border
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Form information");
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		formInformationPanel.setBorder(border);
+		
+		formInformationPanel.setPreferredSize(new Dimension(1000, 300));
+		formInformationPanel.setMaximumSize(new Dimension(1000, 500));
+		
+		// Form description field setup
+		formDescriptionField.setEditable(true);
+		formDescriptionField.setLineWrap(true);
+		formDescriptionField.setWrapStyleWord(true);
+		
+		JPanel titlePanel = new JPanel();
+		JPanel difficultyPanel = new JPanel();
+		JPanel descriptionPanel = new JPanel();
+		
+		titlePanel.setLayout(new GridLayout(1,2));
+		difficultyPanel.setLayout(new GridLayout(1,2));
+		descriptionPanel.setLayout(new GridLayout(1,2));
+		
+		formTitleField.setMaximumSize(new Dimension(1000, 40));
+		formTitleField.setPreferredSize(new Dimension(1000, 40));
+		descriptionPanel.setMaximumSize(new Dimension(1000, 80));
+		
+		// Do each row one at a time
+		titlePanel.add(formTitleLabel);
+		titlePanel.add(formTitleField);
+		
+		difficultyPanel.add(formDifficultyLabel);
+		difficultyPanel.add(formDifficultyCombobox);
+		
+		descriptionPanel.add(formDescriptionLabel);
+		descriptionPanel.add(formDescriptionScroller);
+		
+		// Add them to the information panel
+		formInformationPanel.add(titlePanel);
+		formInformationPanel.add(Box.createVerticalGlue());
+		formInformationPanel.add(difficultyPanel);
+		formInformationPanel.add(Box.createVerticalGlue());
+		formInformationPanel.add(descriptionPanel);
+	}
+	
 	private void prepareEditPanel()
 	{
 		
@@ -73,8 +132,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		
 		editFormComboBox = new JComboBox<String>(formIDs); // Fill the combobox with the ids
-		
-		editFormPanel = new JPanel();
 		
 		editFormPanel.setLayout(new BoxLayout(editFormPanel, BoxLayout.LINE_AXIS)); // Only 1 row
 		
@@ -92,8 +149,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Edit Forms");
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
-		//Font currentFont = border.getTitleFont();
-		//border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
 		
 		editFormPanel.setBorder(border);
 	}
@@ -110,9 +165,14 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		entryContainerPanel.add(editFormPanel);
 		
+		prepareInformationPanel();
+		
+		entryContainerPanel.add(formInformationPanel);
+		
 		prepareQuestionSelectionPanel();
 		
 		entryContainerPanel.add(selectionPanel);
+		
 		entryContainerPanel.add(saveFormButton);
 		
 		prepareFormPreview();
