@@ -370,10 +370,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		questionPreviewOuter.add(Box.createHorizontalGlue());
 		
 		questionPreviewOuter.setPreferredSize(new Dimension(600,300));
-		questionPreviewOuter.setMaximumSize(new Dimension(800,700));
+		questionPreviewOuter.setMaximumSize(new Dimension(1000,700));
 		
-		questionPreview.setPreferredSize(new Dimension(400,50));
-		questionPreview.setMaximumSize(new Dimension(600,80));
+		questionPreview.setPreferredSize(new Dimension(800,50));
+		questionPreview.setMaximumSize(new Dimension(900,80));
 		
 	}
 	
