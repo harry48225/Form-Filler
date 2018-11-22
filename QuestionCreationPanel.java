@@ -739,7 +739,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		int result = JOptionPane.showConfirmDialog(null, optionEntry, "Enter options", 
 																		JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 																		
-		return result == JOptionPane.YES_OPTION ? true : false;
+		return result == JOptionPane.YES_OPTION && optionEntry.getOptions().length > 0; // Return true if they pressed ok and entered at least 1 option
 	}
 	private void getFinalDetails() // Gets the type and difficulty of the question from the user
 	{
