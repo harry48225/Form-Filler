@@ -114,6 +114,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTable()
 	{
+		questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
 
