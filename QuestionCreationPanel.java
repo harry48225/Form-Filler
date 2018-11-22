@@ -57,6 +57,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 										 addCalendarEntryButton, addFileChooserButton}; // To handle the buttons all at once more easily
 	
 	
+	private EnterOptionsPanel optionEntry = new EnterOptionsPanel();
 	// For the add final details panel
 	private JLabel questionTitleLabel = new JLabel("Question title");
 	private JLabel questionTypeLabel = new JLabel("Question type");
@@ -596,52 +597,62 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addCombobox"); // Debug
 		
-		String[] options = getOptions();
-		String[] adjustedOptions = new String[options.length + 1]; // Create a new array with room for the select an option
-		
-		for (int i=0; i<adjustedOptions.length; i++)
+		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-			if (i == 0) // If it 's the first option
+			String[] options = optionEntry.getOptions();
+			String[] adjustedOptions = new String[options.length + 1]; // Create a new array with room for the select an option
+			
+			for (int i=0; i<adjustedOptions.length; i++)
 			{
-				adjustedOptions[i] = "Select an option";
+				if (i == 0) // If it 's the first option
+				{
+					adjustedOptions[i] = "Select an option";
+				}
+				else // Any other option
+				{
+					adjustedOptions[i] = options[i-1];
+				}
 			}
-			else // Any other option
-			{
-				adjustedOptions[i] = options[i-1];
-			}
+		
+			addComponent(new JValidatedComboBox(adjustedOptions)); // Create and add the combobox
 		}
-	
-		addComponent(new JValidatedComboBox(adjustedOptions)); // Create and add the combobox
 	}
 	
 	private void addRadioButtons()
 	{
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addRadioButtons");
 		
-		String[] options = getOptions();
-		
-		RadioButtonPanel.RadioButtonPanelBuilder rBuilder = new RadioButtonPanel.RadioButtonPanelBuilder();
-		for (String option : options) // For each option that the user entered
+		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-			rBuilder = rBuilder.add(option);
+				String[] options = optionEntry.getOptions();
+			
+			RadioButtonPanel.RadioButtonPanelBuilder rBuilder = new RadioButtonPanel.RadioButtonPanelBuilder();
+			for (String option : options) // For each option that the user entered
+			{
+				rBuilder = rBuilder.add(option);
+			}
+			
+			addComponent(rBuilder.build());
 		}
-		
-		addComponent(rBuilder.build());
 	}
 	
 	private void addCheckboxes()
 	{
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addCheckboxes"); // Debug
 		
-		String[] options = getOptions();
-		
-		CheckBoxPanel.CheckBoxPanelBuilder cBuilder = new CheckBoxPanel.CheckBoxPanelBuilder(); 
-		for (String option : options) // For each option that the user entered
+		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-			cBuilder = cBuilder.add(option);
+			String[] options = optionEntry.getOptions();
+			
+			// Add the options to the checkbox builder
+			CheckBoxPanel.CheckBoxPanelBuilder cBuilder = new CheckBoxPanel.CheckBoxPanelBuilder(); 
+			for (String option : options) // For each option that the user entered
+			{
+				cBuilder = cBuilder.add(option);
+			}
+			
+			addComponent(cBuilder.build()); // Add the checkboxpanel
 		}
-		
-		addComponent(cBuilder.build()); // Add the checkboxpanel
 	}
 	
 	private void addPasswordField()
@@ -723,6 +734,13 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		updatePreview(); // Update the question preview
 	}
 	
+	private boolean showEnterOptionsPanel() // Shows the enter options panel to the user and returns true if they didn't press cancel
+	{
+		int result = JOptionPane.showConfirmDialog(null, optionEntry, "Enter options", 
+																		JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+																		
+		return result == JOptionPane.YES_OPTION ? true : false;
+	}
 	private void getFinalDetails() // Gets the type and difficulty of the question from the user
 	{
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running getFinalDetails"); // Debug

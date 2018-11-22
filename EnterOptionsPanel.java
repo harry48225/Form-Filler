@@ -14,6 +14,7 @@ public class EnterOptionsPanel extends JPanel implements ActionListener
 	private JTextField optionField = new JTextField();
 	private JButton addOptionButton = new JButton("Add option");
 	private JButton deleteOptionButton = new JButton("Deleted selected");
+	
 	public EnterOptionsPanel()
 	{
 		prepareGUI();
@@ -91,7 +92,20 @@ public class EnterOptionsPanel extends JPanel implements ActionListener
 	
 	public String[] getOptions()
 	{
-		return (String[]) optionListModel.toArray();
+	
+		// toArray() returns an array of objects but we need
+		// an array of strings. Iterate through and convert one
+		// by one
+		
+		Object[] rawOptions = optionListModel.toArray();
+		String[] optionsToReturn = new String[rawOptions.length];
+		
+		for (int i = 0; i < rawOptions.length; i++)
+		{
+			optionsToReturn[i] = (String) rawOptions[i]; // Cast to string
+		}
+		
+		return optionsToReturn;
 	}
 	
 	public void actionPerformed(ActionEvent e)
