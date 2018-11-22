@@ -45,6 +45,12 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		
 		this.setVisible(true);
 	}
+	
+	public void addNewButton(JButton buttonToAdd) // Allows a button to be added to the button panel
+	{
+		buttonPanel.add(buttonToAdd);
+		this.revalidate();
+	}
 
 	private void prepareButtonPanel()
 	{
@@ -150,7 +156,10 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		else if (e.getSource() == previewButton)
 		{
 			int row = questionTable.getSelectedRow();
-			openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
+			if (row != -1) // If they actually selected a row
+			{
+				openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
+			}
 		}
 	}
 	
@@ -165,71 +174,10 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		questionFrame.setVisible(true);
 	}
 	
-	static class WordWrapHeaderRenderer extends JTextPane implements TableCellRenderer 
+	public String getSelectedQuestionID()
 	{
-		public WordWrapHeaderRenderer()
-		{
-			LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
-			Font currentFont = this.getFont();
-			this.setFont(currentFont.deriveFont(Font.BOLD, 13)); // Make the headers bold
-		}
-		
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
-		{
-			if (value != null) 
-			{
-				//System.out.println(value);
-				setText(value.toString());
-				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
-				
-				// Make the text centered
-				StyledDocument doc = this.getStyledDocument();
-				SimpleAttributeSet center = new SimpleAttributeSet();
-				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-				doc.setParagraphAttributes(0, doc.getLength(), center, false);
-				setOpaque(false);
-				
-			}
-			return this;
-		}
-		
-		
-	}
-	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
-	{
-		public WordWrapCellRenderer()
-		{
-			Font currentFont = this.getFont();
-			this.setFont(currentFont.deriveFont(11)); // Make the text larger
-		}
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
-		{
-			if (value != null) 
-			{
-				//System.out.println(value);
-				setText(value.toString());
-				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
-				
-				
-				// Colour the cell the highlight colour if it's selected.
-				if(isSelected)
-				{
-					setBackground(table.getSelectionBackground());
-				}
-				else
-				{
-					setBackground(table.getBackground());
-				}
-				
-				// Make the text centered
-				StyledDocument doc = this.getStyledDocument();
-				SimpleAttributeSet center = new SimpleAttributeSet();
-				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-				doc.setParagraphAttributes(0, doc.getLength(), center, false);
-				
-			}
-			return this;
-		}
+		int row = questionTable.getSelectedRow();
+		return questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question in the selected row
 	}
 	
 	private void resizeRows()
