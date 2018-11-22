@@ -72,6 +72,24 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		buttonPanel.add(Box.createHorizontalGlue());
 	}
 	
+	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	{
+		Question[] questionData = questions.getArray();
+		
+		if (typeSort)
+		{
+			questions.sortByType();
+			questionData = questions.getArray();
+		}
+		if (difficultySort)
+		{
+			questions.sortByDifficulty();
+			questionData = questions.getArray();
+		}
+		
+		populateTable(questionData);
+	}
+	
 	private void populateTable(Question[] data) // Populates the table with data
 	{
 		
@@ -114,6 +132,36 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	
 	public void actionPerformed(ActionEvent e)
 	{
+		if (e.getSource() == difficultySortButton)
+		{
+			System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> difficultySortButton pressed"); // Debug
+			difficultySort = true;
+			typeSort = false;
+			refreshTable();
+		}
+		else if (e.getSource() == typeSortButton)
+		{
+			System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> typeSortButton pressed"); // Debug
+			typeSort = true;
+			difficultySort = false;
+			refreshTable();
+		}
+		else if (e.getSource() == previewButton)
+		{
+			int row = questionTable.getSelectedRow();
+			openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
+		}
+	}
+	
+	private void openQuestionInWindow(String qID) // Opens a question to practise in a window
+	{
+		System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running openQuestionInWindow");
+		
+		JFrame questionFrame = new JFrame();
+		questionFrame.setLayout(new GridLayout(0,1));
+		questionFrame.setSize(300, 100);
+		questionFrame.add(questions.getPanelByID(qID));
+		questionFrame.setVisible(true);
 	}
 	
 	static class WordWrapHeaderRenderer extends JTextPane implements TableCellRenderer 
