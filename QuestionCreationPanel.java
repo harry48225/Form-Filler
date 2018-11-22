@@ -575,7 +575,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
                     possibilities,
                     "none");
 
-		addComponent(new JValidatedTextField(s)); // Create a new JValidatedTextField of the correct type
+		if (s != null) // If they selected an option
+		{
+			addComponent(new JValidatedTextField(s)); // Create a new JValidatedTextField of the correct type
+		}
 	}
 
 	private void addFileChooser() // Adds a file chooser to the question
@@ -589,8 +592,11 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
                     null,
                     possibilities,
                     "none");
-
-		addComponent(new JValidatedFileChooser(userChoice)); // Create a new JValidatedFileChooser of the correct type
+		
+		if (userChoice != null) // If they selected an option
+		{
+			addComponent(new JValidatedFileChooser(userChoice)); // Create a new JValidatedFileChooser of the correct type
+		}
 	}
 	
 	private void addCombobox()
