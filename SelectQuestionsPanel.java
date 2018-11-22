@@ -1,0 +1,227 @@
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SelectQuestionsPanel extends JPanel implements ActionListener, TableColumnModelListener
+{
+	private QuestionList questions;
+
+	private String[] tableHeaders = new String[] {"ID","Title", "Difficulty", "Type"}; // The headers for the table
+	private String[][] questionData = new String[0][0];
+	private DefaultTableModel questionTableModel = new DefaultTableModel(questionData, tableHeaders);
+	private JTable questionTable = new JTable(questionTableModel); // Create a table to hold the questions
+	private JScrollPane questionTableScrollPane = new JScrollPane(questionTable); // Create a scroll pane
+
+	private JPanel buttonPanel = new JPanel();
+	
+	private JButton typeSortButton = new JButton("Type sort");
+	private JButton difficultySortButton = new JButton("Difficulty sort");
+	private JButton previewButton = new JButton("Preview");
+	
+	// Store which sorts and filters have been applied
+	private boolean typeSort = false;
+	private boolean difficultySort = false;
+	private boolean typeFilter = false;
+	private boolean difficultyFilter = false;
+	
+	public SelectQuestionsPanel(QuestionList tempQuestions)
+	{
+		questions = tempQuestions;
+		prepareGUI();
+	}
+	
+	private void prepareGUI()
+	{
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		prepareTable();
+		this.add(questionTableScrollPane);
+		
+		prepareButtonPanel();
+		this.add(buttonPanel);
+		
+		this.setVisible(true);
+	}
+
+	private void prepareButtonPanel()
+	{
+		
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+		
+		typeSortButton.setBackground(new Color(169,196,235));
+		difficultySortButton.setBackground(new Color(169,196,235));
+		previewButton.setBackground(new Color(169,196,235));
+		
+		typeSortButton.addActionListener(this);
+		difficultySortButton.addActionListener(this);
+		previewButton.addActionListener(this);
+		
+		typeSortButton.setMaximumSize(new Dimension(80, 40));
+		difficultySortButton.setMaximumSize(new Dimension(80, 40));
+		previewButton.setMaximumSize(new Dimension(80, 40));
+		
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(typeSortButton);
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(difficultySortButton);
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(previewButton);
+		buttonPanel.add(Box.createHorizontalGlue());
+	}
+	
+	private void populateTable(Question[] data) // Populates the table with data
+	{
+		
+		System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> Running populateTable"); // Debug
+		
+		questionTableModel.setRowCount(0); // Start a zero rows
+		
+		for (int i =0; i < data.length; i++) // For each question in the array
+		{
+			if(data[i] != null) // If there is data
+			{
+				Question currentQuestion = data[i];
+				
+				String[] question = {currentQuestion.getID(), currentQuestion.getTitle(), 
+									 currentQuestion.getDifficulty() + "", currentQuestion.getType()}; // Convert the question to a String array
+				questionTableModel.addRow(question); // Add the question to the table
+			}
+		}
+		
+		resizeRows();
+	}
+	
+	private void prepareTable()
+	{
+		// Hide the first column as it contains the id and we don't want that displayed to the user
+		TableColumnModel tcm = questionTable.getColumnModel();
+
+		tcm.removeColumn(tcm.getColumn(0));
+		
+		for (int i = 0; i < questionTable.getColumnCount(); i++)
+		{
+			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
+		}
+		tcm.addColumnModelListener(this);
+		
+		populateTable(questions.getArray()); // Populate the table with the questions
+	}
+	
+	
+	public void actionPerformed(ActionEvent e)
+	{
+	}
+	
+	static class WordWrapHeaderRenderer extends JTextPane implements TableCellRenderer 
+	{
+		public WordWrapHeaderRenderer()
+		{
+			LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(Font.BOLD, 13)); // Make the headers bold
+		}
+		
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			if (value != null) 
+			{
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				setOpaque(false);
+				
+			}
+			return this;
+		}
+		
+		
+	}
+	static class WordWrapCellRenderer extends JTextPane implements TableCellRenderer 
+	{
+		public WordWrapCellRenderer()
+		{
+			Font currentFont = this.getFont();
+			this.setFont(currentFont.deriveFont(11)); // Make the text larger
+		}
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{
+			if (value != null) 
+			{
+				//System.out.println(value);
+				setText(value.toString());
+				setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+				
+				
+				// Colour the cell the highlight colour if it's selected.
+				if(isSelected)
+				{
+					setBackground(table.getSelectionBackground());
+				}
+				else
+				{
+					setBackground(table.getBackground());
+				}
+				
+				// Make the text centered
+				StyledDocument doc = this.getStyledDocument();
+				SimpleAttributeSet center = new SimpleAttributeSet();
+				StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+				doc.setParagraphAttributes(0, doc.getLength(), center, false);
+				
+			}
+			return this;
+		}
+	}
+	
+	private void resizeRows()
+	{
+		for (int row = 0; row < questionTable.getRowCount(); row ++)
+		{
+			int requiredHeight = 0;
+			
+			// Go through the columns and get the largest height of all of the components
+			for (int col = 0; col < questionTable.getColumnCount(); col++)
+			{
+				TableCellRenderer cellRenderer = questionTable.getCellRenderer(row, col);
+				Component c = questionTable.prepareRenderer(cellRenderer, row, col);
+				
+				int preferredHeight = c.getPreferredSize().height;
+				
+				if (preferredHeight > requiredHeight)
+				{
+					requiredHeight = preferredHeight;
+				}
+
+			}
+			
+			// Set the height of the row to that height if that's not already the height
+			if (questionTable.getRowHeight(row) != requiredHeight)
+			{
+				questionTable.setRowHeight(row, requiredHeight);
+			}
+		}
+	}
+	
+	public void columnMarginChanged(ChangeEvent e)
+	{
+		resizeRows();
+	}
+	public void columnAdded(TableColumnModelEvent e) {}
+	
+	public void columnRemoved(TableColumnModelEvent e) {}
+	
+	public void columnMoved(TableColumnModelEvent e) {}
+	
+	public void columnSelectionChanged(ListSelectionEvent e) {}
+	
+}
