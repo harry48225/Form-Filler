@@ -134,7 +134,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		for (String questionID : questionIDs) // Add each question to the form
 		{
-			questionForm = questionForm.add(questionID);
+			questionForm = questionForm.add(questionID, true);
 		}
 		
 		openForm(questionForm.build()); // Open the form to be attempted

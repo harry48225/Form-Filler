@@ -393,7 +393,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Running openQuestionInWindow");
 		
 		// Create a form that has only the question in it. Set the id of the question as the id of the form too
-		Form questionForm = new Form.FormBuilder(questionID, questions).add(questionID).build();
+		Form questionForm = new Form.FormBuilder(questionID, questions).add(questionID, true).build();
 		
 		gui.openForm(questionForm); // Open the form
 	}

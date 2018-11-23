@@ -6,6 +6,7 @@ public class Form implements Serializable
 	private String id; // ID unique to each form
 	
 	private String[] questions; // Stores the ids of the questions that are in the form
+	private Boolean[] requiredQuestions; // Stores whether each question is required or not
 	
 	private String title;
 	
@@ -35,6 +36,19 @@ public class Form implements Serializable
 		mainSkillsTested = data[3].split("\\.");
 		difficulty = Integer.parseInt(data[4]);
 		title = data[5];
+		requiredQuestions = loadRequiredQuestions(data[6].split("\\."));
+	}
+	
+	private Boolean[] loadRequiredQuestions(String[] requiredQuestionsStringArray)
+	{
+		Boolean[] outputArray = new Boolean[requiredQuestionsStringArray.length];
+		
+		for (int i = 0; i < requiredQuestionsStringArray.length; i++)
+		{
+			outputArray[i] = Boolean.parseBoolean(requiredQuestionsStringArray[i]);
+		}
+		
+		return outputArray;
 	}
 	
 	public String[] getQuestionIDs() // Returns the question array
@@ -42,13 +56,13 @@ public class Form implements Serializable
 		return questions;
 	}
 	
-	private String questionArrayToString() // Converts the question array to string
+	private String arrayToString(Object[] array) // Converts an array to string
 	{
 		String arrayAsString = "";
 		
-		for (String q : questions)
+		for (Object o : array)
 		{
-			arrayAsString += q + ".";
+			arrayAsString += o + ".";
 		}
 		
 		arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
@@ -57,23 +71,16 @@ public class Form implements Serializable
 		
 	}
 	
-	public String mainSkillsTestedToString() // Converts the skills array to string
+	public String mainSkillsTestedToString()
 	{
-		String arrayAsString = "";
-		
-		for (String s : mainSkillsTested)
-		{
-			arrayAsString += s + ".";
-		}
-		
-		arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
-		
-		return arrayAsString;
+		return arrayToString(mainSkillsTested);
 	}
 	
 	public String toString() // Outputs attributes as String
 	{
-		return id + ","  + questionArrayToString() + "," + description + "," + mainSkillsTestedToString() + "," + difficulty + "," + title; 
+		return id + ","  + arrayToString(questions) + "," 
+				+ description + "," + arrayToString(mainSkillsTested) 
+				+ "," + difficulty + "," + title + arrayToString(requiredQuestions); 
 	}
 	
 	public String getID()
@@ -118,6 +125,8 @@ public class Form implements Serializable
 		private int difficulty; 
 		
 		private String[] questions = new String[50]; // Store 50 questions
+		private Boolean[] requiredQuestions = new Boolean[50];
+		
 		private int nextQuestionLocation = 0;
 		
 		public FormBuilder(String tempID, QuestionList tempQuestions)
@@ -135,11 +144,13 @@ public class Form implements Serializable
 			return this;
 		}
 		
-		public FormBuilder add(String questionID) // Add a question to the form
+		public FormBuilder add(String questionID, Boolean required) // Add a question to the form
 		{
 			System.out.println("[INFO] <FORM_BUILDER> Running add"); // Debug
 			
-			questions[nextQuestionLocation] = questionID; // Add the question
+			// Add the question
+			questions[nextQuestionLocation] = questionID;
+			requiredQuestions[nextQuestionLocation] = required;
 			nextQuestionLocation++;
 			
 			return this;
@@ -215,6 +226,20 @@ public class Form implements Serializable
 				questions[questionLocation] = temp; // Move the one below it into the now free space
 			}
 			
+			return this;
+		}
+		public FormBuilder setRequired(String questionID, Boolean newRequiredStatus)
+		{
+			System.out.println("[INFO] <FORM_BUILDER> Running setRequired");
+			
+			for (int i = 0; i < nextQuestionLocation; i++) // Iterate over the questions
+			{
+				if (questions[i].equals(questionID)) // If we've found the required question
+				{
+					requiredQuestions[i] = newRequiredStatus;
+					break;
+				}
+			}
 			return this;
 		}
 		

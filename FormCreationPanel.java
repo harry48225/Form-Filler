@@ -24,6 +24,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	private SelectQuestionsPanel selectionPanel;
 	private JPanel formPreview;
 	private JPanel[] questionPreviews = new JPanel[50];
+	
 	private int nextQuestionPreviewLocation = 0;
 	
 	private JButton addQuestionButton = new JButton("Add");
@@ -314,22 +315,23 @@ public class FormCreationPanel extends JPanel implements ActionListener
 				
 				toggleRequired(questionID);
 				
+				JPanel questionPreviewPanel = (JPanel) pressedButton.getParent();
+				
 				if (pressedButton.getIcon() == requiredIcon) // If the question was required
 				{
+					// Make it unrequired
 					pressedButton.setIcon(null);
+					formBeingCreated = formBeingCreated.setRequired(questionID, false);
 				}
 				else
 				{
+					// Make it required
 					pressedButton.setIcon(requiredIcon);
+					formBeingCreated = formBeingCreated.setRequired(questionID, true);
 				}
 			}
 
 		}
-	}
-	
-	private void toggleRequired(String questionID)
-	{
-		// TODO
 	}
 	
 	private void loadFormToBeEdited(Form formToEdit)
@@ -405,10 +407,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		questionPreviewPanel.add(actionButtonPanel);
 		
 		questionPreviews[nextQuestionPreviewLocation] = questionPreviewPanel; // Add the panel to the array
+		
 		nextQuestionPreviewLocation++;
 		
-		formBeingCreated = formBeingCreated.add(questionID); // Add the question to the form
-	
+		formBeingCreated = formBeingCreated.add(questionID, true); // Add the question to the form
+		
 		updateFormPreview();
 	}
 	
@@ -514,11 +517,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running getFinalDetails"); // Debug
 		
-		String title = "PLACEHOLDER";
+		String title = formTitleField.getText();
 		
-		String description = JOptionPane.showInputDialog("Please provide a description of the form. "); // Get a description of the form
+		String description = formDescriptionField.getText(); // Get a description of the form
 		
-		int difficulty = Integer.parseInt(JOptionPane.showInputDialog("What's the form's difficulty?")); // Get the form's difficulty
+		int difficulty = Integer.parseInt((String) formDifficultyCombobox.getSelectedItem()); // Get the form's difficulty
 		
 		formBeingCreated = formBeingCreated.setFinalDetails(title, description, difficulty);
 	}
