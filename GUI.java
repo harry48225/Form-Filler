@@ -80,7 +80,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
 		tabs.add("Create questions", new QuestionCreationPanel(questions, this));
-		tabs.add("Create forms", new FormCreationPanel(questions, forms));
+		tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
 		tabs.add("Users", new UserPanel(users));
 		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
@@ -175,6 +175,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			// Add a new question creation panel at the index of the old one
 			tabs.setComponentAt(index, new QuestionCreationPanel(questions, this));
+		}
+		if (componentToReset instanceof FormCreationPanel)
+		{
+			// Add a new form creation panel at the index of the old one
+			tabs.setComponentAt(index, new FormCreationPanel(questions, forms, this));
 		}
 	}
 }

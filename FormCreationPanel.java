@@ -14,6 +14,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private QuestionList questions;
 	private FormList forms;
+	private GUI gui;
 	
 	private String formID = "";
 	
@@ -60,10 +61,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public FormCreationPanel(QuestionList tempQuestions, FormList tempForms)
+	public FormCreationPanel(QuestionList tempQuestions, FormList tempForms, GUI tempGUI)
 	{
 		questions = tempQuestions;
 		forms = tempForms;
+		gui = tempGUI;
 		
 		formID = forms.getFreeID(); // Get a unique id for the form
 		
@@ -202,6 +204,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		entryContainerPanel.add(Box.createVerticalGlue());
 		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
 		resetFormButton.setForeground(Color.WHITE);
+		resetFormButton.addActionListener(this);
 		resetFormButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
 		resetFormButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
 		
@@ -336,6 +339,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		else if (evt.getSource() == addQuestionButton)
 		{
 			addQuestionToForm(selectionPanel.getSelectedQuestionID());
+		}
+		else if (evt.getSource() == resetFormButton)
+		{
+			System.out.println("[INFO] <FORM_CREATION_PANEL> resetFormButton pressed");
+			gui.resetTab(this); // Reset the tab
 		}
 		else if (evt.getSource() instanceof JButton) // If it's a JButton
 		{
