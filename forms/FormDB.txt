@@ -1,3 +1,0 @@
-F60581352,Q81558701.Q61686048.Q53560658,Basic info,Name.Gender.Phone,4,PLACEHOLDER,true.true
-F00324014,Q81558701.Q47753468,Name and photo,Name.Photo upload,4,PLACEHOLDER,true.true
-F20248518,Q81558701.Q34809197.Q41608457.Q47753468.Q53560658.Q61686048.Q02468955,A long form,Name.Password.Email.Photo upload.Phone.Gender.Country of Birth,6,PLACEHOLDER,true.true.true.true.true.true.true

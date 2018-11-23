@@ -91,8 +91,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		formInformationPanel.setBorder(border);
 		
-		formInformationPanel.setPreferredSize(new Dimension(1000, 300));
-		formInformationPanel.setMaximumSize(new Dimension(1000, 500));
+		formInformationPanel.setPreferredSize(new Dimension(10000, 300));
+		formInformationPanel.setMaximumSize(new Dimension(10000, 500));
 		
 		// Form description field setup
 		formDescriptionField.setEditable(true);
@@ -107,9 +107,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		difficultyPanel.setLayout(new GridLayout(1,2));
 		descriptionPanel.setLayout(new GridLayout(1,2));
 		
-		formTitleField.setMaximumSize(new Dimension(1000, 40));
-		formTitleField.setPreferredSize(new Dimension(1000, 40));
-		descriptionPanel.setMaximumSize(new Dimension(1000, 80));
+		formTitleField.setMaximumSize(new Dimension(10000, 40));
+		formTitleField.setPreferredSize(new Dimension(10000, 40));
+		descriptionPanel.setMaximumSize(new Dimension(10000, 80));
 		
 		// Do each row one at a time
 		titlePanel.add(formTitleLabel);
@@ -257,18 +257,47 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			forms.removeForm(existingForm.getID()); // Remove the form
 		}
 		
-		getFinalDetails();
-		
-		forms.addForm(formBeingCreated.build()); // Add the form to the list
-		
-		int save = JOptionPane.showConfirmDialog(null, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
-		
-		if (save == 0) // If they selected yes
+		if (formInformationPresenceCheck()) // If all of the fields have the correct data
 		{
-			forms.writeDatabase(); 
-			JOptionPane.showMessageDialog(null, "Form saved!");
+			getFinalDetails();
+		
+			forms.addForm(formBeingCreated.build()); // Add the form to the list
+		
+			int save = JOptionPane.showConfirmDialog(null, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+		
+			if (save == 0) // If they selected yes
+			{
+				forms.writeDatabase(); 
+				JOptionPane.showMessageDialog(null, "Form saved!");
+			}
 		}
 		
+	}
+	
+	private boolean formInformationPresenceCheck()
+	{
+		String errorString = "";
+			
+		// Check to see that they've filled it all in
+		if (formTitleField.getText().isEmpty())
+		{
+			errorString += "Please enter a title. ";
+		}
+		if (formDescriptionField.getText().isEmpty())
+		{
+			errorString += "Please enter a description. ";
+		}
+		if (formDifficultyCombobox.getSelectedIndex() == 0)
+		{
+			errorString += "Please select a difficulty";
+		}
+		
+		if (errorString != "") // If the user failed to fill something in
+		{
+			JOptionPane.showMessageDialog(null, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return errorString == "";
 	}
 	
 	public void actionPerformed(ActionEvent evt)
@@ -312,8 +341,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			}
 			else if (pressedButton.getName() == "required")
 			{
-				
-				toggleRequired(questionID);
 				
 				JPanel questionPreviewPanel = (JPanel) pressedButton.getParent();
 				
