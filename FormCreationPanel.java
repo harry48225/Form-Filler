@@ -325,10 +325,13 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <FORM_CREATION_PANEL> editFormButton pressed");
 			
-			String selectedFormID = ((String) editFormComboBox.getSelectedItem()).split(":")[0]; // Get the id
-			Form formBeingEdited = forms.getFormByID(selectedFormID); // Get the selected form
-			
-			loadFormToBeEdited(formBeingEdited); // Load the form to be edited
+			if (editFormComboBox.getSelectedIndex() != 0)
+			{
+				String selectedFormID = ((String) editFormComboBox.getSelectedItem()).split(":")[0]; // Get the id
+				Form formBeingEdited = forms.getFormByID(selectedFormID); // Get the selected form
+				
+				loadFormToBeEdited(formBeingEdited); // Load the form to be edited
+			}
 		}
 		else if (evt.getSource() == addQuestionButton)
 		{
