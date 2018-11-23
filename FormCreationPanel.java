@@ -55,6 +55,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private ImageIcon deleteIcon;
 	private ImageIcon requiredIcon;
+	private ImageIcon upArrow;
+	private ImageIcon downArrow;
 	
 	Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
@@ -80,6 +82,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		requiredIcon = new ImageIcon("star.png");
 		requiredIcon = new ImageIcon(requiredIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT)); // Make the icon smaller
 		
+		upArrow = new ImageIcon("uparrow.png");
+		upArrow = new ImageIcon(upArrow.getImage().getScaledInstance(30, 15, Image.SCALE_DEFAULT)); // Make the icon smaller
+		
+		downArrow = new ImageIcon("downarrow.png");
+		downArrow = new ImageIcon(downArrow.getImage().getScaledInstance(30, 15, Image.SCALE_DEFAULT)); // Make the icon smaller
 		
 		prepareMainPanel();
 	}
@@ -332,19 +339,19 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			
 			String questionID = pressedButton.getParent().getName(); // The name of the JPanel that the button is in is the questionID that it belongs to 
 			
-			if (pressedButton.getText().equals("delete")) // If it's a delete button
+			if (pressedButton.getName().equals("delete")) // If it's a delete button
 			{
 				removeQuestionFromForm(questionID); // Remove the question from the form
 			}
-			else if (pressedButton.getText().equals("/\\")) // If an up arrow was pressed
+			else if (pressedButton.getName().equals("up")) // If an up arrow was pressed
 			{
 				moveQuestionUp(questionID); // Move the question up
 			}
-			else if (pressedButton.getText().equals("\\/")) // If an down arrow was pressed
+			else if (pressedButton.getName().equals("down")) // If an down arrow was pressed
 			{
 				moveQuestionDown(questionID); // Move the question down
 			}
-			else if (pressedButton.getName() == "required")
+			else if (pressedButton.getName().equals("required"))
 			{
 				
 				JPanel questionPreviewPanel = (JPanel) pressedButton.getParent();
@@ -403,7 +410,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		actionButtonPanel.add(Box.createHorizontalGlue());
 
 		// Prepare the required button
-		JButton requiredButton = new JButton("");
+		JButton requiredButton = new JButton();
 		requiredButton.setBackground(new Color(169,196,235));
 		requiredButton.setName("required"); // For reference later
 		requiredButton.setIcon(requiredIcon);
@@ -423,11 +430,13 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		// Prepare the movement buttons
 		
-		JButton upButton = new JButton("/\\"); // The button text is an upwards arrow
+		JButton upButton = new JButton(); // The button text is an upwards arrow
+		upButton.setIcon(upArrow);
 		upButton.setName("up");
 		upButton.setBackground(new Color(169,196,235));
 		upButton.setPreferredSize(new Dimension(30, 15));
-		JButton downButton = new JButton("\\/"); // The button text is a downwards arrow
+		JButton downButton = new JButton(); // The button text is a downwards arrow
+		downButton.setIcon(downArrow);
 		downButton.setName("down");
 		downButton.setBackground(new Color(169,196,235));
 		downButton.setPreferredSize(new Dimension(30, 15));
