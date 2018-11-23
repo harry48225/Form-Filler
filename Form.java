@@ -24,6 +24,7 @@ public class Form implements Serializable
 		description = builder.description;
 		mainSkillsTested = builder.mainSkillsTested;
 		difficulty = builder.difficulty;
+		requiredQuestions = builder.requiredQuestions;
 	}
 	
 	public Form(String loadedDataFromFile) // Loads a form from the data from the file
@@ -65,7 +66,10 @@ public class Form implements Serializable
 			arrayAsString += o + ".";
 		}
 		
-		arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
+		if (arrayAsString != "")
+		{
+			arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
+		}
 		
 		return arrayAsString;
 		
@@ -80,7 +84,7 @@ public class Form implements Serializable
 	{
 		return id + ","  + arrayToString(questions) + "," 
 				+ description + "," + arrayToString(mainSkillsTested) 
-				+ "," + difficulty + "," + title + arrayToString(requiredQuestions); 
+				+ "," + difficulty + "," + title + "," + arrayToString(requiredQuestions); 
 	}
 	
 	public String getID()
@@ -248,7 +252,8 @@ public class Form implements Serializable
 			System.out.println("[INFO] <FORM_BUILDER> Running build");
 			
 			trimArray(); // Trim the array
-
+			trimRequiredQuestionsArray(); // Trim the requried questions array
+			
 			mainSkillsTested = new String[questions.length];
 
 			for (int i = 0; i < questions.length; i++)
@@ -257,6 +262,20 @@ public class Form implements Serializable
 			}
 			
 			return new Form(this);
+		}
+		
+		private void trimRequiredQuestionsArray() // Trims the array to the correct length so that there are no null elements
+		{
+			System.out.println("[INFO] <FORM_BUILDER> Running trimRequiredQuestionsArray");
+		
+			Boolean[] newArray = new Boolean[nextQuestionLocation]; // Create a new array of the correct size
+			
+			for (int i = 0; i < nextQuestionLocation; i++) // For each object in the array
+			{
+				newArray[i] = requiredQuestions[i]; // Copy the object
+			}
+			
+			requiredQuestions = newArray; // Store the new trimmed array in questions
 		}
 		
 		private void trimArray() // Trims the array to the correct length so that there are no null elements

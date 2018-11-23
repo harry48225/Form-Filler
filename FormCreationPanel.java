@@ -383,6 +383,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			addQuestionToForm(question); // Add the question to the form preview
 		}
+		
+		
+		formTitleField.setText(formToEdit.getTitle());
+		formDescriptionField.setText(formToEdit.getDescription());
+		formDifficultyCombobox.setSelectedIndex(formToEdit.getDifficulty());
 	}
 	
 	private void addQuestionToForm(String questionID) // Adds a question to the preview and to the form
@@ -536,6 +541,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formPreview.add(Box.createVerticalGlue());
 		formPreview.validate();
 		formPreview.repaint();
+		formPreviewScroller.validate();
+		formPreviewScroller.repaint();
 	}	
 	
 	private void removeQuestionFromForm(String questionID) // Removes a question from the form
