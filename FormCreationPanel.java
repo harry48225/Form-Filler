@@ -23,6 +23,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private SelectQuestionsPanel selectionPanel;
 	private JPanel formPreview;
+	private JScrollPane formPreviewScroller;
+	
 	private JPanel[] questionPreviews = new JPanel[50];
 	
 	private int nextQuestionPreviewLocation = 0;
@@ -206,10 +208,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		entryContainerPanel.add(saveFormButton);
 		
 		prepareFormPreview();
+
 		
 		this.add(entryContainerPanel);
-		this.add(formPreview);
-		
+		this.add(formPreviewScroller);
 		
 		saveFormButton.addActionListener(this);
 		
@@ -245,6 +247,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
 		formPreview.setBorder(border);
+		
+		formPreviewScroller = new JScrollPane(formPreview);
+		formPreviewScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 	}
 	
@@ -380,8 +385,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JPanel questionPreviewPanel = new JPanel();
 		questionPreviewPanel.setName(questionID); // For reference later
 		
-		questionPreviewPanel.setPreferredSize(new Dimension(10000,50));
-		questionPreviewPanel.setMaximumSize(new Dimension(10000,50));
+		questionPreviewPanel.setPreferredSize(new Dimension(100,30));
+		questionPreviewPanel.setMaximumSize(new Dimension(700,50));
 		
 		questionPreviewPanel.setLayout(new BoxLayout(questionPreviewPanel, BoxLayout.LINE_AXIS)); // Horizontal box layout
 		JPanel questionPanel = questions.getPanelByID(questionID);
@@ -393,14 +398,19 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JPanel actionButtonPanel = new JPanel();
 		actionButtonPanel.setName(questionID); // Allows the question that the buttons belong to to be identified.
 		actionButtonPanel.setLayout(new GridLayout(1,3));
-		actionButtonPanel.setPreferredSize(new Dimension(90, 50));
+		actionButtonPanel.setPreferredSize(new Dimension(90, 30));
+
+		actionButtonPanel.add(Box.createHorizontalGlue());
+
 		// Prepare the required button
 		JButton requiredButton = new JButton("");
 		requiredButton.setBackground(new Color(169,196,235));
 		requiredButton.setName("required"); // For reference later
 		requiredButton.setIcon(requiredIcon);
 		requiredButton.addActionListener(this);
+		requiredButton.setPreferredSize(new Dimension(30, 30));
 		actionButtonPanel.add(requiredButton);
+		
 		
 		// Prepare the delete button
 		JButton deleteButton = new JButton();
@@ -408,6 +418,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		deleteButton.setBackground(new Color(169,196,235));
 		deleteButton.setName("delete"); // For reference later 
 		deleteButton.addActionListener(this);
+		deleteButton.setPreferredSize(new Dimension(30, 30));
 		actionButtonPanel.add(deleteButton);
 		
 		// Prepare the movement buttons
@@ -415,9 +426,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JButton upButton = new JButton("/\\"); // The button text is an upwards arrow
 		upButton.setName("up");
 		upButton.setBackground(new Color(169,196,235));
+		upButton.setPreferredSize(new Dimension(30, 15));
 		JButton downButton = new JButton("\\/"); // The button text is a downwards arrow
 		downButton.setName("down");
 		downButton.setBackground(new Color(169,196,235));
+		downButton.setPreferredSize(new Dimension(30, 15));
 		upButton.addActionListener(this);
 		downButton.addActionListener(this);
 		

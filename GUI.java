@@ -72,7 +72,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		this.setSize(1200,700);
 		this.setLocation(500,200);
-		this.setMinimumSize(new Dimension(800,600));
+		this.setMinimumSize(new Dimension(900,600));
 		this.setLayout(new GridLayout(1,1)); // Only 1 row and 1 column as it'll only store panels
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
