@@ -534,7 +534,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}	
 		
 		formPreview.add(Box.createVerticalGlue());
-		formPreview.revalidate();
+		formPreview.validate();
+		formPreview.repaint();
 	}	
 	
 	private void removeQuestionFromForm(String questionID) // Removes a question from the form
