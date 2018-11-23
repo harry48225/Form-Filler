@@ -149,7 +149,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		for (int i = 0; i < formArray.length; i++) // For each form
 		{
-			formIDs[i+1] = formArray[i].getID();
+			formIDs[i+1] = formArray[i].getID() + ": " + formArray[i].getTitle();
 		}
 		
 		editFormComboBox = new JComboBox<String>(formIDs); // Fill the combobox with the ids
@@ -325,7 +325,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <FORM_CREATION_PANEL> editFormButton pressed");
 			
-			Form formBeingEdited = forms.getFormByID((String) editFormComboBox.getSelectedItem()); // Get the selected form
+			String selectedFormID = ((String) editFormComboBox.getSelectedItem()).split(":")[0]; // Get the id
+			Form formBeingEdited = forms.getFormByID(selectedFormID); // Get the selected form
 			
 			loadFormToBeEdited(formBeingEdited); // Load the form to be edited
 		}
@@ -384,6 +385,27 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			addQuestionToForm(question); // Add the question to the form preview
 		}
 		
+		for (Component questionRow : formPreview.getComponents())
+		{
+			if (questionRow instanceof JPanel)
+			{
+				String questionID = questionRow.getName();
+				JPanel questionRowPanel = (JPanel) questionRow;
+				JPanel questionRowActionButtonPanel = (JPanel) questionRowPanel.getComponents()[2]; // The first item is the actual question panel and the second is some glue but we want the buttons
+				
+				for (Component rawButton: questionRowActionButtonPanel.getComponents()) // Iterate over the components in the questionRow's actionButton panel
+				{
+					if (rawButton instanceof JButton)  // If it's a button
+					{
+						JButton button = (JButton) rawButton;
+						if (button.getName().equals("required")) // If it's the required button
+						{
+							button.setIcon(formToEdit.isQuestionRequired(questionID) ? requiredIcon : null); // If the question is required set the icon as the red star
+						}
+					}
+				}				
+			}
+		}
 		
 		formTitleField.setText(formToEdit.getTitle());
 		formDescriptionField.setText(formToEdit.getDescription());

@@ -40,7 +40,19 @@ public class Form implements Serializable
 		requiredQuestions = loadRequiredQuestions(data[6].split("\\."));
 	}
 	
-	private Boolean[] loadRequiredQuestions(String[] requiredQuestionsStringArray)
+	public Boolean isQuestionRequired(String questionID)
+	{
+		Boolean required = false;
+		
+		for (int i = 0; i < questions.length; i ++ )
+		{
+			if (questions[i].equals(questionID)) {required = requiredQuestions[i];}	
+		}
+		
+		return required;
+	}
+	
+	public Boolean[] loadRequiredQuestions(String[] requiredQuestionsStringArray)
 	{
 		Boolean[] outputArray = new Boolean[requiredQuestionsStringArray.length];
 		
