@@ -50,6 +50,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	private JButton resetFormButton = new JButton("Reset Form");
 	private JButton saveFormButton = new JButton("Save Form");
 	
+	private ImageIcon deleteIcon;
+	private ImageIcon requiredIcon;
+	
 	Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public FormCreationPanel(QuestionList tempQuestions, FormList tempForms)
@@ -67,6 +70,13 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	private void prepareGUI()
 	{
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running prepareGUI"); // Debug
+		
+		deleteIcon = new ImageIcon("bin.png");
+		deleteIcon = new ImageIcon(deleteIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT)); // Make the icon smaller
+		
+		requiredIcon = new ImageIcon("star.png");
+		requiredIcon = new ImageIcon(requiredIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT)); // Make the icon smaller
+		
 		
 		prepareMainPanel();
 	}
@@ -227,7 +237,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		formPreview = new JPanel();
 		
-		formPreview.setLayout(new GridLayout(0,1)); // Infinite rows 1 column
+		formPreview.setLayout(new BoxLayout(formPreview, BoxLayout.PAGE_AXIS));
 		
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Form preview");
 		
@@ -299,8 +309,27 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			{
 				moveQuestionDown(questionID); // Move the question down
 			}
+			else if (pressedButton.getName() == "required")
+			{
+				
+				toggleRequired(questionID);
+				
+				if (pressedButton.getIcon() == requiredIcon) // If the question was required
+				{
+					pressedButton.setIcon(null);
+				}
+				else
+				{
+					pressedButton.setIcon(requiredIcon);
+				}
+			}
 
 		}
+	}
+	
+	private void toggleRequired(String questionID)
+	{
+		// TODO
 	}
 	
 	private void loadFormToBeEdited(Form formToEdit)
@@ -322,22 +351,44 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JPanel questionPreviewPanel = new JPanel();
 		questionPreviewPanel.setName(questionID); // For reference later
 		
-		questionPreviewPanel.setLayout(new BorderLayout());
-		questionPreviewPanel.add(questions.getPanelByID(questionID), BorderLayout.CENTER); // Add the question panel to the preview
+		questionPreviewPanel.setPreferredSize(new Dimension(10000,50));
+		questionPreviewPanel.setMaximumSize(new Dimension(10000,50));
+		
+		questionPreviewPanel.setLayout(new BoxLayout(questionPreviewPanel, BoxLayout.LINE_AXIS)); // Horizontal box layout
+		JPanel questionPanel = questions.getPanelByID(questionID);
+		questionPanel.setPreferredSize(new Dimension(300, 50));
+		
+		questionPreviewPanel.add(questionPanel); // Add the question panel to the preview
 		
 		// Prepare the actionButtonPanel
 		JPanel actionButtonPanel = new JPanel();
 		actionButtonPanel.setName(questionID); // Allows the question that the buttons belong to to be identified.
-		actionButtonPanel.setLayout(new GridLayout(1,2));
+		actionButtonPanel.setLayout(new GridLayout(1,3));
+		actionButtonPanel.setPreferredSize(new Dimension(90, 50));
+		// Prepare the required button
+		JButton requiredButton = new JButton("");
+		requiredButton.setBackground(new Color(169,196,235));
+		requiredButton.setName("required"); // For reference later
+		requiredButton.setIcon(requiredIcon);
+		requiredButton.addActionListener(this);
+		actionButtonPanel.add(requiredButton);
 		
 		// Prepare the delete button
-		JButton deleteButton = new JButton("delete");
+		JButton deleteButton = new JButton();
+		deleteButton.setIcon(deleteIcon);
+		deleteButton.setBackground(new Color(169,196,235));
+		deleteButton.setName("delete"); // For reference later 
 		deleteButton.addActionListener(this);
 		actionButtonPanel.add(deleteButton);
 		
 		// Prepare the movement buttons
+		
 		JButton upButton = new JButton("/\\"); // The button text is an upwards arrow
+		upButton.setName("up");
+		upButton.setBackground(new Color(169,196,235));
 		JButton downButton = new JButton("\\/"); // The button text is a downwards arrow
+		downButton.setName("down");
+		downButton.setBackground(new Color(169,196,235));
 		upButton.addActionListener(this);
 		downButton.addActionListener(this);
 		
@@ -350,7 +401,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		actionButtonPanel.add(upAndDownPanel);
 		
-		questionPreviewPanel.add(actionButtonPanel, BorderLayout.EAST);
+		questionPreviewPanel.add(Box.createHorizontalGlue());
+		questionPreviewPanel.add(actionButtonPanel);
 		
 		questionPreviews[nextQuestionPreviewLocation] = questionPreviewPanel; // Add the panel to the array
 		nextQuestionPreviewLocation++;
@@ -429,6 +481,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			formPreview.add(questionPreviews[i]); // Add the preview
 		}	
 		
+		formPreview.add(Box.createVerticalGlue());
 		formPreview.revalidate();
 	}	
 	
