@@ -196,6 +196,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		entryContainerPanel.add(selectionPanel);
 		
+		addHeaderButton.addActionListener(this);
 		addHeaderButton.setBackground(new Color(169,196,235));
 		addHeaderButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
 		addHeaderButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
@@ -315,6 +316,17 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		return errorString == "";
 	}
 	
+	private void addHeader()
+	{
+		String headerText = JOptionPane.showInputDialog(null, "Please enter a header");
+		// The input dialog will return null if the user pressed cancel
+		// If this happens we should stop adding the new header
+		if (headerText != null & !headerText.isEmpty()) // If they pressed ok and typed something
+		{
+			addComponentToForm(headerText);
+		}
+	}
+	
 	public void actionPerformed(ActionEvent evt)
 	{
 		if (evt.getSource() == saveFormButton) // If the save question button was pressed
@@ -338,7 +350,12 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		else if (evt.getSource() == addQuestionButton)
 		{
-			addQuestionToForm(selectionPanel.getSelectedQuestionID());
+			addComponentToForm(selectionPanel.getSelectedQuestionID());
+		}
+		else if (evt.getSource() == addHeaderButton)
+		{
+			System.out.println("[INFO] <FORM_CREATION_PANEL> addHeaderButton pressed");
+			addHeader();
 		}
 		else if (evt.getSource() == resetFormButton)
 		{
@@ -393,7 +410,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		for (String question : formToEdit.getQuestionIDs()) // For each question currently in the form
 		{
-			addQuestionToForm(question); // Add the question to the form preview
+			addComponentToForm(question); // Add the question to the form preview
 		}
 		
 		for (Component questionRow : formPreview.getComponents())
@@ -423,39 +440,57 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formDifficultyCombobox.setSelectedIndex(formToEdit.getDifficulty());
 	}
 	
-	private void addQuestionToForm(String questionID) // Adds a question to the preview and to the form
+	private void addComponentToForm(String component) // Adds a question or header to the preview and to the form
 	{
-		System.out.println("[INFO] <FORM_CREATION_PANEL> Running addQuestionToForm"); // Debug
+		System.out.println("[INFO] <FORM_CREATION_PANEL> Running addComponentToForm"); // Debug
 		
 		JPanel questionPreviewPanel = new JPanel();
-		questionPreviewPanel.setName(questionID); // For reference later
+		questionPreviewPanel.setName(component); // For reference later
 		
 		questionPreviewPanel.setPreferredSize(new Dimension(100,30));
 		questionPreviewPanel.setMaximumSize(new Dimension(700,50));
 		
 		questionPreviewPanel.setLayout(new BoxLayout(questionPreviewPanel, BoxLayout.LINE_AXIS)); // Horizontal box layout
-		JPanel questionPanel = questions.getPanelByID(questionID);
-		questionPanel.setPreferredSize(new Dimension(300, 50));
 		
-		questionPreviewPanel.add(questionPanel); // Add the question panel to the preview
-		
+		// If a question is being added we should add the question panel
+		// otherwise we should add a header
+		boolean isAQuestion = questions.getQuestionByID(component) != null; // If a question is returned then the component is a question
+		if (isAQuestion)
+		{
+			JPanel questionPanel = questions.getPanelByID(component);
+			questionPanel.setPreferredSize(new Dimension(300, 50));
+			questionPreviewPanel.add(questionPanel); // Add the question panel to the preview
+		}
+		else // It's a header
+		{
+			JPanel headerPanel = new JPanel();
+			headerPanel.setPreferredSize(new Dimension(300, 50));
+			TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK), component);
+			border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+			headerPanel.setBorder(border);
+
+			questionPreviewPanel.add(headerPanel);
+			
+		}
 		// Prepare the actionButtonPanel
 		JPanel actionButtonPanel = new JPanel();
-		actionButtonPanel.setName(questionID); // Allows the question that the buttons belong to to be identified.
+		actionButtonPanel.setName(component); // Allows the question that the buttons belong to to be identified.
 		actionButtonPanel.setLayout(new GridLayout(1,3));
 		actionButtonPanel.setPreferredSize(new Dimension(90, 30));
 
 		actionButtonPanel.add(Box.createHorizontalGlue());
 
-		// Prepare the required button
-		JButton requiredButton = new JButton();
-		requiredButton.setBackground(new Color(169,196,235));
-		requiredButton.setName("required"); // For reference later
-		requiredButton.setIcon(requiredIcon);
-		requiredButton.addActionListener(this);
-		requiredButton.setPreferredSize(new Dimension(30, 30));
-		actionButtonPanel.add(requiredButton);
-		
+		if (isAQuestion)
+		{
+			// Prepare the required button
+			JButton requiredButton = new JButton();
+			requiredButton.setBackground(new Color(169,196,235));
+			requiredButton.setName("required"); // For reference later
+			requiredButton.setIcon(requiredIcon);
+			requiredButton.addActionListener(this);
+			requiredButton.setPreferredSize(new Dimension(30, 30));
+			actionButtonPanel.add(requiredButton);
+		}
 		
 		// Prepare the delete button
 		JButton deleteButton = new JButton();
@@ -472,19 +507,17 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		upButton.setIcon(upArrow);
 		upButton.setName("up");
 		upButton.setBackground(new Color(169,196,235));
-		upButton.setPreferredSize(new Dimension(30, 15));
 		JButton downButton = new JButton(); // The button text is a downwards arrow
 		downButton.setIcon(downArrow);
 		downButton.setName("down");
 		downButton.setBackground(new Color(169,196,235));
-		downButton.setPreferredSize(new Dimension(30, 15));
 		upButton.addActionListener(this);
 		downButton.addActionListener(this);
 		
 		JPanel upAndDownPanel = new JPanel(); // Create a JPanel to store them
-		upAndDownPanel.setName(questionID); // Allows the question that the buttons belong to to be identified.
+		upAndDownPanel.setName(component); // Allows the question that the buttons belong to to be identified.
 		upAndDownPanel.setLayout(new GridLayout(2,1)); // 2 rows 1 column
-		
+		upAndDownPanel.setMaximumSize(new Dimension(30,30));
 		upAndDownPanel.add(upButton);
 		upAndDownPanel.add(downButton);
 		
@@ -497,7 +530,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		nextQuestionPreviewLocation++;
 		
-		formBeingCreated = formBeingCreated.add(questionID, true); // Add the question to the form
+		formBeingCreated = formBeingCreated.add(component, isAQuestion); // Add the question to the form, and make it required if it's a question
 		
 		updateFormPreview();
 	}

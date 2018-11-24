@@ -266,14 +266,39 @@ public class Form implements Serializable
 			trimArray(); // Trim the array
 			trimRequiredQuestionsArray(); // Trim the requried questions array
 			
-			mainSkillsTested = new String[questions.length];
-
-			for (int i = 0; i < questions.length; i++)
-			{
-				mainSkillsTested[i] = questionList.getQuestionByID(questions[i]).getType(); // Store the type of the question in the main skills tested array
-			}
+			getMainSkillsTested();
 			
 			return new Form(this);
+		}
+		
+		private void getMainSkillsTested() // Gets the main skills tested
+		{
+			int nextUnTrimmedLocation = 0;
+			String[] unTrimmedMainSkillsTested = new String[questions.length];
+			
+			for (int i = 0; i < questions.length; i++)
+			{
+				Question question = questionList.getQuestionByID(questions[i]); // Get the question
+				if (question != null) // If the question isn't null i.e. it's a question not a header
+				{
+					unTrimmedMainSkillsTested[nextUnTrimmedLocation] = question.getType();
+					nextUnTrimmedLocation++;
+				}
+			}
+			
+			if (nextUnTrimmedLocation != questions.length) // If there was at least one header in the form there will be null values we need to trim off
+			{
+				mainSkillsTested = new String[nextUnTrimmedLocation];
+				
+				for (int i = 0; i < nextUnTrimmedLocation; i++)
+				{
+					mainSkillsTested[i] = unTrimmedMainSkillsTested[i];
+				}
+			}
+			else
+			{
+				mainSkillsTested = unTrimmedMainSkillsTested;
+			}
 		}
 		
 		private void trimRequiredQuestionsArray() // Trims the array to the correct length so that there are no null elements
