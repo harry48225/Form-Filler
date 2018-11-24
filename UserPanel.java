@@ -105,6 +105,23 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		}
 		tcm.addColumnModelListener(this);
 		
+		tcm.getColumn(0).setMaxWidth(120); // Username
+		tcm.getColumn(0).setMaxWidth(120); // Username
+		tcm.getColumn(1).setMaxWidth(120); // Password
+		tcm.getColumn(2).setMaxWidth(120); // First Name
+		tcm.getColumn(3).setMaxWidth(120); // Last Name
+		tcm.getColumn(4).setMaxWidth(120); // Date of birth
+		tcm.getColumn(5).setMaxWidth(120); // Phone Number
+		
+		tcm.getColumn(0).setMinWidth(120); // Username
+		tcm.getColumn(0).setMinWidth(120); // Username
+		tcm.getColumn(1).setMinWidth(120); // Password
+		tcm.getColumn(2).setMinWidth(120); // First Name
+		tcm.getColumn(3).setMinWidth(120); // Last Name
+		tcm.getColumn(4).setMinWidth(120); // Date of birth
+		tcm.getColumn(5).setMinWidth(120); // Phone Number
+		//tcm.getColumn(6).setPreferredWidth(90); // Sessions Attended
+		
 		populateTable(users.getArray());
 	}
 	
@@ -133,8 +150,10 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			if (data[i] != null)
 			{
-				String[] user = data[i].toStringArray(); // Convert the user to a String array
-				userTableModel.addRow(user); // Add the user to the table
+				User u = data[i];
+				String[] userData = new String[] {u.getID(), u.getUsername(), u.getPassword(), u.getFirstName(), u.getLastName(),
+											   u.getDateOfBirth(), u.getPhoneNumber(), u.getSessionsAttendedString().replace(".", " ")};
+				userTableModel.addRow(userData); // Add the user to the table
 			}
 		}
 		
