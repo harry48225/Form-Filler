@@ -1,9 +1,10 @@
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class UserPanel extends JPanel implements ActionListener
+public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private UserList users;
 	
@@ -16,15 +17,18 @@ public class UserPanel extends JPanel implements ActionListener
 	private JTable userTable = new JTable(userTableModel); // Create a table to hold the users
 	private JScrollPane userTableScrollPane = new JScrollPane(userTable); // Create a scroll pane
 	
+	private JPanel actionPanel = new JPanel(); // Stores everything apart from the table
+	
 	// For searching through the users
 	private JPanel searchPanel = new JPanel();
-	private JLabel firstNameSearchLabel = new JLabel("First name to search for");
+	private JLabel firstNameSearchLabel = new JLabel("First name to search for:");
 	private JTextField firstNameSearchTextField = new JTextField();
 	private JButton searchButton = new JButton("Search");
 	
 	private JButton addUserButton = new JButton("Add new user");
 	private JButton editUserButton = new JButton("Edit user");
 	private JButton deleteUserButton = new JButton("Delete user");
+	private JButton saveButton = new JButton("Save changes");
 	
 	private JButton registerButton = new JButton("Take register");
 	
@@ -39,41 +43,82 @@ public class UserPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <USER_PANEL> Running prepareGUI");
 		
-		this.setLayout(new GridLayout(0,1));
+		this.setLayout(new BorderLayout());
 		
-		this.add(userTableScrollPane); // Add the table
+		prepareTable();
+		this.add(userTableScrollPane, BorderLayout.CENTER); // Add the table
 		
+		prepareActionPanel();
+		
+		this.add(actionPanel, BorderLayout.SOUTH);
+		
+	}
+	
+	private void prepareActionPanel()
+	{
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.LINE_AXIS));
+		
+		registerButton.addActionListener(this);
+		registerButton.setBackground(new Color(169,196,235));
+		actionPanel.add(registerButton);
+		
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		
+		prepareSearchPanel();
+		actionPanel.add(searchPanel);
+	
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		
+		editUserButton.addActionListener(this);
+		editUserButton.setBackground(new Color(169,196,235));
+		actionPanel.add(editUserButton);
+
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		
+		addUserButton.addActionListener(this);
+		addUserButton.setBackground(new Color(169,196,235));
+		actionPanel.add(addUserButton);
+
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		
+		deleteUserButton.addActionListener(this);
+		deleteUserButton.setBackground(new Color(169,196,235));
+		actionPanel.add(deleteUserButton);
+		
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+
+		saveButton.addActionListener(this);
+		saveButton.setBackground(new Color(169,196,235));
+		actionPanel.add(saveButton);
+		
+	}
+	private void prepareTable()
+	{
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = userTable.getColumnModel();
 		tcm.removeColumn(tcm.getColumn(0));
 		
+		for (int i = 0; i < userTable.getColumnCount(); i++)
+		{
+			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
+			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
+		}
+		tcm.addColumnModelListener(this);
+		
 		populateTable(users.getArray());
-		
-		prepareSearchPanel();
-		
-		this.add(searchPanel);
-		
-		addUserButton.addActionListener(this);
-		this.add(addUserButton);
-		
-		editUserButton.addActionListener(this);
-		this.add(editUserButton);
-		
-		deleteUserButton.addActionListener(this);
-		this.add(deleteUserButton);
-		
-		registerButton.addActionListener(this);
-		this.add(registerButton);
 	}
 	
 	private void prepareSearchPanel() // Prepares the panel that allows the user to search through the users
 	{
-		searchPanel.setLayout(new GridLayout(0,1));
+		searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.LINE_AXIS));
 		
 		searchPanel.add(firstNameSearchLabel);
+		searchPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		searchPanel.add(firstNameSearchTextField);
+		searchPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
 		searchButton.addActionListener(this);
+		searchButton.setBackground(new Color(169,196,235));
 		
 		searchPanel.add(searchButton);
 	}
@@ -206,4 +251,45 @@ public class UserPanel extends JPanel implements ActionListener
 			new Register(users);
 		}
 	}
+	
+	private void resizeRows()
+	{
+		for (int row = 0; row < userTable.getRowCount(); row ++)
+		{
+			int requiredHeight = 0;
+			
+			// Go through the columns and get the largest height of all of the components
+			for (int col = 0; col < userTable.getColumnCount(); col++)
+			{
+				TableCellRenderer cellRenderer = userTable.getCellRenderer(row, col);
+				Component c = userTable.prepareRenderer(cellRenderer, row, col);
+				
+				int preferredHeight = c.getPreferredSize().height;
+				
+				if (preferredHeight > requiredHeight)
+				{
+					requiredHeight = preferredHeight;
+				}
+
+			}
+			
+			// Set the height of the row to that height if that's not already the height
+			if (userTable.getRowHeight(row) != requiredHeight)
+			{
+				userTable.setRowHeight(row, requiredHeight);
+			}
+		}
+	}
+	
+	public void columnMarginChanged(ChangeEvent e)
+	{
+		resizeRows();
+	}
+	public void columnAdded(TableColumnModelEvent e) {}
+	
+	public void columnRemoved(TableColumnModelEvent e) {}
+	
+	public void columnMoved(TableColumnModelEvent e) {}
+	
+	public void columnSelectionChanged(ListSelectionEvent e) {}
 }
