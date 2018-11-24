@@ -6,6 +6,7 @@ public class Form implements Serializable
 	private String id; // ID unique to each form
 	
 	private String[] questions; // Stores the ids of the questions that are in the form
+	private Boolean[] requiredQuestions; // Stores whether each question is required or not
 	
 	private String title;
 	
@@ -23,6 +24,7 @@ public class Form implements Serializable
 		description = builder.description;
 		mainSkillsTested = builder.mainSkillsTested;
 		difficulty = builder.difficulty;
+		requiredQuestions = builder.requiredQuestions;
 	}
 	
 	public Form(String loadedDataFromFile) // Loads a form from the data from the file
@@ -35,6 +37,31 @@ public class Form implements Serializable
 		mainSkillsTested = data[3].split("\\.");
 		difficulty = Integer.parseInt(data[4]);
 		title = data[5];
+		requiredQuestions = loadRequiredQuestions(data[6].split("\\."));
+	}
+	
+	public Boolean isQuestionRequired(String questionID)
+	{
+		Boolean required = false;
+		
+		for (int i = 0; i < questions.length; i ++ )
+		{
+			if (questions[i].equals(questionID)) {required = requiredQuestions[i];}	
+		}
+		
+		return required;
+	}
+	
+	public Boolean[] loadRequiredQuestions(String[] requiredQuestionsStringArray)
+	{
+		Boolean[] outputArray = new Boolean[requiredQuestionsStringArray.length];
+		
+		for (int i = 0; i < requiredQuestionsStringArray.length; i++)
+		{
+			outputArray[i] = Boolean.parseBoolean(requiredQuestionsStringArray[i]);
+		}
+		
+		return outputArray;
 	}
 	
 	public String[] getQuestionIDs() // Returns the question array
@@ -42,38 +69,34 @@ public class Form implements Serializable
 		return questions;
 	}
 	
-	private String questionArrayToString() // Converts the question array to string
+	private String arrayToString(Object[] array) // Converts an array to string
 	{
 		String arrayAsString = "";
 		
-		for (String q : questions)
+		for (Object o : array)
 		{
-			arrayAsString += q + ".";
+			arrayAsString += o + ".";
 		}
 		
-		arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
+		if (arrayAsString != "")
+		{
+			arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
+		}
 		
 		return arrayAsString;
 		
 	}
 	
-	public String mainSkillsTestedToString() // Converts the skills array to string
+	public String mainSkillsTestedToString()
 	{
-		String arrayAsString = "";
-		
-		for (String s : mainSkillsTested)
-		{
-			arrayAsString += s + ".";
-		}
-		
-		arrayAsString = arrayAsString.substring(0, arrayAsString.length() - 1); // Get rid of trailing .
-		
-		return arrayAsString;
+		return arrayToString(mainSkillsTested);
 	}
 	
 	public String toString() // Outputs attributes as String
 	{
-		return id + ","  + questionArrayToString() + "," + description + "," + mainSkillsTestedToString() + "," + difficulty + "," + title; 
+		return id + ","  + arrayToString(questions) + "," 
+				+ description + "," + arrayToString(mainSkillsTested) 
+				+ "," + difficulty + "," + title + "," + arrayToString(requiredQuestions); 
 	}
 	
 	public String getID()
@@ -118,6 +141,8 @@ public class Form implements Serializable
 		private int difficulty; 
 		
 		private String[] questions = new String[50]; // Store 50 questions
+		private Boolean[] requiredQuestions = new Boolean[50];
+		
 		private int nextQuestionLocation = 0;
 		
 		public FormBuilder(String tempID, QuestionList tempQuestions)
@@ -135,11 +160,13 @@ public class Form implements Serializable
 			return this;
 		}
 		
-		public FormBuilder add(String questionID) // Add a question to the form
+		public FormBuilder add(String questionID, Boolean required) // Add a question to the form
 		{
 			System.out.println("[INFO] <FORM_BUILDER> Running add"); // Debug
 			
-			questions[nextQuestionLocation] = questionID; // Add the question
+			// Add the question
+			questions[nextQuestionLocation] = questionID;
+			requiredQuestions[nextQuestionLocation] = required;
 			nextQuestionLocation++;
 			
 			return this;
@@ -217,21 +244,75 @@ public class Form implements Serializable
 			
 			return this;
 		}
+		public FormBuilder setRequired(String questionID, Boolean newRequiredStatus)
+		{
+			System.out.println("[INFO] <FORM_BUILDER> Running setRequired");
+			
+			for (int i = 0; i < nextQuestionLocation; i++) // Iterate over the questions
+			{
+				if (questions[i].equals(questionID)) // If we've found the required question
+				{
+					requiredQuestions[i] = newRequiredStatus;
+					break;
+				}
+			}
+			return this;
+		}
 		
 		public Form build() // Builds a form
 		{
 			System.out.println("[INFO] <FORM_BUILDER> Running build");
 			
 			trimArray(); // Trim the array
-
-			mainSkillsTested = new String[questions.length];
-
-			for (int i = 0; i < questions.length; i++)
-			{
-				mainSkillsTested[i] = questionList.getQuestionByID(questions[i]).getType(); // Store the type of the question in the main skills tested array
-			}
+			trimRequiredQuestionsArray(); // Trim the requried questions array
+			
+			getMainSkillsTested();
 			
 			return new Form(this);
+		}
+		
+		private void getMainSkillsTested() // Gets the main skills tested
+		{
+			int nextUnTrimmedLocation = 0;
+			String[] unTrimmedMainSkillsTested = new String[questions.length];
+			
+			for (int i = 0; i < questions.length; i++)
+			{
+				Question question = questionList.getQuestionByID(questions[i]); // Get the question
+				if (question != null) // If the question isn't null i.e. it's a question not a header
+				{
+					unTrimmedMainSkillsTested[nextUnTrimmedLocation] = question.getType();
+					nextUnTrimmedLocation++;
+				}
+			}
+			
+			if (nextUnTrimmedLocation != questions.length) // If there was at least one header in the form there will be null values we need to trim off
+			{
+				mainSkillsTested = new String[nextUnTrimmedLocation];
+				
+				for (int i = 0; i < nextUnTrimmedLocation; i++)
+				{
+					mainSkillsTested[i] = unTrimmedMainSkillsTested[i];
+				}
+			}
+			else
+			{
+				mainSkillsTested = unTrimmedMainSkillsTested;
+			}
+		}
+		
+		private void trimRequiredQuestionsArray() // Trims the array to the correct length so that there are no null elements
+		{
+			System.out.println("[INFO] <FORM_BUILDER> Running trimRequiredQuestionsArray");
+		
+			Boolean[] newArray = new Boolean[nextQuestionLocation]; // Create a new array of the correct size
+			
+			for (int i = 0; i < nextQuestionLocation; i++) // For each object in the array
+			{
+				newArray[i] = requiredQuestions[i]; // Copy the object
+			}
+			
+			requiredQuestions = newArray; // Store the new trimmed array in questions
 		}
 		
 		private void trimArray() // Trims the array to the correct length so that there are no null elements

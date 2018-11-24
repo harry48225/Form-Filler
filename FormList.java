@@ -179,6 +179,7 @@ public class FormList
 		catch (Exception e)
 		{
 			System.out.println("[ERROR] <FORM_LIST> Error writing database to file" + e);
+			e.printStackTrace();
 		}
 
 	}
