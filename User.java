@@ -80,6 +80,11 @@ public class User
 		sessionsPresentAt = newSessions;
 	}
 	
+	public String[] getSessionsAttended()
+	{
+		return sessionsPresentAt;
+	}
+	
 	public String getID()
 	{
 		return id;

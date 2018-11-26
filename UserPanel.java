@@ -330,39 +330,6 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		return pass;
 		
 	}
-	/*
-	private void editUser(User userToEdit) // Lets the user edit a user's details
-	{
-		// Show the input dialogs used when creating a user, however populate them with the user's info
-		String username = JOptionPane.showInputDialog(null, "Please enter a username", userToEdit.getUsername());
-		
-		String password = JOptionPane.showInputDialog(null, "Please enter a password", userToEdit.getPassword());
-		
-		String firstName = JOptionPane.showInputDialog(null, "Please enter your first name", userToEdit.getFirstName());
-		String lastName = JOptionPane.showInputDialog(null, "Please enter your last name", userToEdit.getLastName());
-		String dateOfBirth = JOptionPane.showInputDialog(null, "Please enter your date of birth as dd/mm/yyyy", userToEdit.getDateOfBirth());
-		String phoneNumber = JOptionPane.showInputDialog(null, "Please enter your phone number", userToEdit.getPhoneNumber());
-		String sessionsAttendedString = JOptionPane.showInputDialog(null, "Please enter the sessions attended as dd-mm-yyyy separated by commas", userToEdit.getSessionsAttendedString());
-	
-		String[] sessionsAttended = new String[0]; // Empty string array
-		
-		if (sessionsAttendedString.length() > 0) // If there are sessions
-		{
-			sessionsAttended = sessionsAttendedString.split(","); // Get the sessions.
-		}
-	
-		// Update the user
-		userToEdit.setUsername(username);
-		userToEdit.setPassword(password);
-		userToEdit.setFirstName(firstName);
-		userToEdit.setLastName(lastName);
-		userToEdit.setDateOfBirth(dateOfBirth);
-		userToEdit.setPhoneNumber(phoneNumber);
-		userToEdit.setSessionsAttended(sessionsAttended);
-		
-		users.writeDatabase();
-	}
-	*/
 	
 	public String getUsername() // Gets a unique username from the user
 	{
@@ -424,7 +391,14 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			System.out.println("[INFO] <USER_PANEL> searchButton pressed");
 			
-			populateTable(users.filterByFirstName(firstNameSearchTextField.getText()));
+			if (firstNameSearchTextField.getText().trim().isEmpty()) // If they aren't searching for a user repopulate the table with all users
+			{
+				populateTable(users.getArray());
+			}
+			else
+			{
+				populateTable(users.filterByFirstName(firstNameSearchTextField.getText()));
+			}
 		}
 		else if (evt.getSource() == registerButton)
 		{
