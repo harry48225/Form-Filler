@@ -64,8 +64,6 @@ public class UserList
 		
 		userArray = newArray; // Overwrite the old array
 		nextUserLocation--; // There is one less user in the array so a free spot has opened
-		
-		writeDatabase(); // Write the changes to file
 	}
 	
 	public User getUserByID(String id) // Returns the User corresponding to an ID
@@ -248,6 +246,31 @@ public class UserList
 		
 		userArray[nextUserLocation] = newUser;
 		nextUserLocation++;
+	}
+	
+	public void sortByFirstName()
+	{
+		System.out.println("[INFO] <USER_LIST> Running sortByFirstName"); // Debug
+		
+		boolean swapped = true; // Toggle that contains whether a value has been swapped
+		
+		while (swapped == true) // Until no more swaps are made
+		{
+			
+			swapped = false; // Set swapped to false
+			
+			for (int i = 0; i < nextUserLocation-1; i++) // For all users but the last one
+			{
+				if (!Utils.isBeforeInDictionary(userArray[i].getFirstName(), userArray[i+1].getFirstName())) // If user 1 doesn't come before user 2
+				{
+					User temp = userArray[i+1]; // Store the value in a temp variable
+					userArray[i + 1] = userArray[i]; // Swap the values
+					userArray[i] = temp; // Swap
+					
+					swapped = true; // Set swapped to true as a swap was made
+				}
+			}
+		}
 	}
 
 }
