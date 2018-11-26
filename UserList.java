@@ -64,8 +64,6 @@ public class UserList
 		
 		userArray = newArray; // Overwrite the old array
 		nextUserLocation--; // There is one less user in the array so a free spot has opened
-		
-		writeDatabase(); // Write the changes to file
 	}
 	
 	public User getUserByID(String id) // Returns the User corresponding to an ID

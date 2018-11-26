@@ -44,7 +44,11 @@ public class User
 	
 	public void addPresentToday() // Adds today's date to the user's sessions present at array
 	{
-		String today = LocalDate.now().toString(); // Get today's date
+		String rawToday = LocalDate.now().toString(); // Get today's date
+		// By default its yyyy-mm-dd
+		// We want dd-mm-yyyy
+		String[] todayArray = rawToday.split("-");
+		String today = todayArray[2] + "-" + todayArray[1] + "-" + todayArray[0];
 		
 		if (sessionsPresentAt.length >= 1) // If they've been to at least one session
 		{

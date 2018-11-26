@@ -3,6 +3,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.regex.*;
 
 public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
@@ -26,7 +27,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	private JButton searchButton = new JButton("Search");
 	
 	private JButton addUserButton = new JButton("Add new user");
-	private JButton editUserButton = new JButton("Edit user");
+	private JButton editTableButton = new JButton("Edit table");
 	private JButton deleteUserButton = new JButton("Delete user");
 	private JButton saveButton = new JButton("Save changes");
 	
@@ -69,9 +70,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
-		editUserButton.addActionListener(this);
-		editUserButton.setBackground(new Color(169,196,235));
-		actionPanel.add(editUserButton);
+		editTableButton.addActionListener(this);
+		editTableButton.setBackground(new Color(169,196,235));
+		actionPanel.add(editTableButton);
 
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
@@ -94,6 +95,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	}
 	private void prepareTable()
 	{
+		userTable.setDefaultEditor(Object.class, null); // Disable editing
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = userTable.getColumnModel();
 		tcm.removeColumn(tcm.getColumn(0));
@@ -136,6 +138,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		searchButton.addActionListener(this);
 		searchButton.setBackground(new Color(169,196,235));
+		searchButton.setBackground(new Color(169,196,235));
+		
+		firstNameSearchTextField.addActionListener(this);
 		
 		searchPanel.add(searchButton);
 	}
@@ -148,6 +153,8 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		for (int i = 0; i < data.length; i++) // For each user in the array
 		{
+		
+			// Validate the user name
 			if (data[i] != null)
 			{
 				User u = data[i];
@@ -157,6 +164,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			}
 		}
 		
+		resizeRows();
 	}
 	
 	private void createNewUser() // Lets the user create a new user
@@ -174,11 +182,111 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			
 		users.addUser(new User(id,username,password,firstName,lastName,dateOfBirth,phoneNumber, false, new String[0], new QuestionStatList()));
 		
-		users.writeDatabase();
-		
 		JOptionPane.showMessageDialog(null, "User added!");
+		
+		populateTable(users.getArray());
 	}
 	
+	private void saveChanges()
+	{
+		userTable.setDefaultEditor(Object.class, null); // Disable editing
+		
+		// Go through each row of the table and update all of the user details
+		// If there is an issue then create a dialog telling the user what is wrong
+		for (int rowIndex = 0; rowIndex < userTable.getRowCount(); rowIndex++)
+		{
+			String userID = (String) userTable.getModel().getValueAt(rowIndex, 0);
+			User u = users.getUserByID(userID);
+			
+			// Check username, date of birth, phone number, and sessions attended for errors.
+			
+			String newUsername = (String) userTable.getModel().getValueAt(rowIndex, 1);
+			String newDateOfBirth = (String) userTable.getModel().getValueAt(rowIndex, 5);
+			String newPhoneNumber = (String) userTable.getModel().getValueAt(rowIndex, 6);
+			String newSessionsAttended = (String) userTable.getModel().getValueAt(rowIndex, 7);
+			
+			// Check if the username is already in use by a different user
+			User otherUser = users.getUserByUsername(newUsername);
+			if (otherUser != null && otherUser != u) // If the username is already taken
+			{
+				JOptionPane.showMessageDialog(null, u.getFirstName() + " username already in use.", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				return; // Exit the method
+			}
+			
+			if (!validateDate(newDateOfBirth))
+			{
+				JOptionPane.showMessageDialog(null, u.getFirstName() + ": Invaid date of birth", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			if (!validatePhoneNumber(newPhoneNumber))
+			{
+				JOptionPane.showMessageDialog(null, u.getFirstName() + ": Invaid phone number", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			if (!newSessionsAttended.isEmpty())
+			{
+				for (String session : newSessionsAttended.split(" "))
+				{
+					if (!validateDate(session)) // If one of the dates is incorrect
+					{
+						JOptionPane.showMessageDialog(null, u.getFirstName() + " " + session + ": Invaid date (Sessions attended)", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+			}
+			
+		}
+		
+		// We've not hit a return therefore everything must have been correct therefore
+		// write the changes to file.
+		users.writeDatabase();
+		
+	}
+	
+	private boolean validatePhoneNumber(String phoneNumber)
+	{
+		return Pattern.matches("^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$", phoneNumber);
+		
+	}
+	
+	private boolean validateDate(String date)
+	{
+		// Checks if a date is in yyyy-mm-dd
+		boolean pass = true;
+		
+		if (date.length() != 10)
+		{
+			pass = false;
+		}
+		
+		String[] splitDate = date.split("-");
+		
+		try
+		{
+			int day = Integer.parseInt(splitDate[0]);
+			int month = Integer.parseInt(splitDate[1]);
+			int year = Integer.parseInt(splitDate[2]);
+			
+			if (day > 31 || month > 12 || year < 1900)
+			{
+				pass = false;
+			}
+		}
+		catch (NumberFormatException e)
+		{
+			pass = false;
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			pass = false;
+		}
+		// The date is 10 characters long, has 2 - in it and the year is 4 digits and the month and days are 2 digits and they are valid months and days
+		return pass;
+		
+	}
+	/*
 	private void editUser(User userToEdit) // Lets the user edit a user's details
 	{
 		// Show the input dialogs used when creating a user, however populate them with the user's info
@@ -210,6 +318,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		users.writeDatabase();
 	}
+	*/
 	
 	public String getUsername() // Gets a unique username from the user
 	{
@@ -234,6 +343,21 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		return username;
 	}
 	
+	private void editTable()
+	{
+		userTable.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField())); // Disable editing
+	}
+	
+	private void deleteUser()
+	{
+			int row = userTable.getSelectedRow();
+			if (row != -1) // If they actually selected a row
+			{
+				String selectedID = (String) userTable.getModel().getValueAt(row, 0); // Get the userID
+				users.removeUser(selectedID); // Delete the user that the ID corresponds to.
+				populateTable(users.getArray());
+			}
+	}
 	public void actionPerformed(ActionEvent evt)
 	{
 		if (evt.getSource() == addUserButton)
@@ -242,20 +366,15 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			
 			createNewUser();
 		}
-		else if (evt.getSource() == editUserButton)
+		else if (evt.getSource() == editTableButton)
 		{
-			System.out.println("[INFO] <USER_PANEL> editUserButton pressed");
-			int row = userTable.getSelectedRow();
-			String selectedID = (String) userTable.getModel().getValueAt(row, 0); // Get the userID
-			User selectedUser = users.getUserByID(selectedID); // Get the user that has been selected
-			editUser(selectedUser);
+			System.out.println("[INFO] <USER_PANEL> editTableButton pressed");
+			editTable();
 		}
 		else if (evt.getSource() == deleteUserButton)
 		{
 			System.out.println("[INFO] <USER_PANEL> deleteUserButton pressed");
-			int row = userTable.getSelectedRow();
-			String selectedID = (String) userTable.getModel().getValueAt(row, 0); // Get the userID
-			users.removeUser(selectedID); // Delete the user that the ID corresponds to.
+			deleteUser();
 		}
 		else if (evt.getSource() == searchButton)
 		{
@@ -268,6 +387,14 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			System.out.println("[INFO] <USER_PANEL> registerButton pressed");
 			
 			new Register(users);
+		}
+		else if (evt.getSource() == firstNameSearchTextField)
+		{
+			searchButton.doClick();
+		}
+		else if (evt.getSource() == saveButton)
+		{
+			saveChanges();
 		}
 	}
 	
