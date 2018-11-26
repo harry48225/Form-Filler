@@ -173,13 +173,46 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		String username = getUsername();
 		
+		if (username == null)
+		{
+			return;
+		}
+		
 		String password = JOptionPane.showInputDialog("Please enter a password");
 		
+		if (password == null)
+		{
+			return;
+		}
+		
 		String firstName = JOptionPane.showInputDialog("Please enter your first name");
+		
+		if (firstName == null)
+		{
+			return;
+		}
+		
 		String lastName = JOptionPane.showInputDialog("Please enter your last name");
+		
+		if (lastName == null)
+		{
+			return;
+		}
+		
 		String dateOfBirth = JOptionPane.showInputDialog("Please enter your date of birth as dd/mm/yyyy");
+		
+		if (dateOfBirth == null)
+		{
+			return;
+		}
+		
 		String phoneNumber = JOptionPane.showInputDialog("Please enter your phone number");
 			
+		if (phoneNumber == null)
+		{
+			return;
+		}
+		
 		users.addUser(new User(id,username,password,firstName,lastName,dateOfBirth,phoneNumber, false, new String[0], new QuestionStatList()));
 		
 		JOptionPane.showMessageDialog(null, "User added!");
@@ -201,6 +234,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			// Check username, date of birth, phone number, and sessions attended for errors.
 			
 			String newUsername = (String) userTable.getModel().getValueAt(rowIndex, 1);
+			String newPassword = (String) userTable.getModel().getValueAt(rowIndex, 2);
+			String newFirstName = (String) userTable.getModel().getValueAt(rowIndex, 3);
+			String newLastName = (String) userTable.getModel().getValueAt(rowIndex, 4);
 			String newDateOfBirth = (String) userTable.getModel().getValueAt(rowIndex, 5);
 			String newPhoneNumber = (String) userTable.getModel().getValueAt(rowIndex, 6);
 			String newSessionsAttended = (String) userTable.getModel().getValueAt(rowIndex, 7);
@@ -236,6 +272,14 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 					}
 				}
 			}
+			
+			u.setUsername(newUsername);
+			u.setPassword(newPassword);
+			u.setFirstName(newFirstName);
+			u.setLastName(newLastName);
+			u.setDateOfBirth(newDateOfBirth);
+			u.setPhoneNumber(newPhoneNumber);
+			u.setSessionsAttended(newSessionsAttended.split(" "));
 			
 		}
 		
