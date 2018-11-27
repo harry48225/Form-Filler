@@ -89,6 +89,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		{
 			QuestionPanel questionPanel = questionPanels[i];
 			
+			currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addAttempt();
+			
 			boolean passed = questionPanel.validateAnswers(); // Validates the answer
 			
 			if (!passed)
