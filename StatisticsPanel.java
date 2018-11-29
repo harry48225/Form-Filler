@@ -42,6 +42,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private JLabel averageTimeTakenToCompleteLabel = new JLabel("Average time taken to complete: ", SwingConstants.CENTER);
 	
 	private NumberOfAttemptsToCorrectChart correctionsChart;
+	private TimeTakenToCompleteChart timeChart;
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
@@ -130,6 +131,10 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		
 		correctionsChart = new NumberOfAttemptsToCorrectChart(new int[] {0}, 0);
 		statsPanel.add(correctionsChart);
+		
+		timeChart = new TimeTakenToCompleteChart(new long[] {0}, 0);
+		statsPanel.add(timeChart);
+		
 	}
 	
 	private String calcuateAverageTimeTakenToComplete(QuestionStat stats)
@@ -188,23 +193,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		averageTimeTakenToCompleteLabel.setText(averageTimeTakenToCompleteLabel.getText().split(":")[0] + ": " + calcuateAverageTimeTakenToComplete(stats));
 		
 		correctionsChart.updateChart(stats.getNumberOfAttemptsNeededToCorrect(), stats.getNumberOfAttempts());
-		/*
-		// Attempts needed to correct
-		
-		String attemptsNeededToCorrect = "";
-		
-		for (int attempt : stats.getNumberOfAttemptsNeededToCorrect())
-		{
-			if (attempt != 0) // If the attempt isn't null data
-			{
-				attemptsNeededToCorrect += attempt + ",";
-			}
-			else // Break as all the meaningful data has been added
-			{
-				break;
-			}
-		}
-		*/
+		timeChart.updateChart(stats.getTimeTakenToComplete(), stats.getNumberOfAttempts());
 	}
 	
 	private void viewReport() // Opens a window to view a report produced by question stat list
@@ -235,6 +224,101 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <STATISTICS_PANEL> helpButton pressed");
 			
 			JOptionPane.showMessageDialog(null,"This is the statistics panel. You can view information about each question that you've filled in. \r\n To do this select the question from the drop down and press view question. \r\n You can also press produce report to produce a printable report detailing your progress with each question type.");
+		}
+	}
+	
+	private class TimeTakenToCompleteChart extends JPanel
+	{
+		private long[] timeTakenToComplete;
+		private int totalNumberOfAttempts;
+		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
+		
+		public TimeTakenToCompleteChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		{
+			timeTakenToComplete = tempTimeTakenToComplete;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+			
+		}
+		
+		public void updateChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		{
+			timeTakenToComplete = tempTimeTakenToComplete;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+		}
+		
+		private void calculateValidNumberOfAttempts()
+		{
+			// Find how many data points there are
+			// and start the chart at the first one
+			int numberOfDataPoints = 0;
+			for (long attempt : timeTakenToComplete)
+			{
+				if (attempt != -1)
+				{
+					numberOfDataPoints++;
+				}
+				else
+				{
+					break; // The rest will be null
+				}
+			}
+			
+			validNumberOfAttempts = numberOfDataPoints;
+		}
+		
+		private void updateChart()
+		{
+			calculateValidNumberOfAttempts();
+			
+			JFreeChart chart = ChartFactory.createXYLineChart(
+			"Time taken to complete",
+			"Attempt number", "Time (seconds)",
+			createDataset(),
+			PlotOrientation.VERTICAL,
+			false,false,false);
+			
+			XYPlot plot = (XYPlot) chart.getPlot();  
+
+			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+			
+			// Make the axis start at 0
+			
+			
+			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
+			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			
+			ChartPanel cP = new ChartPanel(chart);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
+		}
+		private XYDataset createDataset()
+		{
+			XYSeriesCollection dataset = new XYSeriesCollection();
+			XYSeries data = new XYSeries("data");
+			
+			for (int i = validNumberOfAttempts-1; i >= 0; i--)
+			{
+				if (timeTakenToComplete[i] != -1)
+				{
+					int xCoordinate = totalNumberOfAttempts - i;
+					data.add(xCoordinate, timeTakenToComplete[i]);
+				}
+			}
+			
+			dataset.addSeries(data);
+			return dataset;
 		}
 	}
 	
@@ -300,7 +384,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			// Make the axis start at 0
 			
 			
-			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts);
+			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
 			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			
@@ -323,7 +407,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			{
 				if (numberOfAttemptsToCorrect[i] != -1)
 				{
-					int xCoordinate = totalNumberOfAttempts - validNumberOfAttempts + i;
+					int xCoordinate = totalNumberOfAttempts - i;
 					data.add(xCoordinate, numberOfAttemptsToCorrect[i]);
 				}
 			}
