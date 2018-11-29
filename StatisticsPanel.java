@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -16,6 +17,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.*;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.data.general.DefaultPieDataset;
+//import org.jfree.chart.plot.PiePlot;
+//import org.jfree.chart.labels.PieSectionLabelGenerator;
 
 
 public class StatisticsPanel extends JPanel implements ActionListener
@@ -43,7 +47,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	
 	private NumberOfAttemptsToCorrectChart correctionsChart;
 	private TimeTakenToCompleteChart timeChart;
-	
+	private ValidationChart validationChart;
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public StatisticsPanel(User tempUser, QuestionList tempQuestions)
@@ -135,6 +139,8 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		timeChart = new TimeTakenToCompleteChart(new long[] {0}, 0);
 		statsPanel.add(timeChart);
 		
+		validationChart = new ValidationChart(0,0);
+		statsPanel.add(validationChart);
 	}
 	
 	private String calcuateAverageTimeTakenToComplete(QuestionStat stats)
@@ -194,6 +200,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		
 		correctionsChart.updateChart(stats.getNumberOfAttemptsNeededToCorrect(), stats.getNumberOfAttempts());
 		timeChart.updateChart(stats.getTimeTakenToComplete(), stats.getNumberOfAttempts());
+		validationChart.updateChart(stats.getNumberOfAttempts(), stats.getTimesFailedValidation());
 	}
 	
 	private void viewReport() // Opens a window to view a report produced by question stat list
@@ -294,6 +301,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			
 			ChartPanel cP = new ChartPanel(chart);
+			cP.setPopupMenu(null);
 			
 			this.removeAll();
 			this.setPreferredSize(new Dimension(200,200));
@@ -389,6 +397,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			
 			ChartPanel cP = new ChartPanel(chart);
+			cP.setPopupMenu(null);
 			
 			this.removeAll();
 			this.setPreferredSize(new Dimension(200,200));
@@ -414,6 +423,69 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			
 			dataset.addSeries(data);
 			return dataset;
+		}
+	}
+	
+	public class ValidationChart extends JPanel {
+
+		private static final String KEY1 = "Failed Validation";
+		private static final String KEY2 = "Successful completion";
+
+		private int totalNumberOfAttempts;
+		private int timesFailedValidation;
+		
+		public ValidationChart(int tempTotalNumberOfAttempts, int tempTimesFailedValidation) 
+		{
+		
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			timesFailedValidation = tempTimesFailedValidation;
+			
+			updateChart();
+		}
+		
+		private DefaultPieDataset createDataset()
+		{
+			DefaultPieDataset dataset = new DefaultPieDataset();
+			dataset.setValue(KEY1, timesFailedValidation);
+			dataset.setValue(KEY2, totalNumberOfAttempts);
+			
+			return dataset;
+		}
+		
+		public void updateChart(int tempTotalNumberOfAttempts, int tempTimesFailedValidation)
+		{
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			timesFailedValidation = tempTimesFailedValidation;
+			
+			updateChart();
+		}
+		
+		private void updateChart()
+		{
+			JFreeChart chart = ChartFactory.createPieChart(
+				"Percentage of times failed validation check", createDataset(), true, true, false);
+			/*
+			PiePlot plot = (PiePlot) chart.getPlot();
+			plot.setSectionPaint(KEY1, Color.green);
+			plot.setSectionPaint(KEY2, Color.red);
+			plot.setExplodePercent(KEY1, 0.10);
+			plot.setSimpleLabels(true);
+			*/
+			
+			//PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+			//	"{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
+			//plot.setLabelGenerator(gen);
+			
+			ChartPanel cP = new ChartPanel(chart);	
+			cP.setPopupMenu(null);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
 		}
 	}
 	
