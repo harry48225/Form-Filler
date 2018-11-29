@@ -21,6 +21,25 @@ public class QuestionStat // Every user has one of these for each question and i
 		numberOfAttempts = Integer.parseInt(loadedData[4]);
 	}
 	
+	private void initaliseArrays()
+	{	
+		
+		// Add rogue values
+		
+		// Set all the values in the array to -1
+		for (int i = 0; i < numberOfAttemptsNeededToCorrect.length; i++)
+		{
+			numberOfAttemptsNeededToCorrect[i] = -1;
+		}
+		
+		// Set all the values in the array to -1
+		for (int i = 0; i < timeTakenToComplete.length; i++)
+		{
+			timeTakenToComplete[i] = -1;
+		}
+		
+	}
+	
 	public int getNumberOfAttempts()
 	{
 		return numberOfAttempts;

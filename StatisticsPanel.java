@@ -6,6 +6,17 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.*;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.axis.NumberAxis;
+
 
 public class StatisticsPanel extends JPanel implements ActionListener
 {
@@ -29,6 +40,8 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private JLabel numberOfAttemptsLabel = new JLabel("Number of times attempted: ", SwingConstants.CENTER);
 	private JLabel timesFailedValidationLabel = new JLabel("Number of times failed validation: ", SwingConstants.CENTER);
 	private JLabel averageTimeTakenToCompleteLabel = new JLabel("Average time taken to complete: ", SwingConstants.CENTER);
+	
+	private NumberOfAttemptsToCorrectChart correctionsChart;
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
@@ -114,6 +127,9 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		statsPanel.add(Box.createRigidArea(new Dimension(0,5)));
 		
 		statsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+		
+		correctionsChart = new NumberOfAttemptsToCorrectChart(new int[] {0}, 0);
+		statsPanel.add(correctionsChart);
 	}
 	
 	private String calcuateAverageTimeTakenToComplete(QuestionStat stats)
@@ -171,6 +187,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		timesFailedValidationLabel.setText(timesFailedValidationLabel.getText().split(":")[0] + ": " + stats.getTimesFailedValidation());
 		averageTimeTakenToCompleteLabel.setText(averageTimeTakenToCompleteLabel.getText().split(":")[0] + ": " + calcuateAverageTimeTakenToComplete(stats));
 		
+		correctionsChart.updateChart(stats.getNumberOfAttemptsNeededToCorrect(), stats.getNumberOfAttempts());
 		/*
 		// Attempts needed to correct
 		
@@ -220,4 +237,100 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			JOptionPane.showMessageDialog(null,"This is the statistics panel. You can view information about each question that you've filled in. \r\n To do this select the question from the drop down and press view question. \r\n You can also press produce report to produce a printable report detailing your progress with each question type.");
 		}
 	}
+	
+	private class NumberOfAttemptsToCorrectChart extends JPanel
+	{
+		private int[] numberOfAttemptsToCorrect;
+		private int totalNumberOfAttempts;
+		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
+		
+		public NumberOfAttemptsToCorrectChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		{
+			numberOfAttemptsToCorrect = tempNumberOfAttempts;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+			
+		}
+		
+		public void updateChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		{
+			numberOfAttemptsToCorrect = tempNumberOfAttempts;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+		}
+		
+		private void calculateValidNumberOfAttempts()
+		{
+			// Find how many data points there are
+			// and start the chart at the first one
+			int numberOfDataPoints = 0;
+			for (int attempt : numberOfAttemptsToCorrect)
+			{
+				if (attempt != -1)
+				{
+					numberOfDataPoints++;
+				}
+				else
+				{
+					break; // The rest will be null
+				}
+			}
+			
+			validNumberOfAttempts = numberOfDataPoints;
+		}
+		
+		private void updateChart()
+		{
+			calculateValidNumberOfAttempts();
+			
+			JFreeChart chart = ChartFactory.createXYLineChart(
+			"Times taken to correct an error",
+			"Attempt number", "Number of times",
+			createDataset(),
+			PlotOrientation.VERTICAL,
+			false,false,false);
+			
+			XYPlot plot = (XYPlot) chart.getPlot();  
+
+			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+			
+			// Make the axis start at 0
+			
+			
+			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts);
+			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			
+			ChartPanel cP = new ChartPanel(chart);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
+		}
+		private XYDataset createDataset()
+		{
+			XYSeriesCollection dataset = new XYSeriesCollection();
+			XYSeries data = new XYSeries("data");
+			
+			for (int i = validNumberOfAttempts-1; i >= 0; i--)
+			{
+				if (numberOfAttemptsToCorrect[i] != -1)
+				{
+					int xCoordinate = totalNumberOfAttempts - validNumberOfAttempts + i;
+					data.add(xCoordinate, numberOfAttemptsToCorrect[i]);
+				}
+			}
+			
+			dataset.addSeries(data);
+			return dataset;
+		}
+	}
+	
 }
