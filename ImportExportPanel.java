@@ -46,8 +46,46 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		prepareImportExportQuestionsPanel();
 		this.add(importExportQuestionsPanel);
 		
-		//importFormButton.addActionListener(this);
-		//this.add(importFormButton);
+		prepareImportExportFormPanel();
+		this.add(importExportFormPanel);
+	}
+	
+	private void prepareImportExportFormPanel()
+	{
+		importExportFormPanel.setLayout(new BoxLayout(importExportFormPanel, BoxLayout.PAGE_AXIS));
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Forms");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		importExportFormPanel.setBorder(border); // Set the border
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the import button
+		importFormButton.addActionListener(this);
+		importFormButton.setBackground(new Color(130,183,75));
+		importFormButton.setForeground(Color.WHITE);
+		importFormButton.setMaximumSize(new Dimension(100000, 40));
+		importFormButton.setMinimumSize(new Dimension(100000, 20));
+		importExportFormPanel.add(importFormButton);
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the selection panel
+		formSelectionPanel = new SelectFormsPanel(forms,questions);
+		importExportFormPanel.add(formSelectionPanel);
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the export button
+		exportFormButton.addActionListener(this);
+		exportFormButton.setBackground(new Color(169,196,235));
+		exportFormButton.setMaximumSize(new Dimension(100000, 40));
+		exportFormButton.setMinimumSize(new Dimension(100000, 20));
+		importExportFormPanel.add(exportFormButton);
 	}
 	
 	private void prepareImportExportQuestionsPanel()
