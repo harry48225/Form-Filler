@@ -74,6 +74,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		prepareGUI();	
 	}
 	
+	public void refreshTable()
+	{
+		selectionPanel.refreshTable();
+	}
+	
 	private void prepareGUI()
 	{
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running prepareGUI"); // Debug

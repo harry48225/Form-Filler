@@ -169,6 +169,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			StatisticsPanel sP = (StatisticsPanel) selectedComponent;
 			sP.refresh(); // Refresh the panel
 		}
+		else if (selectedComponent instanceof FormCreationPanel)
+		{
+			FormCreationPanel fC = (FormCreationPanel) selectedComponent;
+			fC.refreshTable(); // Refresh the table.
+		}
 		
 	}
 	
