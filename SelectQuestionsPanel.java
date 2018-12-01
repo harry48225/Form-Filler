@@ -177,7 +177,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	public String getSelectedQuestionID()
 	{
 		int row = questionTable.getSelectedRow();
-		return questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question in the selected row
+		return row == -1 ? null:questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question in the selected row
 	}
 	
 	private void resizeRows()

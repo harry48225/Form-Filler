@@ -1,6 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
+
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.*;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.data.general.DefaultPieDataset;
 
 public class StatisticsPanel extends JPanel implements ActionListener
 {
@@ -12,17 +29,23 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private JPanel mainPanel = new JPanel();
 	private JButton helpButton = new JButton("Help");
 	
+	private JPanel statsPanel = new JPanel();
+	private SelectQuestionsPanel questionSelector;
+	
 	private JButton produceReportButton = new JButton("Produce report");
 	
 	private JComboBox<String> questionDropDown;
 	private JButton viewQuestionButton = new JButton("View question");
 	
 	
-	private JLabel selectedQuestionLabel = new JLabel("Selected question: ");
-	private JLabel timesFailedValidationLabel = new JLabel("Times failed validation: ");
-	private JLabel mostRecentAttemptsNeededToCorrectLabel = new JLabel("5 most recent number of attempts taken to correct an error: ");
-	private JLabel timeTakenToCompleteLabel = new JLabel("5 most recent time taken to complete the question: ");
-	private JLabel averageTimeTakenToCompleteLabel = new JLabel("Average time taken to complete: ");
+	private JLabel numberOfAttemptsLabel = new JLabel("Number of times attempted: ", SwingConstants.CENTER);
+	private JLabel timesFailedValidationLabel = new JLabel("Number of times failed validation: ", SwingConstants.CENTER);
+	private JLabel averageTimeTakenToCompleteLabel = new JLabel("Average time taken to complete: ", SwingConstants.CENTER);
+	
+	private NumberOfAttemptsToCorrectChart correctionsChart;
+	private TimeTakenToCompleteChart timeChart;
+	private ValidationChart validationChart;
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public StatisticsPanel(User tempUser, QuestionList tempQuestions)
 	{
@@ -33,31 +56,51 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		prepareGUI();
 	}
 	
+	public void refresh()
+	{
+		questionSelector.refreshTable();
+	}
+	
 	private void prepareGUI()
 	{
 		System.out.println("[INFO] <STATISTICS_PANEL> Running prepareGUI");
 		
 		this.setLayout(new BorderLayout());
 		
-		questionDropDown = new JComboBox<String>(questionStats.getIDArray());
+		mainPanel.setLayout(new GridLayout(1,2));
 		
-		mainPanel.setLayout(new GridLayout(0,1));
+		JPanel leftSide = new JPanel();
+		leftSide.setLayout(new BorderLayout());
+		
+		// Prepare the question selector
+		questionSelector = new SelectQuestionsPanel(questions);
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Select a question");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		questionSelector.setBorder(border); // Set the border
+		
+		
+		viewQuestionButton.addActionListener(this);
+		viewQuestionButton.setBackground(new Color(169,196,235));
+		viewQuestionButton.setMaximumSize(new Dimension(80, 40));
+		questionSelector.addNewButton(viewQuestionButton);
+		
+		leftSide.add(questionSelector, BorderLayout.CENTER);
 		
 		// Add the report button
 		produceReportButton.addActionListener(this);
-		mainPanel.add(produceReportButton);
+		produceReportButton.setBackground(new Color(130,183,75));
+		leftSide.add(produceReportButton, BorderLayout.SOUTH);
 		
-		// Add the question selection
-		mainPanel.add(questionDropDown);
-		viewQuestionButton.addActionListener(this);
-		mainPanel.add(viewQuestionButton);
+		mainPanel.add(leftSide);
 		
-		// Add all of the labels
-		mainPanel.add(selectedQuestionLabel);
-		mainPanel.add(timesFailedValidationLabel);
-		mainPanel.add(mostRecentAttemptsNeededToCorrectLabel);
-		mainPanel.add(timeTakenToCompleteLabel);
-		mainPanel.add(averageTimeTakenToCompleteLabel);
+		prepareStatisticsPanel();
+		mainPanel.add(statsPanel);
+
 		
 		this.add(mainPanel, BorderLayout.CENTER); // Add the panel in the center
 		
@@ -65,38 +108,45 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		this.add(helpButton, BorderLayout.NORTH);
 	}
 	
-	private void updateStatView(String selectedQuestion)
+	private void prepareStatisticsPanel()
 	{
-		System.out.println("[INFO] <STATISTICS_PANEL> Running updateStatView");
+		statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.PAGE_AXIS));
 		
-		selectedQuestionLabel.setText("Selected question: " + selectedQuestion);
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Statistics");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
 		
-		QuestionStat stats = questionStats.getQuestionStatByID(selectedQuestion); // Get the relevant question stat object
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
-		// Time failed validation
-		timesFailedValidationLabel.setText("Times failed validation: " + stats.getTimesFailedValidation());
+		statsPanel.setBorder(border); // Set the border
 		
-		// Attempts needed to correct
+		// Add all of the labels
+		numberOfAttemptsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		timesFailedValidationLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		averageTimeTakenToCompleteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		
-		String attemptsNeededToCorrect = "";
+		statsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		statsPanel.add(numberOfAttemptsLabel);
+		statsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		statsPanel.add(timesFailedValidationLabel);
+		statsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		statsPanel.add(averageTimeTakenToCompleteLabel);
+		statsPanel.add(Box.createRigidArea(new Dimension(0,5)));
 		
-		for (int attempt : stats.getNumberOfAttemptsNeededToCorrect())
-		{
-			if (attempt != 0) // If the attempt isn't null data
-			{
-				attemptsNeededToCorrect += attempt + ",";
-			}
-			else // Break as all the meaningful data has been added
-			{
-				break;
-			}
-		}
+		statsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
 		
-		mostRecentAttemptsNeededToCorrectLabel.setText("5 most recent number of attempts taken to correct an error: " + attemptsNeededToCorrect);
+		correctionsChart = new NumberOfAttemptsToCorrectChart(new int[] {0}, 0);
+		statsPanel.add(correctionsChart);
 		
-		String timeTakenToComplete = "";
+		timeChart = new TimeTakenToCompleteChart(new long[] {0}, 0);
+		statsPanel.add(timeChart);
 		
-		
+		validationChart = new ValidationChart(0,0);
+		statsPanel.add(validationChart);
+	}
+	
+	private String calcuateAverageTimeTakenToComplete(QuestionStat stats)
+	{
 		// To calculate the average
 		int numberOfTimes = 0; // Store the number of non null entries in the array
 		long totalTime = 0; // Store the total amount of time
@@ -104,17 +154,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		for (long time : stats.getTimeTakenToComplete())
 		{
 			if (time != 0) // If the time isn't null data
-			{
-				String minutes = time/60 + ""; // Divide by 60 to get the number of minutes
-				String seconds = time % 60 + ""; // Mod by 60 to get the number of seconds
-				
-				if (seconds.length() < 2) // If it's not 2 digits
-				{
-					seconds = "0" + seconds; // Pad with a leading zero
-				}
-				
-				timeTakenToComplete += minutes + ":" + seconds + ",";
-				
+			{	
 				totalTime += time; // Add the time to the total 
 				numberOfTimes++; // Increment the number of times
 			}
@@ -124,20 +164,42 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			}
 		}	
 		
-		timeTakenToCompleteLabel.setText("5 most recent time taken to complete the question: " + timeTakenToComplete);
-		
-		long average = totalTime / numberOfTimes; // Calculate the average
-		
-		String minutes = average/60 + ""; // Divide by 60 to get the number of minutes
-		String seconds = average % 60 + ""; // Mod by 60 to get the number of seconds
-				
-		if (seconds.length() < 2) // If it's not 2 digits
+		if (numberOfTimes > 0)
 		{
-			seconds = "0" + seconds; // Pad with a leading zero
+			long average = totalTime / numberOfTimes; // Calculate the average
+			
+			String seconds = average + "";
+					
+			if (seconds.length() < 2) // If it's not 2 digits
+			{
+				seconds = "0" + seconds; // Pad with a leading zero
+			}
+					
+			String averageTimeTakenToComplete = seconds + " seconds";
+			
+			return averageTimeTakenToComplete;
 		}
-				
-		String averageTimeTakenToComplete = minutes + ":" + seconds;
-		averageTimeTakenToCompleteLabel.setText("Average time taken to complete: " + averageTimeTakenToComplete);
+		else
+		{
+			return "";
+		}
+		
+	}
+	
+	private void updateStatView(String selectedQuestion)
+	{
+		System.out.println("[INFO] <STATISTICS_PANEL> Running updateStatView");
+		
+		QuestionStat stats = questionStats.getQuestionStatByID(selectedQuestion); // Get the relevant question stat object
+		
+		// Update all of the labels without affecting the other text
+		numberOfAttemptsLabel.setText(numberOfAttemptsLabel.getText().split(":")[0] + ": " + stats.getNumberOfAttempts());
+		timesFailedValidationLabel.setText(timesFailedValidationLabel.getText().split(":")[0] + ": " + stats.getTimesFailedValidation());
+		averageTimeTakenToCompleteLabel.setText(averageTimeTakenToCompleteLabel.getText().split(":")[0] + ": " + calcuateAverageTimeTakenToComplete(stats));
+		
+		correctionsChart.updateChart(stats.getNumberOfAttemptsNeededToCorrect(), stats.getNumberOfAttempts());
+		timeChart.updateChart(stats.getTimeTakenToComplete(), stats.getNumberOfAttempts());
+		validationChart.updateChart(stats.getNumberOfAttempts(), stats.getTimesFailedValidation());
 	}
 	
 	private void viewReport() // Opens a window to view a report produced by question stat list
@@ -155,8 +217,11 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <STATISTICS_PANEL> viewQuestionButton pressed");
 			
-			String selectedQuestion = (String) questionDropDown.getSelectedItem();
-			updateStatView(selectedQuestion);
+			String selectedQuestion = questionSelector.getSelectedQuestionID();
+			if (selectedQuestion != null)
+			{
+				updateStatView(selectedQuestion);
+			}
 		}
 		else if (evt.getSource() == produceReportButton)
 		{
@@ -170,4 +235,245 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			JOptionPane.showMessageDialog(null,"This is the statistics panel. You can view information about each question that you've filled in. \r\n To do this select the question from the drop down and press view question. \r\n You can also press produce report to produce a printable report detailing your progress with each question type.");
 		}
 	}
+	
+	private class TimeTakenToCompleteChart extends JPanel
+	{
+		private long[] timeTakenToComplete;
+		private int totalNumberOfAttempts;
+		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
+		
+		public TimeTakenToCompleteChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		{
+			timeTakenToComplete = tempTimeTakenToComplete;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+			
+		}
+		
+		public void updateChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		{
+			timeTakenToComplete = tempTimeTakenToComplete;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+		}
+		
+		private void calculateValidNumberOfAttempts()
+		{
+			// Find how many data points there are
+			// and start the chart at the first one
+			int numberOfDataPoints = 0;
+			for (long attempt : timeTakenToComplete)
+			{
+				if (attempt != -1)
+				{
+					numberOfDataPoints++;
+				}
+				else
+				{
+					break; // The rest will be null
+				}
+			}
+			
+			validNumberOfAttempts = numberOfDataPoints;
+		}
+		
+		private void updateChart()
+		{
+			calculateValidNumberOfAttempts();
+			
+			JFreeChart chart = ChartFactory.createXYLineChart(
+			"Time taken to complete",
+			"Attempt number", "Time (seconds)",
+			createDataset(),
+			PlotOrientation.VERTICAL,
+			false,false,false);
+			
+			XYPlot plot = (XYPlot) chart.getPlot();  
+
+			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+			
+			// Make the axis start at the oldest attempt number that we have data for
+			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
+			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			
+			ChartPanel cP = new ChartPanel(chart);
+			cP.setPopupMenu(null);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
+		}
+		private XYDataset createDataset()
+		{
+			XYSeriesCollection dataset = new XYSeriesCollection();
+			XYSeries data = new XYSeries("data");
+			
+			for (int i = validNumberOfAttempts-1; i >= 0; i--)
+			{
+				if (timeTakenToComplete[i] != -1)
+				{
+					int xCoordinate = totalNumberOfAttempts - i;
+					data.add(xCoordinate, timeTakenToComplete[i]);
+				}
+			}
+			
+			dataset.addSeries(data);
+			return dataset;
+		}
+	}
+	
+	private class NumberOfAttemptsToCorrectChart extends JPanel
+	{
+		private int[] numberOfAttemptsToCorrect;
+		private int totalNumberOfAttempts;
+		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
+		
+		public NumberOfAttemptsToCorrectChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		{
+			numberOfAttemptsToCorrect = tempNumberOfAttempts;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+			
+		}
+		
+		public void updateChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		{
+			numberOfAttemptsToCorrect = tempNumberOfAttempts;
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			
+			updateChart();
+		}
+		
+		private void calculateValidNumberOfAttempts()
+		{
+			// Find how many data points there are
+			// and start the chart at the first one
+			int numberOfDataPoints = 0;
+			for (int attempt : numberOfAttemptsToCorrect)
+			{
+				if (attempt != -1)
+				{
+					numberOfDataPoints++;
+				}
+				else
+				{
+					break; // The rest will be null
+				}
+			}
+			
+			validNumberOfAttempts = numberOfDataPoints;
+		}
+		
+		private void updateChart()
+		{
+			calculateValidNumberOfAttempts();
+			
+			JFreeChart chart = ChartFactory.createXYLineChart(
+			"Times taken to correct an error",
+			"Attempt number", "Number of times",
+			createDataset(),
+			PlotOrientation.VERTICAL,
+			false,false,false);
+			
+			XYPlot plot = (XYPlot) chart.getPlot();  
+
+			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+			
+			// Make the axis start at the oldest attempt number that we have data for
+			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
+			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
+			
+			ChartPanel cP = new ChartPanel(chart);
+			cP.setPopupMenu(null);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
+		}
+		private XYDataset createDataset()
+		{
+			XYSeriesCollection dataset = new XYSeriesCollection();
+			XYSeries data = new XYSeries("data");
+			
+			for (int i = validNumberOfAttempts-1; i >= 0; i--)
+			{
+				if (numberOfAttemptsToCorrect[i] != -1)
+				{
+					int xCoordinate = totalNumberOfAttempts - i;
+					data.add(xCoordinate, numberOfAttemptsToCorrect[i]);
+				}
+			}
+			
+			dataset.addSeries(data);
+			return dataset;
+		}
+	}
+	
+	public class ValidationChart extends JPanel {
+
+		private static final String KEY1 = "Failed Validation";
+		private static final String KEY2 = "Successful completion";
+
+		private int totalNumberOfAttempts;
+		private int timesFailedValidation;
+		
+		public ValidationChart(int tempTotalNumberOfAttempts, int tempTimesFailedValidation) 
+		{
+		
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			timesFailedValidation = tempTimesFailedValidation;
+			
+			updateChart();
+		}
+		
+		private DefaultPieDataset createDataset()
+		{
+			DefaultPieDataset dataset = new DefaultPieDataset();
+			dataset.setValue(KEY1, timesFailedValidation);
+			dataset.setValue(KEY2, totalNumberOfAttempts);
+			
+			return dataset;
+		}
+		
+		public void updateChart(int tempTotalNumberOfAttempts, int tempTimesFailedValidation)
+		{
+			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			timesFailedValidation = tempTimesFailedValidation;
+			
+			updateChart();
+		}
+		
+		private void updateChart()
+		{
+			JFreeChart chart = ChartFactory.createPieChart(
+				"Percentage of times failed validation check", createDataset(), true, true, false);
+			
+			ChartPanel cP = new ChartPanel(chart);	
+			cP.setPopupMenu(null);
+			
+			this.removeAll();
+			this.setPreferredSize(new Dimension(200,200));
+			this.setLayout(new GridLayout(1,1));
+			this.add(cP);
+			
+			this.revalidate();
+			this.repaint();
+		}
+	}
+	
 }

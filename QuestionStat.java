@@ -3,7 +3,7 @@ public class QuestionStat // Every user has one of these for each question and i
 	private String questionID; // The question that it's linked to
 	
 	private int timesFailedValidation = 0; // The number of times that the user has failed the validation check for the question
-	
+	private int numberOfAttempts = 0; // The number of times that the user has attempted the question
 	private int[] numberOfAttemptsNeededToCorrect = new int[5]; // The number of times that it's taken the user to correct a error that they've made in the question
 	private long[] timeTakenToComplete = new long[5]; // The length of time in seconds that it has taken the user to complete the question in the past.
 	
@@ -18,6 +18,31 @@ public class QuestionStat // Every user has one of these for each question and i
 		timesFailedValidation = Integer.parseInt(loadedData[1]);
 		numberOfAttemptsNeededToCorrect = loadNumberOfAttemptsNeededToCorrectArray(loadedData[2]);
 		timeTakenToComplete = loadTimeTakenToCompleteArray(loadedData[3]);
+		numberOfAttempts = Integer.parseInt(loadedData[4]);
+	}
+	
+	private void initaliseArrays()
+	{	
+		
+		// Add rogue values
+		
+		// Set all the values in the array to -1
+		for (int i = 0; i < numberOfAttemptsNeededToCorrect.length; i++)
+		{
+			numberOfAttemptsNeededToCorrect[i] = -1;
+		}
+		
+		// Set all the values in the array to -1
+		for (int i = 0; i < timeTakenToComplete.length; i++)
+		{
+			timeTakenToComplete[i] = -1;
+		}
+		
+	}
+	
+	public int getNumberOfAttempts()
+	{
+		return numberOfAttempts;
 	}
 	
 	public int getTimesFailedValidation()
@@ -87,6 +112,11 @@ public class QuestionStat // Every user has one of these for each question and i
 		timesFailedValidation++;
 	}
 	
+	public void addAttempt() // Increments the number of attempts counter
+	{
+		numberOfAttempts++;
+	}
+	
 	public String getID()
 	{
 		return questionID;
@@ -94,7 +124,7 @@ public class QuestionStat // Every user has one of these for each question and i
 	
 	public String toString()
 	{
-		return questionID + "," + timesFailedValidation + "," + numberOfAttemptsNeededToCorrectToString() + "," + timeTakenToCompleteToString();
+		return questionID + "," + timesFailedValidation + "," + numberOfAttemptsNeededToCorrectToString() + "," + timeTakenToCompleteToString() + "," + numberOfAttempts;
 	}
 	
 	private String timeTakenToCompleteToString()
