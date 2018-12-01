@@ -18,9 +18,6 @@ import org.jfree.data.xy.*;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.data.general.DefaultPieDataset;
-//import org.jfree.chart.plot.PiePlot;
-//import org.jfree.chart.labels.PieSectionLabelGenerator;
-
 
 public class StatisticsPanel extends JPanel implements ActionListener
 {
@@ -57,6 +54,11 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		questions = tempQuestions;
 		
 		prepareGUI();
+	}
+	
+	public void refresh()
+	{
+		questionSelector.refreshTable();
 	}
 	
 	private void prepareGUI()
@@ -167,9 +169,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			long average = totalTime / numberOfTimes; // Calculate the average
 			
 			String seconds = average + "";
-			
-			//String minutes = average/60 + ""; // Divide by 60 to get the number of minutes
-			//String seconds = average % 60 + ""; // Mod by 60 to get the number of seconds
 					
 			if (seconds.length() < 2) // If it's not 2 digits
 			{
@@ -219,7 +218,10 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <STATISTICS_PANEL> viewQuestionButton pressed");
 			
 			String selectedQuestion = questionSelector.getSelectedQuestionID();
-			updateStatView(selectedQuestion);
+			if (selectedQuestion != null)
+			{
+				updateStatView(selectedQuestion);
+			}
 		}
 		else if (evt.getSource() == produceReportButton)
 		{
@@ -293,9 +295,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
 			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
 			
-			// Make the axis start at 0
-			
-			
+			// Make the axis start at the oldest attempt number that we have data for
 			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
 			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
@@ -389,9 +389,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
 			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
 			
-			// Make the axis start at 0
-			
-			
+			// Make the axis start at the oldest attempt number that we have data for
 			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
 			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
@@ -464,17 +462,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		{
 			JFreeChart chart = ChartFactory.createPieChart(
 				"Percentage of times failed validation check", createDataset(), true, true, false);
-			/*
-			PiePlot plot = (PiePlot) chart.getPlot();
-			plot.setSectionPaint(KEY1, Color.green);
-			plot.setSectionPaint(KEY2, Color.red);
-			plot.setExplodePercent(KEY1, 0.10);
-			plot.setSimpleLabels(true);
-			*/
-			
-			//PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-			//	"{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
-			//plot.setLabelGenerator(gen);
 			
 			ChartPanel cP = new ChartPanel(chart);	
 			cP.setPopupMenu(null);
