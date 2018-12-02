@@ -27,7 +27,14 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testQuestionStat();
 		//t.testFormInProgress();
 		//t.testOptionsPanel();
-		t.testSelectQuestionsPanel();
+		//t.testSelectQuestionsPanel();
+		t.testSelectFormsPanel();
+	}
+	
+	public void testSelectFormsPanel()
+	{
+		test.add(new SelectFormsPanel(new FormList(),new QuestionList()));
+		test.setVisible(true);
 	}
 	
 	public void testSelectQuestionsPanel()

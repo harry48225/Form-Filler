@@ -174,6 +174,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			FormCreationPanel fC = (FormCreationPanel) selectedComponent;
 			fC.refreshTable(); // Refresh the table.
 		}
+		else if (selectedComponent instanceof ImportExportPanel)
+		{
+			ImportExportPanel Iep = (ImportExportPanel) selectedComponent;
+			Iep.refreshTables(); // Refresh the tables.
+		}
 		
 	}
 	

@@ -4,6 +4,10 @@ import java.awt.event.*;
 
 import javax.swing.table.*;
 
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+
 import java.io.*;
 
 public class ImportExportPanel extends JPanel implements ActionListener
@@ -14,8 +18,18 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	private JFileChooser fileChooser = new JFileChooser();
 	
 	private JButton importQuestionButton = new JButton("Import question");
+	private JButton exportQuestionButton = new JButton("Export");
 	
 	private JButton importFormButton = new JButton("Import form");
+	private JButton exportFormButton = new JButton("Export");
+	
+	private JPanel importExportQuestionsPanel = new JPanel();
+	private JPanel importExportFormPanel = new JPanel();
+	
+	private SelectQuestionsPanel questionSelectionPanel;
+	private SelectFormsPanel formSelectionPanel;
+	
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public ImportExportPanel(QuestionList tempQuestions, FormList tempForms)
 	{
@@ -25,19 +39,97 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		prepareGUI();
 	}
 	
+	public void refreshTables()
+	{
+		questionSelectionPanel.refreshTable();
+		formSelectionPanel.refreshTable();
+	}
+	
 	private void prepareGUI()
 	{
-		this.setLayout(new GridLayout(0,2));
+		this.setLayout(new GridLayout(0,2)); // 2 columns
 		
-		this.add(new QuestionSelectionPanel(questions)); // Add a new question selection panel
+		prepareImportExportQuestionsPanel();
+		this.add(importExportQuestionsPanel);
 		
-		importQuestionButton.addActionListener(this);
-		this.add(importQuestionButton);
+		prepareImportExportFormPanel();
+		this.add(importExportFormPanel);
+	}
+	
+	private void prepareImportExportFormPanel()
+	{
+		importExportFormPanel.setLayout(new BoxLayout(importExportFormPanel, BoxLayout.PAGE_AXIS));
 		
-		this.add(new FormSelectionPanel(forms, questions));
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Forms");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
 		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		importExportFormPanel.setBorder(border); // Set the border
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the import button
 		importFormButton.addActionListener(this);
-		this.add(importFormButton);
+		importFormButton.setBackground(new Color(130,183,75));
+		importFormButton.setForeground(Color.WHITE);
+		importFormButton.setMaximumSize(new Dimension(100000, 40));
+		importFormButton.setMinimumSize(new Dimension(100000, 20));
+		importExportFormPanel.add(importFormButton);
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the selection panel
+		formSelectionPanel = new SelectFormsPanel(forms,questions);
+		importExportFormPanel.add(formSelectionPanel);
+		
+		importExportFormPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the export button
+		exportFormButton.addActionListener(this);
+		exportFormButton.setBackground(new Color(169,196,235));
+		exportFormButton.setMaximumSize(new Dimension(100000, 40));
+		exportFormButton.setMinimumSize(new Dimension(100000, 20));
+		importExportFormPanel.add(exportFormButton);
+	}
+	
+	private void prepareImportExportQuestionsPanel()
+	{
+		importExportQuestionsPanel.setLayout(new BoxLayout(importExportQuestionsPanel, BoxLayout.PAGE_AXIS));
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Questions");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		importExportQuestionsPanel.setBorder(border); // Set the border
+		
+		importExportQuestionsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the import button
+		importQuestionButton.addActionListener(this);
+		importQuestionButton.setBackground(new Color(130,183,75));
+		importQuestionButton.setForeground(Color.WHITE);
+		importQuestionButton.setMaximumSize(new Dimension(100000, 40));
+		importQuestionButton.setMinimumSize(new Dimension(100000, 20));
+		importExportQuestionsPanel.add(importQuestionButton);
+		
+		importExportQuestionsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the selection panel
+		questionSelectionPanel = new SelectQuestionsPanel(questions);
+		importExportQuestionsPanel.add(questionSelectionPanel);
+		
+		importExportQuestionsPanel.add(Box.createRigidArea(new Dimension(0,10)));
+		
+		// Add the export button
+		exportQuestionButton.addActionListener(this);
+		exportQuestionButton.setBackground(new Color(169,196,235));
+		exportQuestionButton.setMaximumSize(new Dimension(100000, 40));
+		exportQuestionButton.setMinimumSize(new Dimension(100000, 20));
+		importExportQuestionsPanel.add(exportQuestionButton);
 	}
 	
 	public void actionPerformed(ActionEvent evt)
@@ -54,13 +146,37 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			
 			importForm();
 		}
+		else if (evt.getSource() == exportQuestionButton)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> exportQuestionButton pressed"); // Debug
+			String selectedQuestionID = questionSelectionPanel.getSelectedQuestionID();
+			if (selectedQuestionID != null)
+			{
+				exportQuestion(selectedQuestionID);
+			}
+		}
+		else if (evt.getSource() == exportFormButton)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> exportFormButton pressed"); // Debug
+			String selectedFormID = formSelectionPanel.getSelectedFormID();
+			if (selectedFormID != null)
+			{
+				exportForm(selectedFormID);
+			}
+		}
 	}
 	
 	private void importQuestion()
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importQuestion");
 		
-		fileChooser.showOpenDialog(this);
+		int result = fileChooser.showOpenDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Importing question cancelled");
+			return;
+		}
 		
 		ExportedQuestion questionImported = null;
 		
@@ -91,7 +207,13 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importForm");
 		
-		fileChooser.showOpenDialog(this);
+		int result = fileChooser.showOpenDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Importing form cancelled");
+			return;
+		}
 		
 		ExportedForm formImported = null;
 		
@@ -111,16 +233,28 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Error importing form " + e); // Output the error
 		}
 		
-		// Add the questions to the question database if they are not present
+		// Add the questions to the question database if they're not already in it
 		
 		for (ExportedQuestion importedQuestion : formImported.getQuestions()) // For each question that was exported with the form
 		{
-			String importedQuestionID = importedQuestion.getQuestion().getID(); // Get the id of the question
-			
-			if (questions.getQuestionByID(importedQuestionID) == null) // If the question isn't present in the question list
+			if (importedQuestion != null) // If the question isn't null
 			{
-				questions.addQuestion(importedQuestion.getQuestion(), importedQuestion.getQuestionPanel()); // Add the imported question to the question list
+				String importedQuestionID = importedQuestion.getQuestion().getID(); // Get the id of the question
+				
+				if (questions.getQuestionByID(importedQuestionID) == null) // If the question isn't present in the question list
+				{
+					questions.addQuestion(importedQuestion.getQuestion(), importedQuestion.getQuestionPanel()); // Add the imported question to the question list
+				}
 			}			
+		}
+		
+		// Add the form to the database overwriting the old one (if it exists)
+		
+		String formID = formImported.getForm().getID();
+		
+		if (forms.getFormByID(formID) != null)
+		{
+			forms.removeForm(formID);
 		}
 		
 		forms.addForm(formImported.getForm()); // Add the form to the form list
@@ -141,7 +275,13 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
 		
 		fileChooser.setSelectedFile(new File("export.ser"));
-		fileChooser.showSaveDialog(this);
+		int result = fileChooser.showSaveDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Exporting question cancelled");
+			return;
+		}
 		
 		try
 		{
@@ -165,6 +305,16 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running exportForm");
 		
+		// Get the user to select a place to save the form
+		fileChooser.setSelectedFile(new File("export.ser"));
+		int result = fileChooser.showSaveDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Exporting form cancelled");
+			return;
+		}
+		
 		Form form = forms.getFormByID(formID);
 		
 		String[] questionIDs = form.getQuestionIDs();
@@ -175,19 +325,19 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		{
 			String questionID = questionIDs[i];
 			
-			Question q = questions.getQuestionByID(questionID); // Get the question
-			QuestionPanel qP = questions.getPanelByID(questionID); // Get the question panel
-		
-			ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
+			if (questions.getQuestionByID(questionID) != null) // Only export if it's a question not a header
+			{
+				Question q = questions.getQuestionByID(questionID); // Get the question
+				QuestionPanel qP = questions.getPanelByID(questionID); // Get the question panel
 			
-			exportedQuestions[i] = questionToExport; // Add the question to export to the array
+				ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
+				
+				exportedQuestions[i] = questionToExport; // Add the question to export to the array
+			}
 		}
 		
 		ExportedForm formToExport = new ExportedForm(form, exportedQuestions); // Add the questions and the form to an exported form object
 		
-		// Get the user to select a place to save the form
-		fileChooser.setSelectedFile(new File("export.ser"));
-		fileChooser.showSaveDialog(this);
 		
 		try
 		{
@@ -204,248 +354,5 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form exported!");
-	}
-	
-	private class FormSelectionPanel extends JPanel implements ActionListener
-	{
-		private FormList forms;
-		private QuestionList questions;
-		
-		// For the view table
-		private String[] tableHeaders = new String[] {"ID","Questions","Description","Main Skills Tested","Difficulty"}; // The headers for the table
-		private String[][] formData = new String[0][0];
-		private DefaultTableModel formTableModel = new DefaultTableModel(formData, tableHeaders);
-		private JTable formTable = new JTable(formTableModel); // Create a table to hold the questions
-		private JScrollPane formTableScrollPane = new JScrollPane(formTable); // Create a scroll pane
-		
-		// Sort buttons
-		private JPanel buttonPanel; // To hold the buttons
-		private JButton sortDifficultyButton = new JButton("Difficulty Sort"); // Button to sort by difficultly
-		private JButton attemptButton = new JButton("Preview Form"); // User presses this to view the selected form
-		private JButton exportButton = new JButton("Export"); // When pressed exports the form
-		
-		
-		
-		public FormSelectionPanel(FormList tempForms, QuestionList tempQuestions) // Constructor
-		{
-			forms = tempForms; // Store the form list
-			questions = tempQuestions;
-				
-			prepareGUI();
-		}
-		
-		private void prepareGUI() // Makes the window
-		{
-			System.out.println("[INFO] <FORM_SELECTION_PANEL> Running prepareGUI"); // Debug
-				
-				
-			GridLayout layout = new GridLayout(1,2); // Create a new grid layout
-				
-			this.setLayout(layout); // Get the layout
-				
-			this.add(formTableScrollPane); // Add the table to the view
-			
-			// Add action listeners 
-			sortDifficultyButton.addActionListener(this);
-			attemptButton.addActionListener(this);
-			exportButton.addActionListener(this);
-			
-			buttonPanel = new JPanel(); // Create a new JPanel
-			buttonPanel.setLayout(new GridLayout(0,1)); // Create a grid layout with infinite rows and 1 column
-			buttonPanel.add(sortDifficultyButton);
-			buttonPanel.add(attemptButton);
-			buttonPanel.add(exportButton);
-			 
-			this.add(buttonPanel);
-			
-			// Hide the first column as it contains the id and we don't want that displayed to the user
-			TableColumnModel tcm = formTable.getColumnModel();
-			tcm.removeColumn(tcm.getColumn(0));
-			
-			populateTable(forms.getArray()); // Populate the table with the questions
-		}
-		
-		private void populateTable(Form[] data) // Populates the table with data
-		{
-			
-			System.out.println("[INFO] <FORM_SELECTION_PANEL> Running populateTable"); // Debug
-			
-			formTableModel.setRowCount(0); // Start a zero rows
-			
-			for (int i =0; i < data.length; i++) // For each form in the array
-			{
-				if(data[i] != null) // If there is data
-				{
-					String[] form = data[i].toStringArray(); // Convert the form to a String array
-					formTableModel.addRow(form); // Add the form to the table
-				}
-			}
-		}
-		
-		private void openFormInWindow(String formID) // Opens a form to preview in a window
-		{
-			System.out.println("[INFO] <FORM_SELECTION_PANEL> Running openFormInWindow");
-			
-			Form selectedForm = forms.getFormByID(formID);
-			
-			JFrame formFrame = new JFrame();
-			formFrame.setLayout(new GridLayout(0,1));
-			formFrame.setSize(300, 300);
-			
-			for (String question : selectedForm.getQuestionIDs()) // For each question id in the form
-			{
-				formFrame.add(questions.getPanelByID(question)); // Add the question to the frame
-			}
-			
-			formFrame.setVisible(true);
-		}
-		
-		public void actionPerformed(ActionEvent evt)
-		{
-			
-			if (evt.getSource() == sortDifficultyButton)
-			{
-				System.out.println("[INFO] <FORM_SELECTION_PANEL> sortDifficultyButton pressed"); // Debug
-				forms.sortByDifficulty(); // Sort the list by type
-				populateTable(forms.getArray());
-			}
-			else if (evt.getSource() == attemptButton)
-			{
-				System.out.println("[INFO] <FORM_SELECTION_PANEL> attemptButton pressed"); // Debug
-				int row = formTable.getSelectedRow();
-				String formID = formTable.getModel().getValueAt(row, 0).toString();
-				openFormInWindow(formID);
-			}
-			else if (evt.getSource() == exportButton)
-			{
-				System.out.println("[INFO] <FORM_SELECTION_PANEL> exportButton pressed"); // Debug
-				
-				int row = formTable.getSelectedRow();
-				String formID = (String) formTable.getModel().getValueAt(row, 0) + ""; // Get the id of the form in the selected row
-				ImportExportPanel.this.exportForm(formID); // Call the export form method.
-			}
-		}
-	
-	}
-	
-	private class QuestionSelectionPanel extends JPanel implements ActionListener
-	{
-		private QuestionList questions;
-		
-		// For the view table
-		private String[] tableHeaders = new String[] {"ID","Difficulty", "Type"}; // The headers for the table
-		private String[][] questionData = new String[0][0];
-		private DefaultTableModel questionTableModel = new DefaultTableModel(questionData, tableHeaders);
-		private JTable questionTable = new JTable(questionTableModel); // Create a table to hold the questions
-		private JScrollPane questionTableScrollPane = new JScrollPane(questionTable); // Create a scroll pane
-		
-		// Sort buttons
-		private JPanel buttonPanel; // To hold the buttons
-		private JButton sortDifficultyButton = new JButton("Difficulty Sort"); // Button to sort by difficulty
-		private JButton sortTypeButton = new JButton("Type Sort"); // Sorts by type
-		private JButton attemptButton = new JButton("Preview Question"); // User presses this to view the selected question
-		private JButton exportButton = new JButton("Export"); // When pressed exports the question
-		
-		
-		
-		public QuestionSelectionPanel(QuestionList tempList) // Constructor
-		{
-			questions = tempList; // Store the question list
-				
-			prepareGUI();
-		}
-		
-		private void prepareGUI() // Makes the window
-		{
-			System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running prepareGUI"); // Debug
-				
-				
-			GridLayout layout = new GridLayout(1,2); // Create a new grid layout
-				
-			this.setLayout(layout); // Get the layout
-				
-			this.add(questionTableScrollPane); // Add the table to the view
-			
-			// Add action listeners 
-			sortDifficultyButton.addActionListener(this);
-			sortTypeButton.addActionListener(this);
-			attemptButton.addActionListener(this);
-			exportButton.addActionListener(this);
-			
-			buttonPanel = new JPanel(); // Create a new JPanel
-			buttonPanel.setLayout(new GridLayout(0,1)); // Create a grid layout with infinite rows and 1 column
-			buttonPanel.add(sortDifficultyButton);
-			buttonPanel.add(sortTypeButton);
-			buttonPanel.add(attemptButton);
-			buttonPanel.add(exportButton);
-			 
-			this.add(buttonPanel);
-			
-			// Hide the first column as it contains the id and we don't want that displayed to the user
-			TableColumnModel tcm = questionTable.getColumnModel();
-			tcm.removeColumn(tcm.getColumn(0));
-			
-			populateTable(questions.getArray()); // Populate the table with the questions
-		}
-		
-		private void populateTable(Question[] data) // Populates the table with data
-		{
-			
-			System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running populateTable"); // Debug
-			
-			questionTableModel.setRowCount(0); // Start a zero rows
-			
-			for (int i =0; i < data.length; i++) // For each question in the array
-			{
-				if(data[i] != null) // If there is data
-				{
-					String[] question = data[i].toStringArray(); // Convert the question to a String array
-					questionTableModel.addRow(question); // Add the question to the table
-				}
-			}
-		}
-		
-		private void openQuestionInWindow(String qID) // Opens a question to practise in a window
-		{
-			System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running openQuestionInWindow");
-			
-			JFrame questionFrame = new JFrame();
-			questionFrame.setLayout(new GridLayout(0,1));
-			questionFrame.setSize(300, 100);
-			questionFrame.add(questions.getPanelByID(qID));
-			questionFrame.setVisible(true);
-		}
-		
-		public void actionPerformed(ActionEvent evt)
-		{
-			
-			if (evt.getSource() == sortDifficultyButton)
-			{
-				System.out.println("[INFO] <QUESTION_SELECTION_PANEL> sortDifficultyButton pressed"); // Debug
-				questions.sortByDifficulty(); // Sort the list by type
-				populateTable(questions.getArray());
-			}
-			else if (evt.getSource() == sortTypeButton)
-			{
-				System.out.println("[INFO] <QUESTION_SELECTION_PANEL> sortTypeButton pressed"); // Debug
-				questions.sortByType();
-				populateTable(questions.getArray());
-			}
-			else if (evt.getSource() == attemptButton)
-			{
-				System.out.println("[INFO] <QUESTION_SELECTION_PANEL> attemptButton pressed"); // Debug
-				int row = questionTable.getSelectedRow();
-				openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
-			}
-			else if (evt.getSource() == exportButton)
-			{
-				System.out.println("[INFO] <QUESTION_SELECTION_PANEL> exportButton pressed"); // Debug
-				
-				int row = questionTable.getSelectedRow();
-				String selectedQuestionID = (String) questionTable.getModel().getValueAt(row, 0) + ""; // Get the id of the question in the selected row
-				ImportExportPanel.this.exportQuestion(selectedQuestionID); // Call the export question method.
-			}
-		}
-	
 	}
 }
