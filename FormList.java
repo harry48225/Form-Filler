@@ -212,8 +212,6 @@ public class FormList
 		
 		formArray = newArray; // Overwrite the old array
 		nextFormLocation--; // There is one less form in the array so a free spot has opened
-		
-		writeDatabase();
 	}
 	
 	public Form[] getArray()

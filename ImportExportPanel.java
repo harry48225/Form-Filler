@@ -39,6 +39,12 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		prepareGUI();
 	}
 	
+	public void refreshTables()
+	{
+		questionSelectionPanel.refreshTable();
+		formSelectionPanel.refreshTable();
+	}
+	
 	private void prepareGUI()
 	{
 		this.setLayout(new GridLayout(0,2)); // 2 columns
@@ -215,16 +221,28 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Error importing form " + e); // Output the error
 		}
 		
-		// Add the questions to the question database if they are not present
+		// Add the questions to the question database if they're not already in it
 		
 		for (ExportedQuestion importedQuestion : formImported.getQuestions()) // For each question that was exported with the form
 		{
-			String importedQuestionID = importedQuestion.getQuestion().getID(); // Get the id of the question
-			
-			if (questions.getQuestionByID(importedQuestionID) == null) // If the question isn't present in the question list
+			if (importedQuestion != null) // If the question isn't null
 			{
-				questions.addQuestion(importedQuestion.getQuestion(), importedQuestion.getQuestionPanel()); // Add the imported question to the question list
+				String importedQuestionID = importedQuestion.getQuestion().getID(); // Get the id of the question
+				
+				if (questions.getQuestionByID(importedQuestionID) == null) // If the question isn't present in the question list
+				{
+					questions.addQuestion(importedQuestion.getQuestion(), importedQuestion.getQuestionPanel()); // Add the imported question to the question list
+				}
 			}			
+		}
+		
+		// Add the form to the database overwriting the old one (if it exists)
+		
+		String formID = formImported.getForm().getID();
+		
+		if (forms.getFormByID(formID) != null)
+		{
+			forms.removeForm(formID);
 		}
 		
 		forms.addForm(formImported.getForm()); // Add the form to the form list
@@ -279,12 +297,15 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		{
 			String questionID = questionIDs[i];
 			
-			Question q = questions.getQuestionByID(questionID); // Get the question
-			QuestionPanel qP = questions.getPanelByID(questionID); // Get the question panel
-		
-			ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
+			if (questions.getQuestionByID(questionID) != null) // Only export if it's a question not a header
+			{
+				Question q = questions.getQuestionByID(questionID); // Get the question
+				QuestionPanel qP = questions.getPanelByID(questionID); // Get the question panel
 			
-			exportedQuestions[i] = questionToExport; // Add the question to export to the array
+				ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
+				
+				exportedQuestions[i] = questionToExport; // Add the question to export to the array
+			}
 		}
 		
 		ExportedForm formToExport = new ExportedForm(form, exportedQuestions); // Add the questions and the form to an exported form object
