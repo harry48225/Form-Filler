@@ -170,7 +170,13 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importQuestion");
 		
-		fileChooser.showOpenDialog(this);
+		int result = fileChooser.showOpenDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Importing question cancelled");
+			return;
+		}
 		
 		ExportedQuestion questionImported = null;
 		
@@ -201,7 +207,13 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importForm");
 		
-		fileChooser.showOpenDialog(this);
+		int result = fileChooser.showOpenDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Importing form cancelled");
+			return;
+		}
 		
 		ExportedForm formImported = null;
 		
@@ -263,7 +275,13 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
 		
 		fileChooser.setSelectedFile(new File("export.ser"));
-		fileChooser.showSaveDialog(this);
+		int result = fileChooser.showSaveDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Exporting question cancelled");
+			return;
+		}
 		
 		try
 		{
@@ -286,6 +304,16 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	private void exportForm(String formID)
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running exportForm");
+		
+		// Get the user to select a place to save the form
+		fileChooser.setSelectedFile(new File("export.ser"));
+		int result = fileChooser.showSaveDialog(this);
+		
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Exporting form cancelled");
+			return;
+		}
 		
 		Form form = forms.getFormByID(formID);
 		
@@ -310,9 +338,6 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		ExportedForm formToExport = new ExportedForm(form, exportedQuestions); // Add the questions and the form to an exported form object
 		
-		// Get the user to select a place to save the form
-		fileChooser.setSelectedFile(new File("export.ser"));
-		fileChooser.showSaveDialog(this);
 		
 		try
 		{
