@@ -10,7 +10,23 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 {
 	
 	private Form form;
+	private JPanel[] components;
+	
+	private JPanel[] pages;
+	private int currentPage = 0;
+	private final int QUESTIONS_PER_PAGE = 6;
+	
+	private JPanel buttonNavigationPanel;
+	
+	private JButton nextButton = new JButton("Next"); // Allows the user to go to the next page
+	private JButton backButton = new JButton("Back"); // Allows the user to go to the previous page
+	private JButton submitButton = new JButton("Submit"); // Allows the user to complete the process
+	
+	private JLabel pageIndicatorLabel = new JLabel("", SwingConstants.RIGHT);
+	
 	private QuestionPanel[] questionPanels;
+	
+	private QuestionList questions;
 	
 	private GUI gui;
 	
@@ -18,18 +34,19 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	private UserList users;
 	
 	private JPanel formPanel = new JPanel();
-	private JButton submitButton = new JButton("Submit");
 	
 	private String questionLostFocus = ""; // The question that has most recently lost focus
 	private long questionStartTime = 0; // Store the time is milliseconds that the user started attempting the question
 	private long[] timeToCompleteQuestions; // Stores the length of time that each question has been focused for
 	
-	private int[] failedValidationChecks; // Stores the amount of time the user has failed the validation check for each question
+
+	private int[] failedValidationChecks; // Stores the amount of time the user has failed the validation check for each question       
 	
-	public FormDisplayer(Form tempF, QuestionPanel[] tempQuestionPanels, User tempU, UserList tempUserList, GUI tempGUI)
+	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
 	{
 		form = tempF;
-		questionPanels = tempQuestionPanels;
+		questions = tempQuestions;
+		components = tempComponents;
 		currentUser = tempU;
 		users = tempUserList;
 		gui = tempGUI;
@@ -42,8 +59,88 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		questionLostFocus = form.getQuestionIDs()[0]; // Make the first question in focus
 		questionStartTime = System.nanoTime(); // Start the clock
 		
+		getQuestionPanels();
+		
 		prepareGUI();
 		
+	}
+	
+	private void prepareButtonNavigationPanel()
+	{
+		buttonNavigationPanel = new JPanel();
+		buttonNavigationPanel.setLayout(new BoxLayout(buttonNavigationPanel, BoxLayout.LINE_AXIS)); // Create a new box layout left to right
+		
+		// Set the correct colours
+		nextButton.setBackground(new Color(169,196,235));
+		backButton.setBackground(new Color(169,196,235));
+		submitButton.setBackground(new Color(130,183,75));
+		
+		// Add the action listener
+		nextButton.addActionListener(this);
+		backButton.addActionListener(this);
+		submitButton.addActionListener(this);
+		
+		// Set the correct preferred sizes for the buttons
+		nextButton.setMaximumSize(new Dimension(175, 60));
+		nextButton.setPreferredSize(new Dimension(175, 60));
+		
+		backButton.setMaximumSize(new Dimension(175, 60));
+		backButton.setPreferredSize(new Dimension(175, 60));
+		
+		submitButton.setMaximumSize(new Dimension(175, 60));
+		submitButton.setPreferredSize(new Dimension(175, 60));
+		
+		if (pages.length > 1)
+		{
+			// Hide the back and finish button
+			nextButton.setVisible(true);
+			backButton.setVisible(false);
+			submitButton.setVisible(false);
+		}
+		else
+		{
+			nextButton.setVisible(false);
+			backButton.setVisible(false);
+			submitButton.setVisible(true);
+		}
+		buttonNavigationPanel.add(backButton);
+		buttonNavigationPanel.add(Box.createHorizontalGlue()); // This is invisible and will fill the space between the buttons as the window is resized.
+		// It keeps the buttons at the far edges.
+		
+		buttonNavigationPanel.add(nextButton);
+		buttonNavigationPanel.add(submitButton);
+		
+		buttonNavigationPanel.setMaximumSize(new Dimension(1000, 30));
+	}
+	
+	private void updatePageIndicatorLabel()
+	{
+		int humanPage = currentPage + 1; // Humans don't start counting at 0 so increment the computer count by one
+		
+		pageIndicatorLabel.setText("Page " + humanPage + " of " + pages.length);
+	}
+	
+	private void getQuestionPanels()
+	{
+		QuestionPanel[] tempQuestionPanels = new QuestionPanel[components.length];
+		int nextQuestionPanelLocation = 0;
+		
+		for (int i = 0; i < components.length; i++)
+		{
+			if (components[i] instanceof QuestionPanel)
+			{
+				tempQuestionPanels[nextQuestionPanelLocation] = (QuestionPanel) components[i];
+				nextQuestionPanelLocation++;
+			}
+		}
+		
+		// Trim the array
+		
+		questionPanels = new QuestionPanel[nextQuestionPanelLocation];
+		for (int i = 0; i < nextQuestionPanelLocation; i++)
+		{
+			questionPanels[i] = tempQuestionPanels[i];
+		}
 	}
 	
 	private void prepareGUI()
@@ -52,29 +149,147 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		this.addWindowListener(this);
 		
-		this.setLayout(new BorderLayout()); // Set a grid layout
-		this.setSize(300,300); // Set the size
+		this.setLayout(new GridLayout(1,1)); // Set a grid layout
+		this.setSize(400,600); // Set the size
 		
-		submitButton.addActionListener(this);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)); // Set a box layout
 		
 		formPanel.setLayout(new GridLayout(0,1)); // Set a grid layout
-			
-		for (QuestionPanel question : questionPanels) // For each question in the form
-		{
-			question.addMouseListener(this); // Add the formDisplayer as a mouse listener
-			
-			for (JComponent component : question.getComponents())
-			{
-				component.addMouseListener(this); // Add a mouse listener to each component in the QuestionPanel
-			}
-			
-			formPanel.add(question); // Get and add the panel
-		}
 		
-		this.add(formPanel, BorderLayout.CENTER);
-		this.add(submitButton, BorderLayout.SOUTH);
+		preparePages();
+		
+		System.out.println(Arrays.toString(pages));
+		formPanel.add(pages[0]);
+		
+		JPanel pageIndicatorPanel = new JPanel();
+		pageIndicatorPanel.setLayout(new GridLayout(1,1));
+		pageIndicatorPanel.add(pageIndicatorLabel);
+		updatePageIndicatorLabel();
+		mainPanel.add(pageIndicatorPanel);
+
+		mainPanel.add(formPanel);
+		
+		prepareButtonNavigationPanel();
+		
+		mainPanel.add(buttonNavigationPanel, BorderLayout.SOUTH);
+		
+		this.add(mainPanel);
 		
 		this.setVisible(true);
+	}
+	
+	private void goForward()
+	{
+		formPanel.removeAll();
+		currentPage++;
+		formPanel.add(pages[currentPage]);
+		
+		if (currentPage > 0) // Show the back button if we're not on the first page
+		{
+			backButton.setVisible(true);
+		}
+		
+		if (currentPage == pages.length-1) // If we're at the last page
+		{
+			nextButton.setVisible(false);
+			submitButton.setVisible(true);
+		}
+		
+		updatePageIndicatorLabel();
+	}
+	
+	private void goBackward() // Goes backward a step
+	{
+		formPanel.removeAll();
+		currentPage--;
+		formPanel.add(pages[currentPage]);
+		
+		if (currentPage == 0) // Show the back button if we're not on the first page
+		{
+			backButton.setVisible(false);
+		}
+		
+		if (currentPage < pages.length-1) // If we're not at the last page
+		{
+			nextButton.setVisible(true);
+			submitButton.setVisible(false);
+		}
+		
+		updatePageIndicatorLabel();
+	}
+	
+	private void preparePages()
+	{
+		JPanel[] tempPages = new JPanel[100]; // Start with 100 pages, we'll trim off the ones that we don't need at the end
+		
+		int currentComponent = 0;
+		int pageNumber = 0;
+		
+		while (currentComponent < components.length)
+		{
+			JPanel currentPage = new JPanel();
+			
+			currentPage.setLayout(new BoxLayout(currentPage, BoxLayout.PAGE_AXIS));
+			currentPage.setPreferredSize(new Dimension(1000,1000));
+			currentPage.add(Box.createVerticalGlue());
+			int numberOfQuestionsInPage = 0;
+			
+			// Add the questions to the page
+			for (int i = 0; i < QUESTIONS_PER_PAGE; i++)
+			{
+				
+				if (currentComponent < components.length)
+				{
+					JPanel component = components[currentComponent];
+					// Determine whether the component is a question or a header
+					boolean isAQuestion = component instanceof QuestionPanel;
+					
+					if (isAQuestion)
+					{
+						currentPage.add(Box.createVerticalGlue());
+						currentPage.add(component); // Add the question panel to the page
+						currentComponent++;
+						numberOfQuestionsInPage++;
+					}
+					else // It's a header
+					{
+						System.out.println("Header");
+						// If we're not at the end of the page add it to the page.
+						// Otherwise, (rather than having it at the bottom of the page)
+						// add it to the start of the next page
+						
+						if (i != QUESTIONS_PER_PAGE - 1) // If we're not at the end of the page
+						{
+							currentPage.add(Box.createVerticalGlue());
+							currentPage.add(component); // Add the header to the page
+							
+							currentComponent++;
+							numberOfQuestionsInPage++;
+						}
+							
+					}
+				}
+				
+			}
+			
+			currentPage.add(Box.createVerticalGlue());
+			tempPages[pageNumber] = currentPage;
+			pageNumber++;
+		}
+		
+		// Trim the pages array
+		
+		// Page number is the index of the last page + 1
+		
+		pages = new JPanel[pageNumber];
+		
+		for (int i = 0; i < pages.length; i++)
+		{
+			pages[i] = tempPages[i];
+		}
+		
+		
 	}
 	
 	private void validateQuestions()
@@ -126,6 +341,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
 			
 			JOptionPane.showMessageDialog(null, "Form complete!");
+			
 		}
 	}
 	
@@ -136,6 +352,14 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			System.out.println("[INFO] <FORM_DISPLAYER> submitButton pressed");
 			questionFocusChange();
 			validateQuestions();
+		}
+		else if (evt.getSource() == nextButton)
+		{
+			goForward();
+		}
+		else if (evt.getSource() == backButton)
+		{
+			goBackward();
 		}
 	}
 	
