@@ -14,6 +14,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	private JButton openButton = new JButton("Upload File"); // The button that will be cliked on to open the file chooser
 	
+	private final String ERROR_STRING = "File Upload: Please upload a file of the correct type";
+	
 	public JValidatedFileChooser(String tempType)
 	{
 		type = tempType;
@@ -93,5 +95,10 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 			setFileExtensionFilter();
 			fileChooser.showOpenDialog(this);
 		}
+	}
+	
+	public String getErrorString()
+	{
+		return ERROR_STRING;
 	}
 }

@@ -24,7 +24,8 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent
 	
 	private JComboBox<String> yearsComboBox;
 	
-
+	private final String ERROR_STRING = "Datepicker: Please enter a valid date";
+	
 	public JValidatedDatePicker()
 	{
 		setupDatePicker();
@@ -73,5 +74,10 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent
 		}
 		
 		return pass;
+	}
+	
+	public String getErrorString()
+	{
+		return ERROR_STRING;
 	}
 }

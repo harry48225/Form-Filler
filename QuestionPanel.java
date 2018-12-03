@@ -78,6 +78,21 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		return passed;
 	}
 	
+	public String getErrorString()
+	{
+		String errorString = "";
+		for (JComponent c : components)
+		{
+			if (c instanceof JValidatedComponent)
+			{
+				JValidatedComponent validatedComponent = (JValidatedComponent) c; // Cast to JValidatedComponent
+				errorString = validatedComponent.getErrorString();
+			}
+		}
+		
+		return errorString;
+	}
+	
 	public boolean presenceChecks()
 	{
 		boolean passed = true;

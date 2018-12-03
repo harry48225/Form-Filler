@@ -24,6 +24,9 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	
 	private JLabel pageIndicatorLabel = new JLabel("", SwingConstants.RIGHT);
 	
+	private JPanel pageErrorsPanel = new JPanel();
+	private JLabel pageErrorsLabel = new JLabel("", SwingConstants.CENTER); // This is displayed at the top of the form and contains the error messages from each question
+	
 	private QuestionPanel[] questionPanels;
 	
 	private QuestionList questions;
@@ -55,8 +58,6 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		gui = tempGUI;
 		
 		int numberOfQuestions = form.getQuestionIDs().length;
-		
-		
 		
 		getQuestionPanels();
 		
@@ -184,6 +185,16 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		updatePageIndicatorLabel();
 		mainPanel.add(pageIndicatorPanel);
 
+		pageErrorsPanel.setLayout(new GridLayout(1,1));
+		pageErrorsPanel.add(pageErrorsLabel);
+		pageErrorsPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red)); // Give it a red border like the questions
+		
+		Font currentFont = pageErrorsLabel.getFont();
+		pageErrorsLabel.setFont(currentFont.deriveFont(Font.PLAIN, 14)); // Make the font larger
+		
+		pageErrorsPanel.setVisible(false); // This panel should only be visible when there are errors to correct
+		mainPanel.add(pageErrorsPanel);
+
 		mainPanel.add(formPanel);
 		
 		prepareButtonNavigationPanel();
@@ -212,7 +223,11 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			submitButton.setVisible(true);
 		}
 		
+		pageErrorsPanel.setVisible(false);
+		
 		updatePageIndicatorLabel();
+		this.repaint();
+		this.revalidate();
 	}
 	
 	private void goBackward() // Goes backward a step
@@ -232,7 +247,12 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			submitButton.setVisible(false);
 		}
 		
+		pageErrorsPanel.setVisible(false);
+		
 		updatePageIndicatorLabel();
+		
+		this.repaint();
+		this.revalidate();
 	}
 	
 	private void preparePages()
@@ -242,7 +262,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		int currentComponent = 0;
 		int pageNumber = 0;
 		
-		while (currentComponent < components.length)
+		while (currentComponent < components.length) // Add all of the components to pages
 		{
 			JPanel currentPage = new JPanel();
 			
@@ -381,8 +401,48 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			}
 		}
 		
+		if (!allCorrect) // If some were filled in incorrectly update the label
+		{
+			updatePageErrorsLabel(questionsInPage);
+		}
+		
 		return allCorrect;
 		
+	}
+	
+	private void updatePageErrorsLabel(QuestionPanel[] questionPanels)
+	{
+		// Construct the error string based on which questions have failed their checks
+		String errorMessages = "";
+		
+		// All the questions are in the page
+		
+		for (QuestionPanel qP : questionPanels)
+		{
+			String questionID = qP.getQuestionID();
+			
+			boolean filledIn = qP.presenceChecks();
+			boolean required = form.isQuestionRequired(questionID);
+			
+			if (filledIn || required)
+			{
+				boolean passed = qP.validateAnswers();
+				
+				if (!passed)
+				{
+					errorMessages += "<strong>" + qP.getErrorString() + "</strong><br>";
+				}
+			}
+		}
+		
+		
+		String errorString = "<html><center><div style='text-align: center;'> There are problems with the following questions<br>" +
+										errorMessages + "Please correct them before continuing <br></div></html>";
+										
+		pageErrorsLabel.setText(errorString);
+		pageErrorsPanel.setVisible(true);
+		this.repaint();
+		this.revalidate();
 	}
 	
 	private void saveStats() // Called when the user successfully completes a form
@@ -394,16 +454,23 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		for (int i = 0; i < questionPanels.length; i++)
 		{
 			String questionID = questionPanels[i].getQuestionID();
-			int amountFailed = failedValidationChecks.get(questionID);
-			long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
+			QuestionPanel questionPanel = questionPanels[i];
 			
+			boolean filledIn = questionPanel.presenceChecks();
+			boolean required = form.isQuestionRequired(questionID);
 			
-			if (amountFailed > 0) // If they failed at least once
+			if (filledIn || required)
 			{
-				currentUser.getQuestionStats().getQuestionStatByID(questionID).addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
+				int amountFailed = failedValidationChecks.get(questionID);
+				long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
+				
+				if (amountFailed > 0) // If they failed at least once
+				{
+					currentUser.getQuestionStats().getQuestionStatByID(questionID).addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
+				}
+				
+				currentUser.getQuestionStats().getQuestionStatByID(questionID).addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
 			}
-			
-			currentUser.getQuestionStats().getQuestionStatByID(questionID).addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
 		}
 		
 		System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());

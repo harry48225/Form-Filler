@@ -8,6 +8,9 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 	private JRadioButton[] buttons; 
 	private ButtonGroup group;
 	
+	
+	private final String ERROR_STRING = "Radiobuttons: Please select an option";
+	
 	public RadioButtonPanel (RadioButtonPanelBuilder builder)
 	{
 		buttons = builder.radioButtons;
@@ -75,5 +78,10 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 			
 			radioButtons = newArray; // Store the new trimmed array in components
 		}
+	}
+	
+	public String getErrorString()
+	{
+		return ERROR_STRING;
 	}
 }

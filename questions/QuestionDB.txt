@@ -1,6 +1,7 @@
-Q22214022,2,Name,First name
-Q84659353,3,Phone,Phone number
-Q95725503,2,Password,Password
-Q12964242,10,Gender,Gender
-Q57267047,2,date of birth,Birthday
-Q63698523,7,Photo upload,Photo ID
+Q20938811,3,Name,Name
+Q11539783,3,Gender,Gender
+Q08001615,4,Phone,Phone Number
+Q65605948,4,Email,Email address
+Q87872472,2,Password,Password
+Q30190367,2,Birthday,Birthday
+Q75311619,4,File Upload,Photo ID

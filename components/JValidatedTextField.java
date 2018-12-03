@@ -9,6 +9,10 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 {
 	private String type; // Available types: email, phone number, ... none
 	
+	private String ERROR_STRING_EMAIL = "Email: Please enter a valid email address";
+	private String ERROR_STRING_PHONE = "Phone number: Please enter a valid phone number";
+	private String ERROR_STRING_GENERAL = "Text Field: Please fill in the field";
+	
 	public JValidatedTextField(String tempType)
 	{
 		type = tempType;
@@ -49,5 +53,25 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 	{
 		return Pattern.matches("^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$", this.getText());
 		
+	}
+	
+	public String getErrorString()
+	{
+		String returnString;
+		
+		if (type.equals("email"))
+		{
+			returnString = ERROR_STRING_EMAIL;
+		}
+		else if (type.equals("phone"))
+		{
+			returnString = ERROR_STRING_PHONE;
+		}
+		else
+		{
+			returnString = ERROR_STRING_GENERAL;
+		}
+		
+		return returnString;
 	}
 }
