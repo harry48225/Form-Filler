@@ -1,4 +1,4 @@
 F25665357,sdfsd,ADFDF,,4,HEADER TEST TEST,false
 F78643668,Example Header.Q07218815.Q47136949,A test form THIS IS HAS BEEN CHANGED,Video upload.Birthday,6,Test Form,true.true.false
 F00851552,Q47753468.Header,Test,Photo upload,1,Header Test,false.true
-F82477217,Section 1.Q71983400.Q81558701.Q53560658.Another section.Q47136949.Q47753468.Final Section.Q07218815,This form has multiple pages,Gender.Name.Phone.Birthday.Photo upload.Video upload,6,Multipage form,false.true.true.true.false.true.true.false.true
+F51890032,Section 1.Q71983400.Q81558701.Q53560658.Another section.Q47136949.Q47753468.Final Section.Q07218815,This form has multiple pages,Gender.Name.Phone.Birthday.Photo upload.Video upload,6,Multipage form,false.false.true.true.false.true.true.false.false

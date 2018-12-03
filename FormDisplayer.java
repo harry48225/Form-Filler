@@ -43,6 +43,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	//private int[] failedValidationChecks; // Stores the amount of time the user has failed the validation check for each question       
 	private HashMap<String, Integer> failedValidationChecks = new HashMap<String,Integer>();
 	
+	private ImageIcon requiredIcon;
+	
 	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
 	{
 		form = tempF;
@@ -158,6 +160,9 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	{
 		System.out.println("[INFO] <FORM_DISPLAYER> Running prepareGUI");
 		
+		requiredIcon = new ImageIcon("star.png");
+		requiredIcon = new ImageIcon(requiredIcon.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT)); // Make the icon smaller
+		
 		this.addWindowListener(this);
 		
 		this.setLayout(new GridLayout(1,1)); // Set a grid layout
@@ -258,9 +263,22 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 					
 					if (isAQuestion)
 					{
-						component.addMouseListener(this);
+						QuestionPanel qP = (QuestionPanel) component;
+						qP.addMouseListener(this);
 						currentPage.add(Box.createVerticalGlue());
-						currentPage.add(component); // Add the question panel to the page
+						
+						JPanel rowPanel = new JPanel();
+						rowPanel.setLayout(new BoxLayout(rowPanel, BoxLayout.LINE_AXIS));
+						
+						JLabel requiredIconLabel = new JLabel();
+						requiredIconLabel.setIcon(requiredIcon);
+						boolean isQuestionRequired = form.isQuestionRequired(qP.getQuestionID());
+						requiredIconLabel.setVisible(isQuestionRequired); // Make it invisble by default
+						
+						rowPanel.add(requiredIconLabel);
+						rowPanel.add(qP); // Add the question panel to the page
+						
+						currentPage.add(rowPanel);
 						currentComponent++;
 						numberOfQuestionsInPage++;
 					}
