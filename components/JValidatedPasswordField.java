@@ -29,4 +29,12 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 		
 		return password1.equals(password2) && !password1.equals(""); // Return whether the two password fields match and that they're not empty
 	}
+	
+	public boolean presenceCheck()
+	{
+		String password1 = new String(passwordFields[0].getPassword());
+		String password2 = new String(passwordFields[1].getPassword());
+		
+		return !password1.trim().isEmpty() || !password2.trim().isEmpty(); // If either field is filled in
+	}
 }

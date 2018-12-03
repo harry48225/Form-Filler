@@ -322,7 +322,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 	}
 	
-	private void validateQuestions()
+	private boolean validatePage(int pageNumber)
 	{
 		
 		System.out.println("Users question stats before validation: " + currentUser.getQuestionStats());
@@ -330,52 +330,86 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		boolean allCorrect = true;
 		
-		for (int i = 0; i < questionPanels.length; i++) // For each question in the form
+		QuestionPanel[] questionsInPageUnTrimmed = new QuestionPanel[QUESTIONS_PER_PAGE];
+		int nextQuestionPanelLocation = 0;
+		
+		for (Component row : pages[pageNumber].getComponents()) // Get the components in the page and iterate over them
 		{
-			QuestionPanel questionPanel = questionPanels[i];
+			if (row instanceof JPanel)
+			{
+				JPanel rowPanel = (JPanel) row;
+				for (Component c : rowPanel.getComponents())
+				{
+					if (c instanceof QuestionPanel)
+					{
+						questionsInPageUnTrimmed[nextQuestionPanelLocation] = (QuestionPanel) c;
+						nextQuestionPanelLocation++;
+					}
+				}
+			}
+		}
+		
+		QuestionPanel[] questionsInPage = new QuestionPanel[nextQuestionPanelLocation];
+		// Trim the array
+		for (int i = 0; i < nextQuestionPanelLocation; i++)
+		{
+			questionsInPage[i] = questionsInPageUnTrimmed[i];
+		}
+		
+		for (int i = 0; i < questionsInPage.length; i++) // For each question in the form
+		{
+			QuestionPanel questionPanel = questionsInPage[i];
 			String questionID = questionPanel.getQuestionID();
 			
 			currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addAttempt();
 			
-			boolean passed = questionPanel.validateAnswers(); // Validates the answer
+			boolean filledIn = questionPanel.presenceChecks();
+			boolean required = form.isQuestionRequired(questionID);
 			
-			if (!passed)
+			if ((filledIn || required)) // If it's filled in or required
 			{
-				allCorrect = false;
-				currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addFailedValidation();
+				boolean passed = questionPanel.validateAnswers(); // Validates the answer
 				
-				Integer currentValidation = failedValidationChecks.get(questionID);
-				failedValidationChecks.put(questionID, currentValidation + 1); // Add to the failed counter.
+				if (!passed)
+				{
+					allCorrect = false;
+					currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addFailedValidation();
+					
+					Integer currentValidation = failedValidationChecks.get(questionID);
+					failedValidationChecks.put(questionID, currentValidation + 1); // Add to the failed counter.
+				}
 			}
 		}
 		
+		return allCorrect;
+		
+	}
+	
+	private void saveStats() // Called when the user successfully completes a form
+	{	
 		System.out.println("Users question stats after validation: " + currentUser.getQuestionStats());
 		System.out.println(Arrays.asList(timeToCompleteQuestions));
 		System.out.println(Arrays.asList(failedValidationChecks));
-		if (allCorrect)
+		
+		for (int i = 0; i < questionPanels.length; i++)
 		{
-			// Store the number of times that it's taken the user to correct an error
+			String questionID = questionPanels[i].getQuestionID();
+			int amountFailed = failedValidationChecks.get(questionID);
+			long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
 			
-			for (int i = 0; i < questionPanels.length; i++)
+			
+			if (amountFailed > 0) // If they failed at least once
 			{
-				String questionID = questionPanels[i].getQuestionID();
-				int amountFailed = failedValidationChecks.get(questionID);
-				long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
-				
-				
-				if (amountFailed > 0) // If they failed at least once
-				{
-					currentUser.getQuestionStats().getQuestionStatByID(questionID).addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
-				}
-				
-				currentUser.getQuestionStats().getQuestionStatByID(questionID).addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
+				currentUser.getQuestionStats().getQuestionStatByID(questionID).addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
 			}
 			
-			System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
-			
-			JOptionPane.showMessageDialog(null, "Form complete!");
-			
+			currentUser.getQuestionStats().getQuestionStatByID(questionID).addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
 		}
+		
+		System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
+		
+		JOptionPane.showMessageDialog(null, "Form complete!");
+			
 	}
 	
 	public void actionPerformed(ActionEvent evt)
@@ -384,11 +418,17 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		{
 			System.out.println("[INFO] <FORM_DISPLAYER> submitButton pressed");
 			questionFocusChange();
-			validateQuestions();
+			if (validatePage(currentPage))
+			{
+				saveStats();
+			}
 		}
 		else if (evt.getSource() == nextButton)
 		{
-			goForward();
+			if (validatePage(currentPage)) // If they correctly filled in all questions on the page
+			{
+				goForward();
+			}
 		}
 		else if (evt.getSource() == backButton)
 		{

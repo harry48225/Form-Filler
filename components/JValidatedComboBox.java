@@ -13,4 +13,9 @@ public class JValidatedComboBox extends JComboBox<String> implements JValidatedC
 	{
 		return (getSelectedIndex() != 0);
 	}
+	
+	public boolean presenceCheck()
+	{
+		return validateAnswer();
+	}
 }

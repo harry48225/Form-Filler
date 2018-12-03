@@ -33,6 +33,11 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 		return (group.getSelection() != null);
 	}
 	
+	public boolean presenceCheck()
+	{
+		return validateAnswer();
+	}
+	
 	public static class RadioButtonPanelBuilder // Simplifies the creation of check box panels
 	{
 		public JRadioButton[] radioButtons = new JRadioButton[100]; // Store 100 options
