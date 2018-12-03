@@ -37,10 +37,11 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	
 	private String questionLostFocus = ""; // The question that has most recently lost focus
 	private long questionStartTime = 0; // Store the time is milliseconds that the user started attempting the question
-	private long[] timeToCompleteQuestions; // Stores the length of time that each question has been focused for
-	
+	//private long[] timeToCompleteQuestions; // Stores the length of time that each question has been focused for
+	private HashMap<String, Long> timeToCompleteQuestions = new HashMap<String,Long>();
 
-	private int[] failedValidationChecks; // Stores the amount of time the user has failed the validation check for each question       
+	//private int[] failedValidationChecks; // Stores the amount of time the user has failed the validation check for each question       
+	private HashMap<String, Integer> failedValidationChecks = new HashMap<String,Integer>();
 	
 	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
 	{
@@ -53,16 +54,26 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		int numberOfQuestions = form.getQuestionIDs().length;
 		
-		failedValidationChecks = new int[numberOfQuestions]; // Create a new int array with an element for each question of the form
-		timeToCompleteQuestions = new long[numberOfQuestions];
 		
-		questionLostFocus = form.getQuestionIDs()[0]; // Make the first question in focus
-		questionStartTime = System.nanoTime(); // Start the clock
 		
 		getQuestionPanels();
 		
+		prepareHashMaps();
+		
+		questionLostFocus = questionPanels[0].getQuestionID(); // Make the first question in focus
+		questionStartTime = System.nanoTime(); // Start the clock
+		
 		prepareGUI();
 		
+	}
+	
+	private void prepareHashMaps() // Add all of the question ids to both hashmaps
+	{
+		for (QuestionPanel p : questionPanels)
+		{
+			timeToCompleteQuestions.put(p.getQuestionID(), new Long(0));
+			failedValidationChecks.put(p.getQuestionID(), new Integer(0));
+		}
 	}
 	
 	private void prepareButtonNavigationPanel()
@@ -247,6 +258,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 					
 					if (isAQuestion)
 					{
+						component.addMouseListener(this);
 						currentPage.add(Box.createVerticalGlue());
 						currentPage.add(component); // Add the question panel to the page
 						currentComponent++;
@@ -303,6 +315,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		for (int i = 0; i < questionPanels.length; i++) // For each question in the form
 		{
 			QuestionPanel questionPanel = questionPanels[i];
+			String questionID = questionPanel.getQuestionID();
 			
 			currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addAttempt();
 			
@@ -313,22 +326,24 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 				allCorrect = false;
 				currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addFailedValidation();
 				
-				failedValidationChecks[i] += 1; // Add to the failed counter.
+				Integer currentValidation = failedValidationChecks.get(questionID);
+				failedValidationChecks.put(questionID, currentValidation + 1); // Add to the failed counter.
 			}
 		}
 		
 		System.out.println("Users question stats after validation: " + currentUser.getQuestionStats());
-		
+		System.out.println(Arrays.asList(timeToCompleteQuestions));
+		System.out.println(Arrays.asList(failedValidationChecks));
 		if (allCorrect)
 		{
 			// Store the number of times that it's taken the user to correct an error
 			
 			for (int i = 0; i < questionPanels.length; i++)
 			{
-				int amountFailed = failedValidationChecks[i];
-				long timeTakenToComplete = timeToCompleteQuestions[i];
-				
 				String questionID = questionPanels[i].getQuestionID();
+				int amountFailed = failedValidationChecks.get(questionID);
+				long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
+				
 				
 				if (amountFailed > 0) // If they failed at least once
 				{
@@ -371,7 +386,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		{
 			if (questionIDs[i].equals(questionLostFocus)) // If we've found the question that lost focus
 			{
-				timeToCompleteQuestions[i] += (System.nanoTime() - questionStartTime) / 1000000000; // Add on the number of seconds that the question was focused for
+				long currentTimeTaken = timeToCompleteQuestions.get(questionIDs[i]);
+				timeToCompleteQuestions.put(questionIDs[i],(System.nanoTime() - questionStartTime) / 1000000000); // Add on the number of seconds that the question was focused for
 				
 				//System.out.println(questionLostFocus + " was focused for " + timeToCompleteQuestions[i] + "s");
 			}
@@ -397,8 +413,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		if (!questionLostFocus.equals(sourceQuestion.getQuestionID())) // If a new question has gotten focus
 		{
-			//System.out.println(questionLostFocus + " lost focus");
-			//System.out.println(sourceQuestion.getQuestionID() + " gained focus");
+			System.out.println(questionLostFocus + " lost focus");
+			System.out.println(sourceQuestion.getQuestionID() + " gained focus");
 			questionFocusChange();
 			
 		}
@@ -415,6 +431,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		else // It's not a question panel
 		{
 			JComponent component = (JComponent) evt.getSource(); // It'll be a component that's in a question panel that fired the event
+			
+			// Check if the parent is a question panel
 			sourceQuestion = (QuestionPanel) component.getParent();	//getting its parent will get the question panel
 		}
 		
