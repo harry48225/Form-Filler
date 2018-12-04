@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+
 public class GUI extends JFrame implements ChangeListener// Main GUI class
 {
 	private QuestionList questions; // The question list
@@ -17,6 +21,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	private FormsInProgressList formsInProgress;
 	
 	private JTabbedPane tabs = new JTabbedPane(); // To store the different sections of the program
+	
+	Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public GUI() // Constructor
 	{
@@ -96,33 +102,52 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	public void openForm(Form f) // Takes a form and opens it for attempting
 	{
-		QuestionPanel[] formQuestionPanels;
+		JPanel[] formComponents;
 		
 		System.out.println("[INFO] <GUI> Running openForm"); // Debug
-		
+		/*
 		if (formsInProgress.isFormPresent(f.getID())) // If the form is in the formsInProgressList
 		{
 			System.out.println("[INFO] <GUI> Loading saved form");
-			formQuestionPanels = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
+			formComponents = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
 		}
 		else // The form is not in the forms in progress list
 		{
+		*/
 			System.out.println("[INFO] <GUI> Starting new form");
 			// Load the question panels from the questionPanels database
 			String[] questionIDs = f.getQuestionIDs();
 			
-			formQuestionPanels = new QuestionPanel[questionIDs.length];
+			formComponents = new JPanel[questionIDs.length];
 			
-			for (int i = 0; i < formQuestionPanels.length; i++)
+			for (int i = 0; i < formComponents.length; i++)
 			{
-				formQuestionPanels[i] = questions.getPanelByID(questionIDs[i]); // Add the relevant question panel to the formQuestionPanels array
+				// Determine whether the component is a question or a header
+				boolean isAQuestion = questions.getQuestionByID(questionIDs[i]) != null;
+				
+				if (isAQuestion)
+				{
+					JPanel questionPanel = questions.getPanelByID(questionIDs[i]);
+					questionPanel.setPreferredSize(new Dimension(300, 50));
+					formComponents[i]  = questionPanel; // Add the question panel to the array
+				}
+				else // It's a header
+				{
+					JPanel headerPanel = new JPanel();
+					headerPanel.setPreferredSize(new Dimension(300, 50));
+					TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK), questionIDs[i]);
+					border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+					headerPanel.setBorder(border);
+
+					formComponents[i] = headerPanel; // Add the header to the page
+				}
 			}
 			
-			formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formQuestionPanels)); // Add the form in progress
+			//formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formComponents)); // Add the form in progress
 			
-		}
+		//}
 		
-		new FormDisplayer(f, formQuestionPanels, currentUser, users, this); // Open the form
+		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
 		
 	}
 	

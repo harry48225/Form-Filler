@@ -416,6 +416,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		for (String question : formToEdit.getQuestionIDs()) // For each question currently in the form
 		{
 			addComponentToForm(question); // Add the question to the form preview
+			formBeingCreated = formBeingCreated.setRequired(question, formToEdit.isQuestionRequired(question));
 		}
 		
 		for (Component questionRow : formPreview.getComponents())

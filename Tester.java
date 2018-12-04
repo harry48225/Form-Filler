@@ -48,32 +48,6 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		int result = JOptionPane.showConfirmDialog(null, new EnterOptionsPanel(), "Enter options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	public void testFormInProgress()
-	{
-		FormInProgress myForm = new FormInProgress("F00000001", 14, new QuestionPanel[10]);
-		
-		FormsInProgressList forms = new FormsInProgressList("testUser2");
-		
-		System.out.println("F12345767 is present: " + forms.isFormPresent("F12345767"));
-		
-		//System.out.println("Adding forms to testUser2's formInProgress list");
-		//forms.addFormInProgress(new FormInProgress("F00000002", 14, new Component[10]));
-		//forms.addFormInProgress(new FormInProgress("F00000003", 14, new Component[10]));
-		//forms.writeDatabase();
-		/*
-		FormsInProgressList forms0 = new FormsInProgressList("testUser");
-		forms0.addFormInProgress(new FormInProgress("F00000001", 14, new Component[10]));
-		forms0.writeDatabase();
-		*/
-		
-		//System.out.println("testUser " + Arrays.toString(new FormsInProgressList("testUser").getArray()));
-		//System.out.println("testUser2 " + Arrays.toString(forms.getArray()));
-		//System.out.println(Arrays.toString(forms.getArray()));
-		//System.out.println("Adding a FormInProgress object to the array");
-		//System.out.println(Arrays.toString(forms.getArray()));
-		
-		
-	}
 	
 	public void testQuestionStat()
 	{

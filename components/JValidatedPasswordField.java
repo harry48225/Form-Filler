@@ -7,6 +7,8 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 {
 	JPasswordField[] passwordFields = {new JPasswordField(), new JPasswordField()}; // The two password fields
 	
+	private final String ERROR_STRING = "Passwords: Please enter two matching passwords";
+	
 	public JValidatedPasswordField()
 	{
 		preparePanel();
@@ -28,5 +30,18 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 		String password2 = new String(passwordFields[1].getPassword());
 		
 		return password1.equals(password2) && !password1.equals(""); // Return whether the two password fields match and that they're not empty
+	}
+	
+	public boolean presenceCheck()
+	{
+		String password1 = new String(passwordFields[0].getPassword());
+		String password2 = new String(passwordFields[1].getPassword());
+		
+		return !password1.trim().isEmpty() || !password2.trim().isEmpty(); // If either field is filled in
+	}
+	
+	public String getErrorString()
+	{
+		return ERROR_STRING;
 	}
 }

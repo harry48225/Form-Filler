@@ -215,6 +215,10 @@ public class Form implements Serializable
 				String temp = questions[questionLocation - 1]; // Store the question above it
 				questions[questionLocation - 1] = questions[questionLocation]; // Move it up
 				questions[questionLocation] = temp; // Move the one above it into the now free space
+				
+				boolean tempRequired = requiredQuestions[questionLocation-1];
+				requiredQuestions[questionLocation-1] = requiredQuestions[questionLocation];
+				requiredQuestions[questionLocation] = tempRequired;
 			}
 			
 			return this;
@@ -240,6 +244,10 @@ public class Form implements Serializable
 				String temp = questions[questionLocation + 1]; // Store the question below it
 				questions[questionLocation + 1] = questions[questionLocation]; // Move it down
 				questions[questionLocation] = temp; // Move the one below it into the now free space
+				
+				boolean tempRequired = requiredQuestions[questionLocation+1];
+				requiredQuestions[questionLocation+1] = requiredQuestions[questionLocation];
+				requiredQuestions[questionLocation] = tempRequired;
 			}
 			
 			return this;

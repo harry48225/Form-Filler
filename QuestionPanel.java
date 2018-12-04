@@ -78,6 +78,42 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		return passed;
 	}
 	
+	public String getErrorString()
+	{
+		String errorString = "";
+		for (JComponent c : components)
+		{
+			if (c instanceof JValidatedComponent)
+			{
+				JValidatedComponent validatedComponent = (JValidatedComponent) c; // Cast to JValidatedComponent
+				errorString = validatedComponent.getErrorString();
+			}
+		}
+		
+		return errorString;
+	}
+	
+	public boolean presenceChecks()
+	{
+		boolean passed = true;
+		
+		for (JComponent c : components) // For each component
+		{
+			if (c instanceof JValidatedComponent)
+			{
+				JValidatedComponent validatedComponent = (JValidatedComponent) c; // Cast to JValidatedComponent
+				if (validatedComponent.presenceCheck() == false) // If they got an answer wrong
+				{
+					passed = false;
+					this.setBorder(null);
+				}				
+			}
+		}
+		
+		
+		return passed;
+	}
+	
 	public static class QuestionPanelBuilder // Simplifies the creation of question panels
 	{
 		private final String questionID; // Must be set in constructor
