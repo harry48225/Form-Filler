@@ -84,7 +84,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public boolean presenceCheck()
 	{
-		return fileChooser.getSelectedFile() != null;
+		return fileChooser != null && fileChooser.getSelectedFile() != null;
 	}
 
 	public void actionPerformed(ActionEvent evt)

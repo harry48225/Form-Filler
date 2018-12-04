@@ -381,7 +381,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			QuestionPanel questionPanel = questionsInPage[i];
 			String questionID = questionPanel.getQuestionID();
 			
-			currentUser.getQuestionStats().getQuestionStatByID(questionPanel.getQuestionID()).addAttempt();
+			
 			
 			boolean filledIn = questionPanel.presenceChecks();
 			boolean required = form.isQuestionRequired(questionID);
@@ -464,18 +464,24 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 				int amountFailed = failedValidationChecks.get(questionID);
 				long timeTakenToComplete = timeToCompleteQuestions.get(questionID);
 				
+				QuestionStat qS = currentUser.getQuestionStats().getQuestionStatByID(questionID);
+				
+				
 				if (amountFailed > 0) // If they failed at least once
 				{
-					currentUser.getQuestionStats().getQuestionStatByID(questionID).addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
+					qS.addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
 				}
 				
-				currentUser.getQuestionStats().getQuestionStatByID(questionID).addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
+				qS.addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
+				qS.addAttempt();
 			}
 		}
 		
 		System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
 		
 		JOptionPane.showMessageDialog(null, "Form complete!");
+		
+		users.writeDatabase(); // Save the users stats
 			
 	}
 	
@@ -512,7 +518,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			if (questionIDs[i].equals(questionLostFocus)) // If we've found the question that lost focus
 			{
 				long currentTimeTaken = timeToCompleteQuestions.get(questionIDs[i]);
-				timeToCompleteQuestions.put(questionIDs[i],(System.nanoTime() - questionStartTime) / 1000000000); // Add on the number of seconds that the question was focused for
+				long duration = (System.nanoTime() - questionStartTime) / 1000000000; // The amount of time in seconds that they've just spent on it
+				timeToCompleteQuestions.put(questionIDs[i],currentTimeTaken + duration); // Add on the number of seconds that the question was focused for
 				
 				//System.out.println(questionLostFocus + " was focused for " + timeToCompleteQuestions[i] + "s");
 			}

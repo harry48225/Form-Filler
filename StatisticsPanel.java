@@ -145,47 +145,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		statsPanel.add(validationChart);
 	}
 	
-	private String calcuateAverageTimeTakenToComplete(QuestionStat stats)
-	{
-		// To calculate the average
-		int numberOfTimes = 0; // Store the number of non null entries in the array
-		long totalTime = 0; // Store the total amount of time
-		
-		for (long time : stats.getTimeTakenToComplete())
-		{
-			if (time != 0) // If the time isn't null data
-			{	
-				totalTime += time; // Add the time to the total 
-				numberOfTimes++; // Increment the number of times
-			}
-			else // Break as all meaningful data has been added
-			{
-				break;
-			}
-		}	
-		
-		if (numberOfTimes > 0)
-		{
-			long average = totalTime / numberOfTimes; // Calculate the average
-			
-			String seconds = average + "";
-					
-			if (seconds.length() < 2) // If it's not 2 digits
-			{
-				seconds = "0" + seconds; // Pad with a leading zero
-			}
-					
-			String averageTimeTakenToComplete = seconds + " seconds";
-			
-			return averageTimeTakenToComplete;
-		}
-		else
-		{
-			return "";
-		}
-		
-	}
-	
 	private void updateStatView(String selectedQuestion)
 	{
 		System.out.println("[INFO] <STATISTICS_PANEL> Running updateStatView");
@@ -195,7 +154,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		// Update all of the labels without affecting the other text
 		numberOfAttemptsLabel.setText(numberOfAttemptsLabel.getText().split(":")[0] + ": " + stats.getNumberOfAttempts());
 		timesFailedValidationLabel.setText(timesFailedValidationLabel.getText().split(":")[0] + ": " + stats.getTimesFailedValidation());
-		averageTimeTakenToCompleteLabel.setText(averageTimeTakenToCompleteLabel.getText().split(":")[0] + ": " + calcuateAverageTimeTakenToComplete(stats));
+		averageTimeTakenToCompleteLabel.setText(averageTimeTakenToCompleteLabel.getText().split(":")[0] + ": " + stats.getAverageTimeTakenToComplete() + " seconds");
 		
 		correctionsChart.updateChart(stats.getNumberOfAttemptsNeededToCorrect(), stats.getNumberOfAttempts());
 		timeChart.updateChart(stats.getTimeTakenToComplete(), stats.getNumberOfAttempts());
@@ -290,6 +249,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			PlotOrientation.VERTICAL,
 			false,false,false);
 			
+			System.out.println(validNumberOfAttempts + " " + totalNumberOfAttempts);
 			XYPlot plot = (XYPlot) chart.getPlot();  
 
 			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
@@ -311,6 +271,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			this.revalidate();
 			this.repaint();
 		}
+		
 		private XYDataset createDataset()
 		{
 			XYSeriesCollection dataset = new XYSeriesCollection();

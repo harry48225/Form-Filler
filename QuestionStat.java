@@ -3,13 +3,15 @@ public class QuestionStat // Every user has one of these for each question and i
 	private String questionID; // The question that it's linked to
 	
 	private int timesFailedValidation = 0; // The number of times that the user has failed the validation check for the question
-	private int numberOfAttempts = 0; // The number of times that the user has attempted the question
+	private int numberOfSuccessfulAttempts = 0; // The number of times that the user has successfully attempted the question
 	private int[] numberOfAttemptsNeededToCorrect = new int[5]; // The number of times that it's taken the user to correct a error that they've made in the question
 	private long[] timeTakenToComplete = new long[5]; // The length of time in seconds that it has taken the user to complete the question in the past.
 	
 	public QuestionStat(String tempQuestionID)
 	{
 		questionID = tempQuestionID;
+		
+		initaliseArrays();
 	}
 	
 	public QuestionStat(String[] loadedData)
@@ -18,7 +20,7 @@ public class QuestionStat // Every user has one of these for each question and i
 		timesFailedValidation = Integer.parseInt(loadedData[1]);
 		numberOfAttemptsNeededToCorrect = loadNumberOfAttemptsNeededToCorrectArray(loadedData[2]);
 		timeTakenToComplete = loadTimeTakenToCompleteArray(loadedData[3]);
-		numberOfAttempts = Integer.parseInt(loadedData[4]);
+		numberOfSuccessfulAttempts = Integer.parseInt(loadedData[4]);
 	}
 	
 	private void initaliseArrays()
@@ -40,10 +42,16 @@ public class QuestionStat // Every user has one of these for each question and i
 		
 	}
 	
+	public int getTotalNumberOfAttempts()
+	{
+		return numberOfSuccessfulAttempts + timesFailedValidation;
+	}
+	
 	public int getNumberOfAttempts()
 	{
-		return numberOfAttempts;
+		return numberOfSuccessfulAttempts;
 	}
+	
 	
 	public int getTimesFailedValidation()
 	{
@@ -57,7 +65,7 @@ public class QuestionStat // Every user has one of these for each question and i
 	
 	public int getAverageNumberOfAttemptsNeededToCorrect()
 	{
-		int number = 0; // Store the number of numberOfAttempts - to calculate the average
+		int number = 0; // Store the number of number of attempts - to calculate the average
 		int total = 0;
 		
 		for (int attemptNeededToCorrect : numberOfAttemptsNeededToCorrect) // For each number in the array
@@ -114,7 +122,7 @@ public class QuestionStat // Every user has one of these for each question and i
 	
 	public void addAttempt() // Increments the number of attempts counter
 	{
-		numberOfAttempts++;
+		numberOfSuccessfulAttempts++;
 	}
 	
 	public String getID()
@@ -124,7 +132,7 @@ public class QuestionStat // Every user has one of these for each question and i
 	
 	public String toString()
 	{
-		return questionID + "," + timesFailedValidation + "," + numberOfAttemptsNeededToCorrectToString() + "," + timeTakenToCompleteToString() + "," + numberOfAttempts;
+		return questionID + "," + timesFailedValidation + "," + numberOfAttemptsNeededToCorrectToString() + "," + timeTakenToCompleteToString() + "," + numberOfSuccessfulAttempts;
 	}
 	
 	private String timeTakenToCompleteToString()
@@ -184,7 +192,7 @@ public class QuestionStat // Every user has one of these for each question and i
 		return output;
 	}
 	
-	public void addNumberOfAttemptsNeededToCorrect(int numberOfAttempts) // Adds the number of attempts it's taken a user to correct an error to the array
+	public void addNumberOfAttemptsNeededToCorrect(int numberOfSuccessfulAttempts) // Adds the number of attempts it's taken a user to correct an error to the array
 	{
 		// The array operates FIFO - first in first out.
 		// Therefore all of the data items need to be copied one along and then the latest data stored at the front
@@ -198,7 +206,7 @@ public class QuestionStat // Every user has one of these for each question and i
 			newArray[i] = numberOfAttemptsNeededToCorrect[i-1]; // Copy them across one further along than they were before - the oldest item gets discarded
 		}
 		
-		newArray[0] = numberOfAttempts; // Add the latest data at the start
+		newArray[0] = numberOfSuccessfulAttempts; // Add the latest data at the start
 		
 		numberOfAttemptsNeededToCorrect = newArray; // Overwrite the old array
 	}
