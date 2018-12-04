@@ -2,7 +2,9 @@ package components;
 
 import javax.swing.*;
 import java.awt.*;
-public class CheckBoxPanel extends JPanel // A better class for managing check boxes
+
+
+public class CheckBoxPanel extends JPanel implements JSaveableComponent // A better class for managing check boxes
 {
 	private JCheckBox[] boxes; 
 	
@@ -11,6 +13,30 @@ public class CheckBoxPanel extends JPanel // A better class for managing check b
 		boxes = builder.checkboxes;
 		
 		preparePanel();
+	}
+	
+	
+	public CheckBoxPanel (String saveString)
+	{
+		String[] options = saveString.split(":")[1].split("\\."); // The options are delimted by a .
+		
+		System.out.println(saveString.split(":")[1]);
+		
+		boxes = new JCheckBox[options.length];
+		
+		for (int i = 0; i < boxes.length; i++)
+		{
+			System.out.println(options[i]);
+			
+			String[] optionData = options[i].split(";");
+			
+			boxes[i] = new JCheckBox(optionData[0]);
+			boxes[i].setSelected(Boolean.parseBoolean(optionData[1]));
+		}
+		
+		preparePanel();
+		
+		
 	}
 	
 	private void preparePanel()
@@ -33,7 +59,7 @@ public class CheckBoxPanel extends JPanel // A better class for managing check b
 		public CheckBoxPanelBuilder add(String option)
 		{
 			System.out.println("[INFO] <CHECKBOX_PANEL_BUILDER> Running add"); // Debug
-			
+
 			checkboxes[nextCheckBoxLocation] = new JCheckBox(option);
 			nextCheckBoxLocation++;
 			
@@ -62,5 +88,28 @@ public class CheckBoxPanel extends JPanel // A better class for managing check b
 			
 			checkboxes = newArray; // Store the new trimmed array in components
 		}
+	}
+	
+	private String getOptionsString()
+	{
+		String options = "";
+		
+		for (JCheckBox checkBox : boxes)
+		{
+			options += (checkBox.getText() + ";" + checkBox.isSelected() + ".");
+		}
+		
+		options = options.substring(0, options.length() - 1); // Trim off the trailing ,
+		
+		return options;
+	}
+	
+	public String toString()
+	{
+		String asString = "checkboxes:";
+		
+		asString += getOptionsString();
+		
+		return asString;
 	}
 }
