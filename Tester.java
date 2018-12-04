@@ -9,10 +9,8 @@ public class Tester implements ActionListener // Just to quickly test things wit
 
 	JFrame test;
 	JButton b;
-	RadioButtonPanel rBP;
+	JValidatedPasswordField c;
 	JValidatedTextField tF;
-	
-	JValidatedComboBox box;
 	
 	CheckBoxPanel cBP;
 	
@@ -48,8 +46,27 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		b.addActionListener(this);
 		
 		//cBP = new CheckBoxPanel.CheckBoxPanelBuilder().add("test 1").add("test 2").build();
-		cBP = new CheckBoxPanel("checkboxes:test 1;true.test 2;false");
-		test.add(cBP);
+		//cBP = new CheckBoxPanel("checkboxes:test 1;true.test 2;false");
+		
+		//c = new RadioButtonPanel.RadioButtonPanelBuilder().add("test 1").add("test 2").build();
+		//c = new JValidatedComboBox(new String[] {"Please select an option", "option 1", "option 2"});
+		//c = new JValidatedComboBox("combobox:Please select an option.option 1.option 2;2");
+		
+		//c = new JValidatedDatePicker();
+		//c = new JValidatedDatePicker("datepicker:4.6.3");
+		
+		//c = new JValidatedFileChooser("image");
+		//c = new JValidatedFileChooser("filechooser:image");
+		
+		//c = new JValidatedTextField("phone");
+		//c = new JValidatedTextField("textfield:07232334515;phone");
+		
+		//c = new JValidatedPasswordField();
+		c = new JValidatedPasswordField("password:passwordexample;adifferentpassword");
+		
+		System.out.println(c.getErrorString());
+		
+		test.add(c);
 		test.add(b);
 		
 		test.setVisible(true);
@@ -60,7 +77,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	{
 		if (e.getSource() == b)
 		{
-			System.out.println(cBP.toString());
+			System.out.println(c.toString());
 		}
 	}
 	

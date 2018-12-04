@@ -3,7 +3,7 @@ package components;
 import javax.swing.*;
 import java.awt.*;
 
-public class RadioButtonPanel extends JPanel implements JValidatedComponent // A better class for managing check boxes
+public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSaveableComponent // A better class for managing check boxes
 {
 	private JRadioButton[] buttons; 
 	private ButtonGroup group;
@@ -14,7 +14,27 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 	public RadioButtonPanel (RadioButtonPanelBuilder builder)
 	{
 		buttons = builder.radioButtons;
-		group = new ButtonGroup();
+		preparePanel();
+	}
+	
+	public RadioButtonPanel(String saveString)
+	{
+		String[] options = saveString.split(":")[1].split("\\."); // The options are delimted by a .
+		
+		System.out.println(saveString.split(":")[1]);
+		
+		
+		buttons = new JRadioButton[options.length];
+		for (int i = 0; i < buttons.length; i++)
+		{
+			System.out.println(options[i]);
+			
+			String[] optionData = options[i].split(";");
+			
+			buttons[i] = new JRadioButton(optionData[0]);
+			buttons[i].setSelected(Boolean.parseBoolean(optionData[1]));
+		}
+		
 		preparePanel();
 	}
 	
@@ -23,6 +43,8 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 		System.out.println("[INFO] <RADIOBUTTON_PANEL_BUILDER> Running preparePanel"); // Debug
 		
 		this.setLayout(new GridLayout(0,2)); // Infinite rows 2 columns
+		
+		group = new ButtonGroup();
 		
 		for (JRadioButton button : buttons) // Add each button to the array
 		{
@@ -78,6 +100,29 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent // A
 			
 			radioButtons = newArray; // Store the new trimmed array in components
 		}
+	}
+	
+	private String getOptionsString()
+	{
+		String options = "";
+		
+		for (JRadioButton button : buttons)
+		{
+			options += (button.getText() + ";" + button.isSelected() + ".");
+		}
+		
+		options = options.substring(0, options.length() - 1); // Trim off the trailing ,
+		
+		return options;
+	}
+	
+	public String toString()
+	{
+		String asString = "radiobuttons:";
+		
+		asString += getOptionsString();
+		
+		return asString;
 	}
 	
 	public String getErrorString()
