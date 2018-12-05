@@ -74,6 +74,9 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			case "datepicker":
 				component = new JValidatedDatePicker(componentString);
 				break;
+			case "radiobuttons":
+				component = new RadioButtonPanel(componentString);
+				break;
 		}
 		
 		return component;

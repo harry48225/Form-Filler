@@ -487,7 +487,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 				}
 				else
 				{
-					addComponent(new JLabel(labelTextField.getText())); // Add a label with the entered text to the question
+					addComponent(new JSaveableLabel(labelTextField.getText())); // Add a label with the entered text to the question
 					goForward();
 				}
 			}

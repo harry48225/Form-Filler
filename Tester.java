@@ -70,7 +70,9 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//c = new QuestionPanel.QuestionPanelBuilder("Q12345678").add(
 		//new JSaveableLabel("Test label")).add(new CheckBoxPanel.CheckBoxPanelBuilder().add(
 		//"test 1").add("test 2").build()).build();
-		c = new QuestionPanel("Q12345678$label:Test label||checkboxes:test 1;true.test 2;false");
+		//c = new QuestionPanel("Q12345678$label:Test label||checkboxes:test 1;true.test 2;false");
+		
+		c = new QuestionPanel("Q97512145$label:test||radiobuttons:1;false.2;false.3;false.4;false.5;false.6;false.7;false.8;false");
 		test.add(c);
 		test.add(b);
 		
