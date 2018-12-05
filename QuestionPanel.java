@@ -10,6 +10,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 
+import java.util.*;
+
 public class QuestionPanel extends JPanel implements ActionListener, Serializable // Holds the components of the question
 {
 	private final String questionID; // Stores the id of the question that it belongs to.
@@ -20,6 +22,61 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		questionID = builder.questionID; // Store the id
 		components = builder.components;
 		setup(components); // Setup the window with the list of components
+	}
+	
+	public QuestionPanel(String saveString)
+	{
+		// The save string is in this format
+		// questionID$Component1||Component2
+		
+		String[] splitString = saveString.split("\\$");
+
+		questionID = splitString[0];
+		
+		String[] componentList = splitString[1].split("\\|\\|");
+		
+		components = new JComponent[componentList.length];
+		
+		for (int i = 0; i < componentList.length; i++)
+		{
+			components[i] = importComponent(componentList[i]);
+		}
+		
+		setup(components);
+	}
+	
+	private JComponent importComponent(String componentString)
+	{
+		String componentName = componentString.split(":")[0];
+		
+		JComponent component = null;
+		
+		switch (componentName)
+		{
+			case "label":
+				component = new JSaveableLabel(componentString);
+				break;
+			case "textfield":
+				component = new JValidatedTextField(componentString);
+				break;
+			case "password":
+				component = new JValidatedPasswordField(componentString);
+				break;
+			case "combobox":
+				component = new JValidatedComboBox(componentString);
+				break;
+			case "checkboxes":
+				component = new CheckBoxPanel(componentString);
+				break;
+			case "filechooser":
+				component = new JValidatedFileChooser(componentString);
+				break;
+			case "datepicker":
+				component = new JValidatedDatePicker(componentString);
+				break;
+		}
+		
+		return component;
 	}
 	
 	private void setup(JComponent[] components) // Adds all the components to itself
@@ -113,6 +170,25 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		
 		
 		return passed;
+	}
+	
+	public String toString() // Outputs a string which can be used to recreate the question panel
+	{
+		String outputString = questionID + "$";
+		
+		for (JComponent c : components)
+		{
+			if (c instanceof JSaveableComponent)
+			{
+				JSaveableComponent cSave = (JSaveableComponent) c;
+				
+				outputString += (cSave.toString() + "||");
+			}
+		}
+		
+		outputString = outputString.substring(0, outputString.length() - 2); // Trim off the trailing ||
+		
+		return outputString;
 	}
 	
 	public static class QuestionPanelBuilder // Simplifies the creation of question panels
