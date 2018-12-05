@@ -9,7 +9,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 
 	JFrame test;
 	JButton b;
-	JValidatedPasswordField c;
+	JSaveableLabel c;
 	JValidatedTextField tF;
 	
 	CheckBoxPanel cBP;
@@ -62,9 +62,10 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//c = new JValidatedTextField("textfield:07232334515;phone");
 		
 		//c = new JValidatedPasswordField();
-		c = new JValidatedPasswordField("password:passwordexample;adifferentpassword");
+		//c = new JValidatedPasswordField("password:passwordexample;adifferentpassword");
 		
-		System.out.println(c.getErrorString());
+		//c = new JSaveableLabel("test label");
+		c = new JSaveableLabel("label:test label");
 		
 		test.add(c);
 		test.add(b);
