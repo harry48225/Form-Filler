@@ -12,7 +12,7 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class QuestionPanel extends JPanel implements ActionListener, Serializable // Holds the components of the question
+public class QuestionPanel extends JPanel implements ActionListener, Serializable, JSaveableComponent // Holds the components of the question
 {
 	private final String questionID; // Stores the id of the question that it belongs to.
 	private JComponent[] components; // Stores the components in the array
@@ -93,6 +93,11 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			this.add(component); // Add it to the panel
 		}
 
+	}
+	
+	public QuestionPanel clone() // Return a deep copy of the question panel
+	{
+		return new QuestionPanel(toString()); // Return a copy of the quesiton panel
 	}
 	
 	public String getQuestionID()

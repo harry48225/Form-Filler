@@ -2,7 +2,7 @@ import java.io.*;
 
 public class FormsInProgressList
 {
-	private String databaseFileName = "FormsInProgessDB.ser";
+	private String databaseFileName = "FormsInProgessDB.txt";
 	private String databasePath;
 	private FormInProgress[] formsInProgressArray = new FormInProgress[100];
 	
@@ -64,12 +64,18 @@ public class FormsInProgressList
 		
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream(databasePath + "/" + databaseFileName); // Create a file output stream with the correct path to the output file
-			ObjectOutputStream out = new ObjectOutputStream(fileOut); // Create an object output stream from the file output stream
+			FileWriter fw = new FileWriter(databaseFileName);
 			
-			out.writeObject(formsInProgressArray); // Write the array to the file
+			for (int i = 0; i < nextFormInProgressLocation; i++) // For each form in the array
+			{
+				String currentPositionFormData = formsInProgressArray[i].toString(); // Get the attribute string
+				
+				fw.write(currentPositionFormData); // Write the data
+				
+				fw.write("\r\n"); // Go to a new line
+			}
 			
-			out.close();
+			fw.close(); // Close the file
 		}
 		catch (IOException e)
 		{
@@ -80,6 +86,7 @@ public class FormsInProgressList
 	
 	private void loadDatabase()
 	{
+		/*
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> Running loadDatabase");
 		
 		try
@@ -117,5 +124,6 @@ public class FormsInProgressList
 		}
 		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> " + nextFormInProgressLocation + " formsInProgress loaded from file");
+		*/
 	}
 }

@@ -108,7 +108,7 @@ public class QuestionPanelList
 			}
 		}
 		
-		return result;
+		return result.clone();
 	}
 	
 }

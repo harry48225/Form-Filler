@@ -19,16 +19,11 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 	
 	public RadioButtonPanel(String saveString)
 	{
-		String[] options = saveString.split(":")[1].split("\\."); // The options are delimted by a .
-		
-		System.out.println(saveString.split(":")[1]);
-		
+		String[] options = saveString.split(":")[1].split("\\."); // The options are delimted by a .	
 		
 		buttons = new JRadioButton[options.length];
 		for (int i = 0; i < buttons.length; i++)
-		{
-			System.out.println(options[i]);
-			
+		{	
 			String[] optionData = options[i].split(";");
 			
 			buttons[i] = new JRadioButton(optionData[0]);

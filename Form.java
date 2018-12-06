@@ -5,7 +5,7 @@ public class Form implements Serializable
 {
 	private String id; // ID unique to each form
 	
-	private String[] questions; // Stores the ids of the questions that are in the form
+	private String[] questions; // Stores the ids of the questions that are in the form and any header text
 	private Boolean[] requiredQuestions; // Stores whether each question is required or not
 	
 	private String title;

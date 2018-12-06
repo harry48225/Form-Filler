@@ -1,3 +1,5 @@
+import components.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -9,9 +11,9 @@ public class FormInProgress implements Serializable // This object get serialize
 	private int percentComplete;
 	private int timesCompleted;
 	
-	private QuestionPanel[] questionPanels;
+	private JPanel[] questionPanels; // Also contains the JPanels which contain the headers
 	
-	public FormInProgress(String tempFormID, int tempPercentComplete, QuestionPanel[] tempQuestionPanels, int tempTimesCompleted)
+	public FormInProgress(String tempFormID, int tempPercentComplete, JPanel[] tempQuestionPanels, int tempTimesCompleted)
 	{
 		formID = tempFormID;
 		percentComplete = tempPercentComplete;
@@ -39,7 +41,7 @@ public class FormInProgress implements Serializable // This object get serialize
 		return timesCompleted;
 	}
 	
-	public QuestionPanel[] getQuestionPanels()
+	public JPanel[] getQuestionPanels()
 	{
 		return questionPanels;
 	}
@@ -47,6 +49,21 @@ public class FormInProgress implements Serializable // This object get serialize
 	public String getFormID()
 	{
 		return formID;
+	}
+	
+	public String toString()
+	{
+		String outputString = "";
+		
+		for (JPanel panel : questionPanels)
+		{
+			JSaveableComponent c = (JSaveableComponent) panel;
+			outputString += (c.toString() + ",");
+		}
+		
+		outputString = outputString.substring(0, outputString.length() - 1); // Trim off the trailing ,
+		
+		return outputString;
 	}
 	
 }
