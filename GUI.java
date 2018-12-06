@@ -103,15 +103,15 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		JPanel[] formComponents;
 		
 		System.out.println("[INFO] <GUI> Running openForm"); // Debug
-		/*
+		
 		if (formsInProgress.isFormPresent(f.getID())) // If the form is in the formsInProgressList
 		{
 			System.out.println("[INFO] <GUI> Loading saved form");
 			formComponents = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
+			System.out.println(formComponents.length);
 		}
 		else // The form is not in the forms in progress list
 		{
-		*/
 			System.out.println("[INFO] <GUI> Starting new form");
 			// Load the question panels from the questionPanels database
 			String[] questionIDs = f.getQuestionIDs();
@@ -139,7 +139,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			
 			formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formComponents, 0)); // Add the form in progress
 			
-		//}
+		}
 		
 		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
 		

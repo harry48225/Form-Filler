@@ -22,8 +22,10 @@ public class HeaderPanel extends JPanel implements JSaveableComponent
 		{
 			headerText = tempHeaderText.split(":")[1];
 		}
-		
-		headerText = tempHeaderText;
+		else
+		{
+			headerText = tempHeaderText;
+		}
 		
 		preparePanel();
 	}

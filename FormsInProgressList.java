@@ -64,18 +64,18 @@ public class FormsInProgressList
 		
 		try
 		{
-			FileWriter fw = new FileWriter(databaseFileName);
+			FileWriter fw = new FileWriter(databasePath + "/" + databaseFileName);
 			
 			for (int i = 0; i < nextFormInProgressLocation; i++) // For each form in the array
 			{
 				String currentPositionFormData = formsInProgressArray[i].toString(); // Get the attribute string
 				
-				fw.write(currentPositionFormData); // Write the data
-				
-				fw.write("\r\n"); // Go to a new line
+				fw.write(currentPositionFormData + "\r\n"); // Write the data
+
 			}
 			
 			fw.close(); // Close the file
+			
 		}
 		catch (IOException e)
 		{
@@ -86,19 +86,24 @@ public class FormsInProgressList
 	
 	private void loadDatabase()
 	{
-		/*
+		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> Running loadDatabase");
+		
+		nextFormInProgressLocation = 0;
 		
 		try
 		{
-			FileInputStream fileIn = new FileInputStream(databasePath + "/" + databaseFileName); // Create an input stream with the correct class
-			ObjectInputStream in = new ObjectInputStream(fileIn); // Create an object input stream
+			BufferedReader br = new BufferedReader(new FileReader(databasePath + "/" + databaseFileName)); // Open the database file name
 			
-			formsInProgressArray = (FormInProgress[]) in.readObject(); // Read the formsInProgress array from the file and store it
+			String line = br.readLine(); // Read the line from the database
 			
-			in.close(); // Close the file
-			
-			fileIn.close();
+			while (line != null) // While there is still data to load from the file
+			{
+				
+				addFormInProgress(new FormInProgress(line));
+				
+				line = br.readLine(); // Read the next line
+			}
 		}
 		catch(Exception e)
 		{
@@ -124,6 +129,5 @@ public class FormsInProgressList
 		}
 		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> " + nextFormInProgressLocation + " formsInProgress loaded from file");
-		*/
 	}
 }
