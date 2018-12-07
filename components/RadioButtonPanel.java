@@ -35,7 +35,7 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 	
 	private void preparePanel()
 	{
-		System.out.println("[INFO] <RADIOBUTTON_PANEL_BUILDER> Running preparePanel"); // Debug
+		System.out.println("[INFO] <RADIOBUTTON_PANEL> Running preparePanel"); // Debug
 		
 		this.setLayout(new GridLayout(0,2)); // Infinite rows 2 columns
 		
@@ -46,6 +46,9 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 			this.add(button);
 			group.add(button); // Add the buttons to the button group
 		}
+		
+		this.setPreferredSize(new Dimension(700,100*buttons.length));
+		this.setMaximumSize(new Dimension(700,120*buttons.length));
 	}
 	
 	public boolean validateAnswer()

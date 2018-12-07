@@ -455,8 +455,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JPanel questionPreviewPanel = new JPanel();
 		questionPreviewPanel.setName(component); // For reference later
 		
-		questionPreviewPanel.setPreferredSize(new Dimension(100,30));
-		questionPreviewPanel.setMaximumSize(new Dimension(700,50));
+		questionPreviewPanel.setMaximumSize(new Dimension(700,300));
 		
 		questionPreviewPanel.setLayout(new BoxLayout(questionPreviewPanel, BoxLayout.LINE_AXIS)); // Horizontal box layout
 		

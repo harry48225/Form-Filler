@@ -49,6 +49,9 @@ public class CheckBoxPanel extends JPanel implements JSaveableComponent // A bet
 		{
 			this.add(box);
 		}
+		
+		this.setPreferredSize(new Dimension(700,100*boxes.length));
+		this.setMaximumSize(new Dimension(700,120*boxes.length));
 	}
 
 	public static class CheckBoxPanelBuilder // Simplifies the creation of check box panels

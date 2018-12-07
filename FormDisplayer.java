@@ -272,7 +272,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			
 			currentPage.setLayout(new BoxLayout(currentPage, BoxLayout.PAGE_AXIS));
 			currentPage.setPreferredSize(new Dimension(1000,1000));
-			currentPage.add(Box.createVerticalGlue());
+			currentPage.add(Box.createVerticalStrut(30));
 			int numberOfQuestionsInPage = 0;
 			
 			// Add the questions to the page
@@ -327,7 +327,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 				
 			}
 			
-			currentPage.add(Box.createVerticalGlue());
+			currentPage.add(Box.createVerticalStrut(30));
 			tempPages[pageNumber] = currentPage;
 			pageNumber++;
 		}

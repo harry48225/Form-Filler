@@ -126,7 +126,6 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 				if (isAQuestion)
 				{
 					JPanel questionPanel = questions.getPanelByID(questionIDs[i]);
-					questionPanel.setPreferredSize(new Dimension(300, 50));
 					formComponents[i]  = questionPanel; // Add the question panel to the array
 				}
 				else // It's a header
