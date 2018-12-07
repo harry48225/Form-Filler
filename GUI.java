@@ -169,6 +169,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		formsInProgress.writeDatabase();
 		System.out.println("[INFO] <GUI> Form saved"); // Debug
 		
+		refreshFormTab();
+		
 	}
 	
 	public void stateChanged(ChangeEvent changeEvent)
@@ -218,5 +220,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			// Add a new form creation panel at the index of the old one
 			tabs.setComponentAt(index, new FormCreationPanel(questions, forms, this));
 		}
+	}
+	
+	private void refreshFormTab() // Refreshes the form tab
+	{
+		FormDisplayPanel fDP = (FormDisplayPanel) tabs.getComponentAt(1); // The form display panel is at index 1
+		fDP.refreshTable();
 	}
 }
