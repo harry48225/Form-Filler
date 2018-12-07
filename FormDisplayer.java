@@ -136,13 +136,17 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	
 	private void getQuestionPanels()
 	{
+		System.out.println("[INFO] <FORM_DISPLAYER> Running getQuestionPanels");
 		QuestionPanel[] tempQuestionPanels = new QuestionPanel[components.length];
 		int nextQuestionPanelLocation = 0;
 		
+		System.out.println(components.length);
 		for (int i = 0; i < components.length; i++)
-		{
+		{	
+			System.out.println(components[i].getClass().getName());
 			if (components[i] instanceof QuestionPanel)
 			{
+				System.out.println(components[i]);
 				tempQuestionPanels[nextQuestionPanelLocation] = (QuestionPanel) components[i];
 				nextQuestionPanelLocation++;
 			}

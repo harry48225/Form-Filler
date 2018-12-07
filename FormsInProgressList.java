@@ -2,7 +2,7 @@ import java.io.*;
 
 public class FormsInProgressList
 {
-	private String databaseFileName = "FormsInProgessDB.ser";
+	private String databaseFileName = "FormsInProgessDB.txt";
 	private String databasePath;
 	private FormInProgress[] formsInProgressArray = new FormInProgress[100];
 	
@@ -64,12 +64,18 @@ public class FormsInProgressList
 		
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream(databasePath + "/" + databaseFileName); // Create a file output stream with the correct path to the output file
-			ObjectOutputStream out = new ObjectOutputStream(fileOut); // Create an object output stream from the file output stream
+			FileWriter fw = new FileWriter(databasePath + "/" + databaseFileName);
 			
-			out.writeObject(formsInProgressArray); // Write the array to the file
+			for (int i = 0; i < nextFormInProgressLocation; i++) // For each form in the array
+			{
+				String currentPositionFormData = formsInProgressArray[i].toString(); // Get the attribute string
+				
+				fw.write(currentPositionFormData + "\r\n"); // Write the data
+
+			}
 			
-			out.close();
+			fw.close(); // Close the file
+			
 		}
 		catch (IOException e)
 		{
@@ -80,18 +86,24 @@ public class FormsInProgressList
 	
 	private void loadDatabase()
 	{
+		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> Running loadDatabase");
+		
+		nextFormInProgressLocation = 0;
 		
 		try
 		{
-			FileInputStream fileIn = new FileInputStream(databasePath + "/" + databaseFileName); // Create an input stream with the correct class
-			ObjectInputStream in = new ObjectInputStream(fileIn); // Create an object input stream
+			BufferedReader br = new BufferedReader(new FileReader(databasePath + "/" + databaseFileName)); // Open the database file name
 			
-			formsInProgressArray = (FormInProgress[]) in.readObject(); // Read the formsInProgress array from the file and store it
+			String line = br.readLine(); // Read the line from the database
 			
-			in.close(); // Close the file
-			
-			fileIn.close();
+			while (line != null) // While there is still data to load from the file
+			{
+				
+				addFormInProgress(new FormInProgress(line));
+				
+				line = br.readLine(); // Read the next line
+			}
 		}
 		catch(Exception e)
 		{

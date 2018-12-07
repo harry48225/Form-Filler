@@ -9,6 +9,8 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
+import components.*;
+
 public class FormCreationPanel extends JPanel implements ActionListener
 {
 	
@@ -469,12 +471,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		else // It's a header
 		{
-			JPanel headerPanel = new JPanel();
-			headerPanel.setPreferredSize(new Dimension(300, 50));
-			TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK), component);
-			border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
-			headerPanel.setBorder(border);
-
+			JPanel headerPanel = new HeaderPanel(component);
 			questionPreviewPanel.add(headerPanel);
 			
 		}

@@ -131,9 +131,9 @@ public class QuestionList
 			
 			for (int i = 0; i < nextQuestionLocation; i++) // For each Question in the array
 			{
-				String currentPositionUserData = questionArray[i].toString(); // Get the attribute string
+				String currentPositionQuestionData = questionArray[i].toString(); // Get the attribute string
 				
-				fw.write(currentPositionUserData); // Write the data
+				fw.write(currentPositionQuestionData); // Write the data
 				
 				fw.write("\r\n"); // Go to a new line
 			}

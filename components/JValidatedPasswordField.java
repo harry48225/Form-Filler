@@ -3,7 +3,7 @@ package components;
 import javax.swing.*;
 import java.awt.*;
 
-public class JValidatedPasswordField extends JPanel implements JValidatedComponent
+public class JValidatedPasswordField extends JPanel implements JValidatedComponent, JSaveableComponent
 {
 	JPasswordField[] passwordFields = {new JPasswordField(), new JPasswordField()}; // The two password fields
 	
@@ -11,6 +11,19 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	
 	public JValidatedPasswordField()
 	{
+		preparePanel();
+	}
+	
+	public JValidatedPasswordField(String saveString)
+	{
+		// The save string is in the format
+		// password:password1;password2
+		
+		String[] passwords = saveString.split(":")[1].split(";");
+		
+		passwordFields[0].setText(passwords[0]);
+		passwordFields[1].setText(passwords[1]);
+		
 		preparePanel();
 	}
 	
@@ -43,5 +56,12 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	public String getErrorString()
 	{
 		return ERROR_STRING;
+	}
+	
+	public String toString()
+	{
+		String asString = "password:" + new String(passwordFields[0].getPassword()) + ";" + new String(passwordFields[1].getPassword());
+		
+		return asString;
 	}
 }

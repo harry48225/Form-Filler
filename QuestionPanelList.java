@@ -2,7 +2,7 @@ import java.io.*;
 
 public class QuestionPanelList
 {
-	private String databaseFileName = "questions/QuestionPanelDB.ser"; 
+	private String databaseFileName = "questions/QuestionPanelDB.txt"; 
 	
 	public QuestionPanel[] panels = new QuestionPanel[100]; // To store the question panels
 	
@@ -42,12 +42,18 @@ public class QuestionPanelList
 	
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream(databaseFileName); // Create a file output stream with the correct path to the output file
-			ObjectOutputStream out = new ObjectOutputStream(fileOut); // Create an object output stream from the file output stream
+			FileWriter fw = new FileWriter(databaseFileName);
 			
-			out.writeObject(panels); // Write all of the panels to file
+			for (int i = 0; i < nextQuestionPanelLocation; i++) // For each Question in the array
+			{
+				String currentPositionQuestionData = panels[i].toString(); // Get the attribute string
+				
+				fw.write(currentPositionQuestionData); // Write the data
+				
+				fw.write("\r\n"); // Go to a new line
+			}
 			
-			out.close();
+			fw.close(); // Close the file
 		}
 		catch (IOException e)
 		{
@@ -59,37 +65,20 @@ public class QuestionPanelList
 	{
 		System.out.println("[INFO] <QUESTION_PANEL_LIST> Running loadDatabase");
 		
+		nextQuestionPanelLocation = 0; // Start at the beginning of the array
+		
 		try
 		{
-			FileInputStream fileIn = new FileInputStream(databaseFileName); // Create an input stream with the correct database
-			ObjectInputStream in = new ObjectInputStream(fileIn); // Create an object input stream
+			BufferedReader br = new BufferedReader(new FileReader(databaseFileName)); // Open the database file
 			
-			panels = (QuestionPanel[]) in.readObject(); // Read the QuestionPanel array from the file and store it
+			String line = br.readLine(); // Read line from the file
 			
-			in.close(); // Close the file
-			
-			fileIn.close();
+			addQuestionPanel(new QuestionPanel(line)); // Load the question panel
 		}
 		catch(Exception e)
 		{
 			System.out.println("[ERROR] <QUESTION_PANEL_LIST> Error loading database " + e); // Print the error message
-		}
-		
-		// Now we need to determine the number of panels in the question panel array to
-		// avoid overwriting and to correctly set nextQuestionPanelLocation
-		
-		nextQuestionPanelLocation = 0;
-		
-		for (QuestionPanel qP : panels)
-		{	
-			if (qP != null) // If the space in the array is occupied
-			{
-				nextQuestionPanelLocation++; // Increment the nextQuestionPanelLocation as the space is taken
-			}
-			else // Space is free
-			{
-				break; // Stop incrementing
-			}
+			e.printStackTrace();
 		}
 		
 		System.out.println("[INFO] <QUESTION_PANEL_LIST> " + nextQuestionPanelLocation + " QuestionPanels loaded from file");
@@ -119,7 +108,7 @@ public class QuestionPanelList
 			}
 		}
 		
-		return result;
+		return result.clone();
 	}
 	
 }

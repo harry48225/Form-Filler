@@ -1,12 +1,10 @@
+import components.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.EtchedBorder;
 
 public class GUI extends JFrame implements ChangeListener// Main GUI class
 {
@@ -21,8 +19,6 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	private FormsInProgressList formsInProgress;
 	
 	private JTabbedPane tabs = new JTabbedPane(); // To store the different sections of the program
-	
-	Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public GUI() // Constructor
 	{
@@ -48,6 +44,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		users.writeDatabase(); // Write the database to file
 		
 		formsInProgress = new FormsInProgressList(currentUser.getUsername());
+		
+		System.out.println(formsInProgress);
 		
 		prepareGUI();
 		
@@ -105,15 +103,15 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		JPanel[] formComponents;
 		
 		System.out.println("[INFO] <GUI> Running openForm"); // Debug
-		/*
+		
 		if (formsInProgress.isFormPresent(f.getID())) // If the form is in the formsInProgressList
 		{
 			System.out.println("[INFO] <GUI> Loading saved form");
 			formComponents = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
+			System.out.println(formComponents.length);
 		}
 		else // The form is not in the forms in progress list
 		{
-		*/
 			System.out.println("[INFO] <GUI> Starting new form");
 			// Load the question panels from the questionPanels database
 			String[] questionIDs = f.getQuestionIDs();
@@ -133,19 +131,15 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 				}
 				else // It's a header
 				{
-					JPanel headerPanel = new JPanel();
-					headerPanel.setPreferredSize(new Dimension(300, 50));
-					TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2,0,0,0, Color.BLACK), questionIDs[i]);
-					border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
-					headerPanel.setBorder(border);
+					JPanel headerPanel = new HeaderPanel(questionIDs[i]);
 
 					formComponents[i] = headerPanel; // Add the header to the page
 				}
 			}
 			
-			//formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formComponents)); // Add the form in progress
+			formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formComponents, 0)); // Add the form in progress
 			
-		//}
+		}
 		
 		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
 		
@@ -168,6 +162,10 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	public void saveForm(Form f, int percentComplete)
 	{
 		System.out.println("[INFO] <GUI> Running saveForm"); // Debug
+		
+		System.out.println(f);
+		System.out.println(percentComplete);
+		
 		formsInProgress.getByID(f.getID()).setPercentComplete(percentComplete);
 		formsInProgress.writeDatabase();
 		System.out.println("[INFO] <GUI> Form saved"); // Debug

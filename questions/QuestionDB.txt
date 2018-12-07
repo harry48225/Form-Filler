@@ -1,7 +1,5 @@
-Q20938811,3,Name,Name
-Q11539783,3,Gender,Gender
-Q08001615,4,Phone,Phone Number
-Q65605948,4,Email,Email address
-Q87872472,2,Password,Password
-Q30190367,2,Birthday,Birthday
-Q75311619,4,File Upload,Photo ID
+Q68752198,6,File Upload,Test radio buttons
+Q77076291,2,Name,First name
+Q52837697,5,Birthday,Birthday
+Q47855449,2,File Upload,Photo ID
+Q36849304,3,Gender,Gender

@@ -5,7 +5,7 @@ import java.awt.*;
 
 import java.util.regex.*;
 
-public class JValidatedTextField extends JTextField implements JValidatedComponent
+public class JValidatedTextField extends JTextField implements JValidatedComponent, JSaveableComponent
 {
 	private String type; // Available types: email, phone number, ... none
 	
@@ -15,6 +15,24 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 	
 	public JValidatedTextField(String tempType)
 	{
+		
+		// Temp type can either be a save string or just the type
+		
+		if (tempType.contains(":")) // If it's a save string
+		{
+			// saveString is formatted like this
+			// filechooser:enteredText;type
+			
+			String[] textFieldData = tempType.split(":")[1].split(";");
+			
+			String enteredText = textFieldData[0];
+			
+			tempType = textFieldData[1];
+			
+			setText(enteredText);
+		}
+		
+		
 		type = tempType;
 	}
 	
@@ -73,5 +91,12 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 		}
 		
 		return returnString;
+	}
+	
+	public String toString()
+	{
+		String asString = "textfield:" + getText() + ";" + type;
+		
+		return asString;
 	}
 }
