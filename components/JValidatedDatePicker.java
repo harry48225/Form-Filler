@@ -70,6 +70,9 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 		
 		yearsComboBox = new JComboBox<String>(yearArray); // Create the combobox
 		
+		this.setPreferredSize(new Dimension(100, 100));
+		this.setMaximumSize(new Dimension(700, 120));
+		
 		this.add(daysComboBox);
 		this.add(monthsComboBox);
 		this.add(yearsComboBox);

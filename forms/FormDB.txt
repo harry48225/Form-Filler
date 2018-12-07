@@ -1,5 +1,2 @@
 F22688749,Test.Q68752198,dsfdsfdsf,File Upload,2,dgdsfds,false.true
 F92671083,Basic.Q77076291.Q36849304.About you.Q52837697.Q47855449,Asks for basic info,Name.Gender.Birthday.File Upload,3,Basic info,false.true.true.false.false.true
-F45888725,Q47855449.Q47855449.Q68752198.Q41003270.Q52837697,Test,File Upload.File Upload.File Upload.Drop-down.Birthday,5,Test radio buttons,true.true.true.true.true
-F69665491,Q36849304.Q47855449.Q52837697.Q41003270.Q68752198,test,Gender.File Upload.Birthday.Drop-down.File Upload,4,Test test,true.true.true.true.true
-F54771003,Q47855449.Q36849304.Q41003270.Q68752198,etesadfds fdsfd f,File Upload.Gender.Drop-down.File Upload,3,Test test test,true.true.true.true
