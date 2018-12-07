@@ -1,1 +1,5 @@
 Q68752198$label:Radio button test||radiobuttons:1;false.2;false.3;false.3;false.4;false.44;false.43;false.3;false.3;false.42;false.34;false
+Q77076291$label:First name||textfield:;none
+Q52837697$label:Birthday||datepicker:0.0.0
+Q47855449$label:Photo id||filechooser:image
+Q36849304$label:Gender||radiobuttons:Male;false.Female;false.Other;false
