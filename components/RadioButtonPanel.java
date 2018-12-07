@@ -47,8 +47,10 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 			group.add(button); // Add the buttons to the button group
 		}
 		
-		this.setPreferredSize(new Dimension(700,100*buttons.length));
-		this.setMaximumSize(new Dimension(700,120*buttons.length));
+		int numberOfRows = (buttons.length + 1)/2;
+		
+		this.setPreferredSize(new Dimension(700,40*numberOfRows));
+		this.setMaximumSize(new Dimension(700,50*numberOfRows));
 	}
 	
 	public boolean validateAnswer()
