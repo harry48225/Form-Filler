@@ -73,7 +73,12 @@ public class QuestionPanelList
 			
 			String line = br.readLine(); // Read line from the file
 			
-			addQuestionPanel(new QuestionPanel(line)); // Load the question panel
+			while (line != null)
+			{
+				addQuestionPanel(new QuestionPanel(line)); // Load the question panel
+				
+				line = br.readLine();
+			}
 		}
 		catch(Exception e)
 		{
