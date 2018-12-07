@@ -6,7 +6,9 @@ import java.awt.event.*;
 import java.net.URL;
 import java.io.*;
 
-public class JValidatedDatePicker extends JPanel implements JValidatedComponent
+import java.util.*;
+
+public class JValidatedDatePicker extends JPanel implements JValidatedComponent, JSaveableComponent
 {
 	// Hardcoded data
 	private String[] days = {"Day", "1","2","3","4","5","6","7","8","9","10",
@@ -32,6 +34,25 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent
 		
 	}
 	
+	public JValidatedDatePicker(String saveString)
+	{
+		// saveString is formatted like this
+		// datepicker:dayIndex.monthIndex.yearIndex
+		
+		String[] selectedIndexes = saveString.split(":")[1].split("\\.");
+		
+		setupDatePicker();
+		
+		int dayIndex = Integer.parseInt(selectedIndexes[0]);
+		int monthIndex = Integer.parseInt(selectedIndexes[1]);
+		int yearIndex = Integer.parseInt(selectedIndexes[2]);
+		
+		daysComboBox.setSelectedIndex(dayIndex);
+		monthsComboBox.setSelectedIndex(monthIndex);
+		yearsComboBox.setSelectedIndex(yearIndex);
+		
+	}
+	
 	private void setupDatePicker()
 	{
 		this.setLayout(new GridLayout(1,3)); // 1 row 3 columns
@@ -40,7 +61,9 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent
 		
 		for (int i = yearArray.length - 2; i >= 0; i--)
 		{
-			yearArray[i+1] = 2018 - i + ""; // Fill the array with the most recent date at the start and the oldest at the end
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+
+			yearArray[i+1] = year - i + ""; // Fill the array with the most recent date at the start and the oldest at the end
 		}
 		
 		yearArray[0] = "Year"; // Store year at the start of the array
@@ -79,5 +102,14 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent
 	public String getErrorString()
 	{
 		return ERROR_STRING;
+	}
+	
+	public String toString()
+	{
+		String asString = "datepicker:";
+		
+		asString += (daysComboBox.getSelectedIndex() + "." + monthsComboBox.getSelectedIndex() + "." + yearsComboBox.getSelectedIndex());
+		
+		return asString;
 	}
 }

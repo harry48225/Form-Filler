@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 import javax.swing.filechooser.*;
 
-public class JValidatedFileChooser extends JPanel implements JValidatedComponent, ActionListener
+public class JValidatedFileChooser extends JPanel implements JValidatedComponent, ActionListener, JSaveableComponent
 {
 	private final String type; // Allowed types are all, image, document, video
 	
@@ -18,6 +18,15 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public JValidatedFileChooser(String tempType)
 	{
+		// Temp type can either be a save string or just the type
+		
+		if (tempType.contains(":")) // If it's a save string
+		{
+			// saveString is formatted like this
+			// filechooser:type
+			
+			tempType = tempType.split(":")[1];
+		}
 		type = tempType;
 			
 		fileChooser = new JFileChooser();
@@ -100,5 +109,12 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	public String getErrorString()
 	{
 		return ERROR_STRING;
+	}
+	
+	public String toString()
+	{
+		String asString = "filechooser:" + type;
+		
+		return asString;
 	}
 }
