@@ -85,6 +85,11 @@ public class FormInProgress implements Serializable // This object get serialize
 		return questionPanels;
 	}
 	
+	public void setFormComponents(JPanel[] newComponents) // Allows the question panel array to be overwritten with blank questions
+	{
+		questionPanels = newComponents;
+	}
+	
 	public String getFormID()
 	{
 		return formID;

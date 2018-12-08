@@ -92,7 +92,7 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		{
 			this.add(component); // Add it to the panel
 		}
-		
+
 		this.setMaximumSize(new Dimension(700,300));
 	}
 	

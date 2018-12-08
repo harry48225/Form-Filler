@@ -198,22 +198,22 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private class TimeTakenToCompleteChart extends JPanel
 	{
 		private long[] timeTakenToComplete;
-		private int totalNumberOfAttempts;
+		private int totalNumberOfSuccessfulAttempts;
 		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
 		
-		public TimeTakenToCompleteChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		public TimeTakenToCompleteChart(long[] tempTimeTakenToComplete, int tempSuccessfulAttempts)
 		{
 			timeTakenToComplete = tempTimeTakenToComplete;
-			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			totalNumberOfSuccessfulAttempts = tempSuccessfulAttempts;
 			
 			updateChart();
 			
 		}
 		
-		public void updateChart(long[] tempTimeTakenToComplete, int tempTotalNumberOfAttempts)
+		public void updateChart(long[] tempTimeTakenToComplete, int tempSuccessfulAttempts)
 		{
 			timeTakenToComplete = tempTimeTakenToComplete;
-			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			totalNumberOfSuccessfulAttempts = tempSuccessfulAttempts;
 			
 			updateChart();
 		}
@@ -249,14 +249,14 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			PlotOrientation.VERTICAL,
 			false,false,false);
 			
-			System.out.println(validNumberOfAttempts + " " + totalNumberOfAttempts);
+			System.out.println(validNumberOfAttempts + " " + totalNumberOfSuccessfulAttempts);
 			XYPlot plot = (XYPlot) chart.getPlot();  
 
 			NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
 			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
 			
 			// Make the axis start at the oldest attempt number that we have data for
-			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
+			xAxis.setLowerBound(totalNumberOfSuccessfulAttempts - validNumberOfAttempts + 1);
 			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			
@@ -281,7 +281,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			{
 				if (timeTakenToComplete[i] != -1)
 				{
-					int xCoordinate = totalNumberOfAttempts - i;
+					int xCoordinate = totalNumberOfSuccessfulAttempts - i;
 					data.add(xCoordinate, timeTakenToComplete[i]);
 				}
 			}
@@ -291,25 +291,26 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		}
 	}
 	
+	
 	private class NumberOfAttemptsToCorrectChart extends JPanel
 	{
 		private int[] numberOfAttemptsToCorrect;
-		private int totalNumberOfAttempts;
+		private int totalNumberOfSuccessfulAttempts;
 		private int validNumberOfAttempts; // The array contains some rogue values so we need to deal with those.
 		
-		public NumberOfAttemptsToCorrectChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		public NumberOfAttemptsToCorrectChart(int[] tempNumberOfAttempts, int tempSuccessfulAttempts)
 		{
 			numberOfAttemptsToCorrect = tempNumberOfAttempts;
-			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			totalNumberOfSuccessfulAttempts = tempSuccessfulAttempts;
 			
 			updateChart();
 			
 		}
 		
-		public void updateChart(int[] tempNumberOfAttempts, int tempTotalNumberOfAttempts)
+		public void updateChart(int[] tempNumberOfAttempts, int tempSuccessfulAttempts)
 		{
 			numberOfAttemptsToCorrect = tempNumberOfAttempts;
-			totalNumberOfAttempts = tempTotalNumberOfAttempts;
+			totalNumberOfSuccessfulAttempts = tempSuccessfulAttempts;
 			
 			updateChart();
 		}
@@ -351,7 +352,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
 			
 			// Make the axis start at the oldest attempt number that we have data for
-			xAxis.setLowerBound(totalNumberOfAttempts - validNumberOfAttempts + 1);
+			xAxis.setLowerBound(totalNumberOfSuccessfulAttempts - validNumberOfAttempts + 1);
 			xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits()); // Only show integers on the axis
 			
@@ -375,7 +376,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 			{
 				if (numberOfAttemptsToCorrect[i] != -1)
 				{
-					int xCoordinate = totalNumberOfAttempts - i;
+					int xCoordinate = totalNumberOfSuccessfulAttempts - i;
 					data.add(xCoordinate, numberOfAttemptsToCorrect[i]);
 				}
 			}

@@ -477,7 +477,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		// Prepare the actionButtonPanel
 		JPanel actionButtonPanel = new JPanel();
 		actionButtonPanel.setName(component); // Allows the question that the buttons belong to to be identified.
-		actionButtonPanel.setLayout(new GridLayout(1,3));
+		actionButtonPanel.setLayout(new BoxLayout(actionButtonPanel, BoxLayout.LINE_AXIS));
 		actionButtonPanel.setPreferredSize(new Dimension(90, 30));
 
 		actionButtonPanel.add(Box.createHorizontalGlue());
@@ -490,7 +490,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			requiredButton.setName("required"); // For reference later
 			requiredButton.setIcon(requiredIcon);
 			requiredButton.addActionListener(this);
-			requiredButton.setPreferredSize(new Dimension(30, 30));
+			requiredButton.setPreferredSize(new Dimension(40, 40));
+			requiredButton.setMaximumSize(new Dimension(40, 40));
 			actionButtonPanel.add(requiredButton);
 		}
 		
@@ -500,7 +501,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		deleteButton.setBackground(new Color(169,196,235));
 		deleteButton.setName("delete"); // For reference later 
 		deleteButton.addActionListener(this);
-		deleteButton.setPreferredSize(new Dimension(30, 30));
+		deleteButton.setPreferredSize(new Dimension(40, 40));
+		deleteButton.setMaximumSize(new Dimension(40, 40));
 		actionButtonPanel.add(deleteButton);
 		
 		// Prepare the movement buttons
@@ -519,7 +521,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JPanel upAndDownPanel = new JPanel(); // Create a JPanel to store them
 		upAndDownPanel.setName(component); // Allows the question that the buttons belong to to be identified.
 		upAndDownPanel.setLayout(new GridLayout(2,1)); // 2 rows 1 column
-		upAndDownPanel.setMaximumSize(new Dimension(30,30));
+		upAndDownPanel.setPreferredSize(new Dimension(40, 40));
+		upAndDownPanel.setMaximumSize(new Dimension(40,40));
 		upAndDownPanel.add(upButton);
 		upAndDownPanel.add(downButton);
 		
