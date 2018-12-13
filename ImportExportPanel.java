@@ -182,14 +182,12 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		try
 		{
-			FileInputStream fileIn = new FileInputStream(fileChooser.getSelectedFile()); // Open an input stream at the file that the user selected
-			ObjectInputStream in = new ObjectInputStream(fileIn); // Create an object input stream
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			
-			questionImported = (ExportedQuestion) in.readObject(); // Read the ExportedQuestion from the file
+			BufferedReader br = new BufferedReader(new FileReader(filePath)); // Open the database file
 			
-			in.close(); // Close the file
 			
-			fileIn.close();
+			questionImported = new ExportedQuestion(br.readLine()); // Read the ExportedQuestion from the file
 		}
 		catch(Exception e)
 		{
@@ -274,7 +272,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
 		
-		fileChooser.setSelectedFile(new File("export.ser"));
+		fileChooser.setSelectedFile(new File("export.question"));
 		int result = fileChooser.showSaveDialog(this);
 		
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -285,12 +283,12 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream(fileChooser.getSelectedFile()); // Open a new output stream at file selected from the save dialog
-			ObjectOutputStream out = new ObjectOutputStream(fileOut); // Create an object output stream
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			FileWriter fw = new FileWriter(filePath);
 			
-			out.writeObject(questionToExport); // Serialize the question
+			fw.write(questionToExport.toString()); // Serialize the question
 			
-			out.close();
+			fw.close();
 		}
 		catch (IOException e)
 		{

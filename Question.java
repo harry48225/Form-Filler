@@ -17,6 +17,17 @@ public class Question implements Serializable
 		title = tempTitle; // Store the title
 	}
 	
+	public Question(String saveString)
+	{
+		String[] splitQuestionData = saveString.split(",");
+		
+		id = splitQuestionData[0];
+		difficulty = Integer.parseInt(splitQuestionData[1]); // Convert the first part to an integer
+		type = splitQuestionData[2]; // Get the type
+		title = splitQuestionData[3];
+
+	}
+	
 	public int getDifficulty() // Getter for difficulty
 	{
 		return difficulty; // Return the difficulty

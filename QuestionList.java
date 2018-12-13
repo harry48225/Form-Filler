@@ -68,7 +68,7 @@ public class QuestionList
 				break; // Stop searching
 			}
 			
-			if (q.getID().equals(id)) // If the id of the question matches the search id
+			else if (q.getID().equals(id)) // If the id of the question matches the search id
 			{
 				result = q;
 				
@@ -102,11 +102,7 @@ public class QuestionList
 			{
 				String[] splitQuestionData = line.split(","); // Split the data into its parts
 				
-				String id = splitQuestionData[0];
-				int difficulty = Integer.parseInt(splitQuestionData[1]); // Convert the first part to an integer
-				String type = splitQuestionData[2]; // Get the type
-				String title = splitQuestionData[3];
-				Question tempRead = new Question(id, difficulty, type, title); // Create a new question with the data read from the file
+				Question tempRead = new Question(line); // Create a new question with the data read from the file
 				
 				addQuestion(tempRead); // Add the question to the array
 				

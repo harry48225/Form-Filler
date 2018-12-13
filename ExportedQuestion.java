@@ -11,6 +11,16 @@ public class ExportedQuestion implements Serializable
 		questionPanel = tempQuestionPanel;
 	}
 	
+	public ExportedQuestion(String saveString)
+	{
+		String[] splitSaveString = saveString.split("###");
+		String questionString = splitSaveString[0];
+		String questionPanelString = splitSaveString[1];
+		
+		question = new Question(questionString);
+		questionPanel = new QuestionPanel(questionPanelString);
+	}
+	
 	public Question getQuestion()
 	{
 		return question;
@@ -20,4 +30,10 @@ public class ExportedQuestion implements Serializable
 	{
 		return questionPanel;
 	}
+	
+	public String toString()
+	{
+		return question.toString() + "###" + questionPanel.toString();
+	}
+	
 }
