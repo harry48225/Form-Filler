@@ -106,36 +106,26 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		if (formsInProgress.isFormPresent(f.getID())) // If the form is in the formsInProgressList
 		{
-			System.out.println("[INFO] <GUI> Loading saved form");
+			FormInProgress fP = formsInProgress.getByID(f.getID());
+			// If the form is not fully completed
+			if (fP.getPercentComplete() != 100)
+			{
+				System.out.println("[INFO] <GUI> Loading saved form");
+			}
+			else // We should reset the form in progress
+			{
+				System.out.println("[INFO] <GUI> Resetting form");
+				
+				fP.setFormComponents(buildFormComponentArray(f));
+			}
+			
 			formComponents = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
-			System.out.println(formComponents.length);
 		}
 		else // The form is not in the forms in progress list
 		{
 			System.out.println("[INFO] <GUI> Starting new form");
-			// Load the question panels from the questionPanels database
-			String[] questionIDs = f.getQuestionIDs();
 			
-			formComponents = new JPanel[questionIDs.length];
-			
-			for (int i = 0; i < formComponents.length; i++)
-			{
-				// Determine whether the component is a question or a header
-				boolean isAQuestion = questions.getQuestionByID(questionIDs[i]) != null;
-				
-				if (isAQuestion)
-				{
-					JPanel questionPanel = questions.getPanelByID(questionIDs[i]);
-					questionPanel.setPreferredSize(new Dimension(300, 50));
-					formComponents[i]  = questionPanel; // Add the question panel to the array
-				}
-				else // It's a header
-				{
-					JPanel headerPanel = new HeaderPanel(questionIDs[i]);
-
-					formComponents[i] = headerPanel; // Add the header to the page
-				}
-			}
+			formComponents = buildFormComponentArray(f);
 			
 			formsInProgress.addFormInProgress(new FormInProgress(f.getID(), 0, formComponents, 0)); // Add the form in progress
 			
@@ -143,6 +133,35 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
 		
+	}
+	
+	private JPanel[] buildFormComponentArray(Form f)
+	{
+		JPanel[] formComponents;
+		// Load the question panels from the questionPanels database
+		String[] questionIDs = f.getQuestionIDs();
+		
+		formComponents = new JPanel[questionIDs.length];
+		
+		for (int i = 0; i < formComponents.length; i++)
+		{
+			// Determine whether the component is a question or a header
+			boolean isAQuestion = questions.getQuestionByID(questionIDs[i]) != null;
+			
+			if (isAQuestion)
+			{
+				JPanel questionPanel = questions.getPanelByID(questionIDs[i]);
+				formComponents[i]  = questionPanel; // Add the question panel to the array
+			}
+			else // It's a header
+			{
+				JPanel headerPanel = new HeaderPanel(questionIDs[i]);
+
+				formComponents[i] = headerPanel; // Add the header to the page
+			}
+		}
+		
+		return formComponents;
 	}
 	
 	public void attemptFormFromUserWeaknesses() 
@@ -166,9 +185,18 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		System.out.println(f);
 		System.out.println(percentComplete);
 		
-		formsInProgress.getByID(f.getID()).setPercentComplete(percentComplete);
+		FormInProgress fP = formsInProgress.getByID(f.getID());
+		fP.setPercentComplete(percentComplete);
+		
+		if (percentComplete == 100) // If the user fully completed the form
+		{
+			fP.addTimesCompleted();
+		}
+		
 		formsInProgress.writeDatabase();
 		System.out.println("[INFO] <GUI> Form saved"); // Debug
+		
+		refreshFormTab();
 		
 	}
 	
@@ -219,5 +247,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			// Add a new form creation panel at the index of the old one
 			tabs.setComponentAt(index, new FormCreationPanel(questions, forms, this));
 		}
+	}
+	
+	private void refreshFormTab() // Refreshes the form tab
+	{
+		FormDisplayPanel fDP = (FormDisplayPanel) tabs.getComponentAt(1); // The form display panel is at index 1
+		fDP.refreshTable();
 	}
 }

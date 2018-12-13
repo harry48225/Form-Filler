@@ -92,9 +92,8 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		{
 			this.add(component); // Add it to the panel
 		}
-		
-		this.setPreferredSize(new Dimension(100,30));
-		this.setMaximumSize(new Dimension(700,50));
+
+		this.setMaximumSize(new Dimension(700,300));
 	}
 	
 	public QuestionPanel clone() // Return a deep copy of the question panel
@@ -217,6 +216,7 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		{
 			System.out.println("[INFO] <QUESTION_PANEL_BUILDER> Running add");
 			
+			component.setMaximumSize(new Dimension(700,300));
 			components[nextComponentLocation] = component;
 			nextComponentLocation++;
 			

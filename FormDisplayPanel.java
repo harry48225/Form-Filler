@@ -437,10 +437,14 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 								  // less cluttered
 								  
 				String percentageComplete = "0%";
+				String timesCompleted = "0";
+				
 				String formID = f.getID();
 				if (formsInProgress.isFormPresent(formID)) // If the form is partially completed / has already been attempted by the user
 				{
-					percentageComplete = formsInProgress.getByID(formID).getPercentComplete() + "%"; // Get the percentage that the form is complete, append %, and add it to the end of the array
+					FormInProgress fP = formsInProgress.getByID(formID);
+					percentageComplete = fP.getPercentComplete() + "%"; // Get the percentage that the form is complete, append %, and add it to the end of the array
+					timesCompleted = fP.getTimesCompleted() + ""; // Get the times completed and convert to string
 				}
 				
 				// "ID","Title", "Description", "Main Skills Tested","Difficulty", "Percent Complete", "Times completed"
@@ -451,7 +455,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				String betterLookingMainskillsTested = f.mainSkillsTestedToString().replace(".", ", ");
 				
 				String[] formData = {f.getID(), f.getTitle(), f.getDescription(), betterLookingMainskillsTested, 
-									f.getDifficulty() + "", percentageComplete, "PLACEHOLDER"}; // Convert the form to a String array
+									f.getDifficulty() + "", percentageComplete, timesCompleted}; // Convert the form to a String array
 				
 				formTableModel.addRow(formData); // Add the form to the table
 			}

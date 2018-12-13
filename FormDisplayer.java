@@ -186,6 +186,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		JPanel pageIndicatorPanel = new JPanel();
 		pageIndicatorPanel.setLayout(new GridLayout(1,1));
 		pageIndicatorPanel.add(pageIndicatorLabel);
+		pageIndicatorPanel.setMaximumSize(new Dimension(2000, 20));
 		updatePageIndicatorLabel();
 		mainPanel.add(pageIndicatorPanel);
 
@@ -197,13 +198,14 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		pageErrorsLabel.setFont(currentFont.deriveFont(Font.PLAIN, 14)); // Make the font larger
 		
 		pageErrorsPanel.setVisible(false); // This panel should only be visible when there are errors to correct
+
 		mainPanel.add(pageErrorsPanel);
 
 		mainPanel.add(formPanel);
 		
 		prepareButtonNavigationPanel();
 		
-		mainPanel.add(buttonNavigationPanel, BorderLayout.SOUTH);
+		mainPanel.add(buttonNavigationPanel);
 		
 		this.add(mainPanel);
 		
@@ -272,7 +274,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			
 			currentPage.setLayout(new BoxLayout(currentPage, BoxLayout.PAGE_AXIS));
 			currentPage.setPreferredSize(new Dimension(1000,1000));
-			currentPage.add(Box.createVerticalGlue());
+			currentPage.add(Box.createVerticalStrut(30));
 			int numberOfQuestionsInPage = 0;
 			
 			// Add the questions to the page
@@ -328,6 +330,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			}
 			
 			currentPage.add(Box.createVerticalGlue());
+			currentPage.add(Box.createVerticalStrut(30));
 			tempPages[pageNumber] = currentPage;
 			pageNumber++;
 		}
@@ -470,11 +473,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 				
 				QuestionStat qS = currentUser.getQuestionStats().getQuestionStatByID(questionID);
 				
-				
-				if (amountFailed > 0) // If they failed at least once
-				{
-					qS.addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
-				}
+				qS.addNumberOfAttemptsNeededToCorrect(amountFailed); // Get the question stat for the question at add the number of attempts failed
 				
 				qS.addTimeTakenToComplete(timeTakenToComplete); // Store the time that it took them
 				qS.addAttempt();
@@ -606,7 +605,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			}
 
 		}
-
+	
 		gui.saveForm(form, percentComplete);
 	}
 
