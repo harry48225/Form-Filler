@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.filechooser.*;
 
 import javax.swing.table.*;
 
@@ -170,6 +171,10 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importQuestion");
 		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Exported Questions", "question");
+		
+		fileChooser.setFileFilter(filter);
+		
 		int result = fileChooser.showOpenDialog(this);
 		
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -206,6 +211,10 @@ public class ImportExportPanel extends JPanel implements ActionListener
 	private void importForm()
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running importForm");
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Exported Forms", "form");
+		
+		fileChooser.setFileFilter(filter);
 		
 		int result = fileChooser.showOpenDialog(this);
 		
