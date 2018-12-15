@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class ExportedQuestion implements Serializable
+public class ExportedQuestion
 {
 	private Question question; // The question and question panel
 	private QuestionPanel questionPanel;

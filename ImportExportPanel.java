@@ -199,6 +199,8 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		questions.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question imported!");
+		
+		refreshTables();
 	}
 	
 	private void importForm()
@@ -217,20 +219,18 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		try
 		{
-			FileInputStream fileIn = new FileInputStream(fileChooser.getSelectedFile()); // Open an input stream at the file that the user selected
-			ObjectInputStream in = new ObjectInputStream(fileIn); // Create an object input stream
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			
-			formImported = (ExportedForm) in.readObject(); // Read the ExportedForm from the file
+			BufferedReader br = new BufferedReader(new FileReader(filePath)); // Open the database file
 			
-			in.close(); // Close the file
 			
-			fileIn.close();
+			formImported = new ExportedForm(br.readLine()); // Read the ExportedForm from the file
 		}
 		catch(Exception e)
 		{
 			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Error importing form " + e); // Output the error
 		}
-		
+
 		// Add the questions to the question database if they're not already in it
 		
 		for (ExportedQuestion importedQuestion : formImported.getQuestions()) // For each question that was exported with the form
@@ -261,6 +261,8 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		forms.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form imported!");
+		
+		refreshTables();
 	}
 	
 	private void exportQuestion(String questionID)
@@ -292,7 +294,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		}
 		catch (IOException e)
 		{
-			System.out.println("[ERROR] <IMPORT_EXPORT_PANEL> Error exporting form to file " + e); // Output the error
+			System.out.println("[ERROR] <IMPORT_EXPORT_PANEL> Error exporting question to file " + e); // Output the error
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question exported!");
@@ -304,7 +306,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running exportForm");
 		
 		// Get the user to select a place to save the form
-		fileChooser.setSelectedFile(new File("export.ser"));
+		fileChooser.setSelectedFile(new File("export.form"));
 		int result = fileChooser.showSaveDialog(this);
 		
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -318,6 +320,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		String[] questionIDs = form.getQuestionIDs();
 		
 		ExportedQuestion[] exportedQuestions = new ExportedQuestion[questionIDs.length]; // Create an array to store the exported question objects
+		int nextExportedQuestionsLocation  = 0;
 		
 		for (int i = 0; i < questionIDs.length; i++) // For each question in the form
 		{
@@ -330,21 +333,30 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			
 				ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
 				
-				exportedQuestions[i] = questionToExport; // Add the question to export to the array
+				exportedQuestions[nextExportedQuestionsLocation] = questionToExport; // Add the question to export to the array
+				nextExportedQuestionsLocation++;
 			}
 		}
 		
-		ExportedForm formToExport = new ExportedForm(form, exportedQuestions); // Add the questions and the form to an exported form object
+		// Now we need to trim the array so that there aren't any null elements
+		ExportedQuestion[] trimmedExportedQuestions = new ExportedQuestion[nextExportedQuestionsLocation];
+		
+		for (int i = 0; i < trimmedExportedQuestions.length; i++)
+		{
+			trimmedExportedQuestions[i] = exportedQuestions[i];
+		}
+		
+		ExportedForm formToExport = new ExportedForm(form, trimmedExportedQuestions); // Add the questions and the form to an exported form object
 		
 		
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream(fileChooser.getSelectedFile()); // Open a new output stream at file selected from the save dialog
-			ObjectOutputStream out = new ObjectOutputStream(fileOut); // Create an object output stream
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			FileWriter fw = new FileWriter(filePath);
 			
-			out.writeObject(formToExport); // Serialize the form
+			fw.write(formToExport.toString()); // Write the form to file
 			
-			out.close();
+			fw.close();
 		}
 		catch (IOException e)
 		{
