@@ -204,6 +204,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		questions.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question imported!");
+		JOptionPane.showMessageDialog(null, "Question imported!");
 		
 		refreshTables();
 	}
@@ -270,6 +271,7 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		forms.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form imported!");
+		JOptionPane.showMessageDialog(null, "Form imported!");
 		
 		refreshTables();
 	}
@@ -283,7 +285,12 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		ExportedQuestion questionToExport = new ExportedQuestion(q, qP); // Create a new ExportedQuestion object
 		
-		fileChooser.setSelectedFile(new File("export.question"));
+		fileChooser.setSelectedFile(new File(q.getTitle()));
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Exported Questions", "question");
+		
+		fileChooser.setFileFilter(filter);
+		
 		int result = fileChooser.showSaveDialog(this);
 		
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -292,9 +299,15 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			return;
 		}
 		
+		String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+		
+		if (!filePath.endsWith(".question")) // If it doesn't end with question
+		{
+			filePath += ".question"; // Add the question file type
+		}
+		
 		try
 		{
-			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			FileWriter fw = new FileWriter(filePath);
 			
 			fw.write(questionToExport.toString()); // Serialize the question
@@ -307,15 +320,20 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question exported!");
-		
+		JOptionPane.showMessageDialog(null, "Question exported!");
 	}
 	
 	private void exportForm(String formID)
 	{
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Running exportForm");
+		Form form = forms.getFormByID(formID);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Exported Forms", "form");
+		
+		fileChooser.setFileFilter(filter);
 		
 		// Get the user to select a place to save the form
-		fileChooser.setSelectedFile(new File("export.form"));
+		fileChooser.setSelectedFile(new File(form.getTitle()));
 		int result = fileChooser.showSaveDialog(this);
 		
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -324,7 +342,6 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			return;
 		}
 		
-		Form form = forms.getFormByID(formID);
 		
 		String[] questionIDs = form.getQuestionIDs();
 		
@@ -357,10 +374,16 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		
 		ExportedForm formToExport = new ExportedForm(form, trimmedExportedQuestions); // Add the questions and the form to an exported form object
 		
+		String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+		
+		if (!filePath.endsWith(".form")) // If it doesn't end with form
+		{
+			filePath += ".form"; // Add the form file type
+		}
 		
 		try
 		{
-			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			
 			FileWriter fw = new FileWriter(filePath);
 			
 			fw.write(formToExport.toString()); // Write the form to file
@@ -373,5 +396,6 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form exported!");
+		JOptionPane.showMessageDialog(null, "Form exported!");
 	}
 }
