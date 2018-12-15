@@ -199,6 +199,15 @@ public class ImportExportPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Error importing question " + e); // Output the error
 		}
 		
+		// Add the question to the database overwriting the old one (if it exists)
+		
+		String questionID = questionImported.getQuestion().getID();
+		
+		if (questions.getQuestionByID(questionID) != null)
+		{
+			questions.removeQuestion(questionID);
+		}
+		
 		questions.addQuestion(questionImported.getQuestion(), questionImported.getQuestionPanel()); // Add the imported question to the database
 		
 		questions.writeDatabase();
