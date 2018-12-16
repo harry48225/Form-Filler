@@ -26,9 +26,13 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private JButton[] navigationButtons = {viewQuestionsButton, createQuestionsButton, viewFormsButton, createFormsButton, importExportButton, viewStatisticsButton,
 										   viewUsersButton};
 	
+	private JPanel takeRegisterButtonPanel = new JPanel();
 	private JButton takeRegisterButton = new JButton("Take register");
 	
-	private JButton exitButton = new JButton("Exit button");
+	private JButton exitButton = new JButton("Exit");
+	private JPanel exitButtonPanel = new JPanel();
+	
+	private JPanel mainPanel = new JPanel();
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
@@ -51,10 +55,80 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		prepareUsernamePanel();
 		
 		this.add(usernamePanel, BorderLayout.NORTH);
+			
+		if (adminMode)
+		{
+			prepareAdminMode();
+		}
+		else
+		{
+			prepareUserMode();
+		}
+		
+		
+		this.add(mainPanel, BorderLayout.CENTER);
+		
+		prepareExitButtonPanel();
+		
+		this.add(exitButtonPanel, BorderLayout.SOUTH);
+	}
+	
+	private void prepareAdminMode()
+	{
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
+		
+		JPanel adminPanel = new JPanel();
+		
+		adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.PAGE_AXIS));
 		
 		prepareButtonNavigationPanel();
 		
-		this.add(buttonNavigationPanel, BorderLayout.CENTER);
+		adminPanel.add(buttonNavigationPanel);
+		
+		prepareTakeRegisterButton();
+		
+		adminPanel.add(Box.createVerticalGlue());
+		adminPanel.add(Box.createVerticalStrut(20));
+		
+		adminPanel.add(takeRegisterButtonPanel);
+		
+		adminPanel.add(Box.createVerticalStrut(20));
+		
+		adminPanel.setPreferredSize(new Dimension(900, 500));
+		adminPanel.setMaximumSize(new Dimension(1200, 600));
+
+		mainPanel.add(Box.createHorizontalGlue());
+		mainPanel.add(adminPanel);
+		mainPanel.add(Box.createHorizontalGlue());
+		
+	}
+	
+	private void prepareTakeRegisterButton()
+	{
+		takeRegisterButton.addActionListener(this);
+		takeRegisterButton.setBackground(new Color(130,183,75));
+		
+		takeRegisterButtonPanel.setLayout(new GridLayout(1,1));
+		takeRegisterButtonPanel.add(takeRegisterButton);
+		takeRegisterButtonPanel.setPreferredSize(new Dimension(1200, 50));
+		takeRegisterButtonPanel.setMaximumSize(new Dimension(1200, 50));
+	}
+	
+	private void prepareUserMode()
+	{
+		
+	}
+	
+	private void prepareExitButtonPanel()
+	{
+		exitButtonPanel.setLayout(new BoxLayout(exitButtonPanel, BoxLayout.LINE_AXIS));
+		
+		exitButton.addActionListener(this);
+		exitButton.setBackground(new Color(174,59,46));
+		exitButton.setForeground(Color.WHITE);
+		
+		exitButtonPanel.add(Box.createHorizontalGlue());
+		exitButtonPanel.add(exitButton);
 	}
 	
 	private void prepareButtonNavigationPanel()
@@ -105,10 +179,6 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		buttonNavigationPanel.add(viewStatisticsButton, buttonNavigationPanelConstraints);
 		buttonNavigationPanelConstraints.gridx = 1;
 		buttonNavigationPanel.add(viewUsersButton, buttonNavigationPanelConstraints);
-		
-		
-		
-		
 		
 	}
 	
@@ -169,7 +239,19 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		{
 			gui.setSelectedTab("UserPanel");
 		}
-		
+		else if (evt.getSource() == exitButton)
+		{
+			System.out.println("[INFO] <MAIN_MENU_PANEL> exitButton pressed");
+			
+			System.out.println("[INFO] <MAIN_MENU_PANEL> Terminating program");
+			System.exit(0); // Quit the program
+		}
+		else if (evt.getSource() == takeRegisterButton)
+		{
+			System.out.println("[INFO] <MAIN_MENU_PANEL> takeRegisterButton pressed");
+			
+			gui.openRegister();
+		}
 		
 	}
 }

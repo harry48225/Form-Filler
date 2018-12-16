@@ -272,4 +272,9 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			}
 		}
 	}
+	
+	public void openRegister()
+	{
+		new Register(users);
+	}
 }
