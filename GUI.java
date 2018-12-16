@@ -252,8 +252,20 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void refreshFormTab() // Refreshes the form tab
 	{
-		FormDisplayPanel fDP = (FormDisplayPanel) tabs.getComponentAt(1); // The form display panel is at index 1
-		fDP.refreshTable();
+		// Search through the tabs to find the one that the one
+		// that is the form display panel
+		
+		for (int i = 0; i < tabs.getTabCount(); i++) // For each tab
+		{
+			Component currentTab = tabs.getComponentAt(i);
+			if (currentTab instanceof FormDisplayPanel)
+			{
+				FormDisplayPanel fDP = (FormDisplayPanel) currentTab;
+				fDP.refreshTable();
+				
+				break;
+			}
+		}
 	}
 	
 	public void setSelectedTab(String tabToSelect)
