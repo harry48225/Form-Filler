@@ -81,7 +81,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		tabs.add("Main menu", new MainMenuPanel(currentUser));
+		tabs.add("Main menu", new MainMenuPanel(currentUser, this));
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
 		tabs.add("Create questions", new QuestionCreationPanel(questions, this));
@@ -254,5 +254,22 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	{
 		FormDisplayPanel fDP = (FormDisplayPanel) tabs.getComponentAt(1); // The form display panel is at index 1
 		fDP.refreshTable();
+	}
+	
+	public void setSelectedTab(String tabToSelect)
+	{
+		System.out.println("[INFO] <GUI> Running setSelectedTab");
+		
+		// Search through the tabs to find the one that the one
+		// that is of the the class that matches the parameter
+		
+		for (int i = 0; i < tabs.getTabCount(); i++) // For each tab
+		{
+			Component currentTab = tabs.getComponentAt(i);
+			if (currentTab.getClass().getName().equals(tabToSelect))
+			{
+				tabs.setSelectedIndex(i);
+			}
+		}
 	}
 }
