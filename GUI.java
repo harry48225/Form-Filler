@@ -81,6 +81,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		tabs.add("Main menu", new MainMenuPanel(currentUser));
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
 		tabs.add("Create questions", new QuestionCreationPanel(questions, this));
