@@ -11,6 +11,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private boolean adminMode;
 	private User user;
 	private GUI gui;
+	private FormsInProgressList forms;
 	
 	private JPanel usernamePanel;
 	private JLabel usernameLabel;
@@ -40,10 +41,11 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public MainMenuPanel(User tempUser, GUI tempGUI)
+	public MainMenuPanel(User tempUser, GUI tempGUI, FormsInProgressList tempForms)
 	{
 		user = tempUser;
 		gui = tempGUI;
+		forms = tempForms;
 		
 		adminMode = user.isAdmin();
 		
@@ -118,6 +120,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private void updateContinueFormLabel()
 	{
 		continueFormLabel.setText("<html><center><strong>Last form attempted:<br>FORMID</strong><br>FORMDESCRIPTION</center></html>");
+		System.out.println(forms.getMostRecentFormID());
 		
 	}
 	
