@@ -88,6 +88,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		return images;
 	}
+	
 	private void prepareGUI()
 	{
 		this.setTitle("Form Filler");
@@ -104,9 +105,13 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		tabs.add("Main menu", new MainMenuPanel(currentUser, this));
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
-		tabs.add("Create questions", new QuestionCreationPanel(questions, this));
-		tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
-		tabs.add("Users", new UserPanel(users));
+		
+		if (currentUser.isAdmin())
+		{
+			tabs.add("Create questions", new QuestionCreationPanel(questions, this));
+			tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
+			tabs.add("Users", new UserPanel(users));
+		}
 		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
 		
@@ -250,6 +255,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			ImportExportPanel Iep = (ImportExportPanel) selectedComponent;
 			Iep.refreshTables(); // Refresh the tables.
+		}
+		else if (selectedComponent instanceof MainMenuPanel)
+		{
+			MainMenuPanel mmP = (MainMenuPanel) selectedComponent;
+			mmP.update();
 		}
 		
 	}

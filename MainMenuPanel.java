@@ -32,6 +32,10 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private JButton exitButton = new JButton("Exit");
 	private JPanel exitButtonPanel = new JPanel();
 	
+	private JPanel continueFormPanel = new JPanel();
+	private JLabel continueFormLabel = new JLabel();
+	private JButton resumeFormButton = new JButton("Resume form");
+
 	private JPanel mainPanel = new JPanel();
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
@@ -44,6 +48,16 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		adminMode = user.isAdmin();
 		
 		prepareGUI();
+	}
+	
+	public void update() // Should be called when a user selects the tab and updates the last form attempted section
+	{
+		System.out.println("[INFO] <MAIN_MENU_PANEL> Running update");
+		
+		if (!adminMode)
+		{
+			updateContinueFormLabel();
+		}
 	}
 	
 	private void prepareGUI()
@@ -73,8 +87,44 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		this.add(exitButtonPanel, BorderLayout.SOUTH);
 	}
 	
+	private void prepareUserMode()
+	{
+		System.out.println("[INFO] <MAIN_MENU_PANEL> Running prepareUserMode");
+		
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
+		
+		prepareButtonNavigationPanel();
+		prepareContinueFormPanel();
+		
+		mainPanel.add(buttonNavigationPanel);
+		
+		mainPanel.add(continueFormPanel);
+	}
+	
+	private void prepareContinueFormPanel()
+	{
+		continueFormPanel.setLayout(new BoxLayout(continueFormPanel, BoxLayout.PAGE_AXIS));
+		
+		updateContinueFormLabel();
+		
+		continueFormPanel.add(continueFormLabel);
+		
+		resumeFormButton.addActionListener(this);
+		resumeFormButton.setBackground(new Color(130,183,75));
+		
+		continueFormPanel.add(resumeFormButton);
+	}
+	
+	private void updateContinueFormLabel()
+	{
+		continueFormLabel.setText("<html><center><strong>Last form attempted:<br>FORMID</strong><br>FORMDESCRIPTION</center></html>");
+		
+	}
+	
 	private void prepareAdminMode()
 	{
+		System.out.println("[INFO] <MAIN_MENU_PANEL> Running prepareAdminMode");
+		
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
 		
 		JPanel adminPanel = new JPanel();
@@ -112,11 +162,6 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		takeRegisterButtonPanel.add(takeRegisterButton);
 		takeRegisterButtonPanel.setPreferredSize(new Dimension(1200, 50));
 		takeRegisterButtonPanel.setMaximumSize(new Dimension(1200, 50));
-	}
-	
-	private void prepareUserMode()
-	{
-		
 	}
 	
 	private void prepareExitButtonPanel()
@@ -157,20 +202,33 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		
 		// Question buttons
 		buttonNavigationPanel.add(viewQuestionsButton, buttonNavigationPanelConstraints);
-		buttonNavigationPanelConstraints.gridx = 1;
-		buttonNavigationPanel.add(createQuestionsButton, buttonNavigationPanelConstraints);
+		
+		if (adminMode)
+		{
+			buttonNavigationPanelConstraints.gridx = 1;
+			buttonNavigationPanel.add(createQuestionsButton, buttonNavigationPanelConstraints);
+		}
+		
 		buttonNavigationPanelConstraints.gridy += 1;
 		buttonNavigationPanelConstraints.gridx = 0;
 		
 		// Form buttons
 		buttonNavigationPanel.add(viewFormsButton, buttonNavigationPanelConstraints);
-		buttonNavigationPanelConstraints.gridx = 1;
-		buttonNavigationPanel.add(createFormsButton, buttonNavigationPanelConstraints);
+		
+		if (adminMode)
+		{
+			buttonNavigationPanelConstraints.gridx = 1;
+			buttonNavigationPanel.add(createFormsButton, buttonNavigationPanelConstraints);
+		}
 		buttonNavigationPanelConstraints.gridy += 1;
 		buttonNavigationPanelConstraints.gridx = 0;
 		
 		// Import export button
-		buttonNavigationPanelConstraints.gridwidth = 2;
+		if (adminMode)
+		{
+			buttonNavigationPanelConstraints.gridwidth = 2;
+		}
+		
 		buttonNavigationPanel.add(importExportButton, buttonNavigationPanelConstraints);
 		buttonNavigationPanelConstraints.gridy += 1;
 		buttonNavigationPanelConstraints.gridwidth = 1;
@@ -178,7 +236,11 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		// View statistics buttons
 		buttonNavigationPanel.add(viewStatisticsButton, buttonNavigationPanelConstraints);
 		buttonNavigationPanelConstraints.gridx = 1;
-		buttonNavigationPanel.add(viewUsersButton, buttonNavigationPanelConstraints);
+		
+		if (adminMode)
+		{
+			buttonNavigationPanel.add(viewUsersButton, buttonNavigationPanelConstraints);
+		}
 		
 	}
 	
