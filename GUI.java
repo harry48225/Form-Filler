@@ -5,6 +5,11 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
+
+import java.io.*;
+
+import java.net.URL;
 
 public class GUI extends JFrame implements ChangeListener// Main GUI class
 {
@@ -70,9 +75,24 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
                     usernames[0])); // Show the user a dropdown with all the current users
 	}
 	
+	private List<Image> getIcons()
+	{
+		List<Image> images = new ArrayList<Image>();
+		
+		images.add(new ImageIcon("icons/icon-12.png").getImage());
+		images.add(new ImageIcon("icons/icon-16.png").getImage());
+		images.add(new ImageIcon("icons/icon-24.png").getImage());
+		images.add(new ImageIcon("icons/icon-48.png").getImage());
+		images.add(new ImageIcon("icons/icon-96.png").getImage());
+		images.add(new ImageIcon("icons/icon-240.png").getImage());
+		
+		return images;
+	}
 	private void prepareGUI()
 	{
 		this.setTitle("Form Filler");
+		
+		this.setIconImages(getIcons());
 		
 		this.setSize(1200,700);
 		this.setLocation(500,200);
