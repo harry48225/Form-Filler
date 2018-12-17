@@ -11,8 +11,9 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private boolean adminMode;
 	private User user;
 	private GUI gui;
-	private FormsInProgressList forms;
-	
+	private FormsInProgressList formsInProgress;
+	private FormList forms;
+		
 	private JPanel usernamePanel;
 	private JLabel usernameLabel;
 	
@@ -24,7 +25,8 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private JButton importExportButton = new JButton("Import/Export");
 	private JButton viewStatisticsButton = new JButton("View statistics");
 	private JButton viewUsersButton = new JButton("View users");
-	private JButton[] navigationButtons = {viewQuestionsButton, createQuestionsButton, viewFormsButton, createFormsButton, importExportButton, viewStatisticsButton,
+	private JButton[] navigationButtons = {viewQuestionsButton, createQuestionsButton, viewFormsButton, 
+										   createFormsButton, importExportButton, viewStatisticsButton,
 										   viewUsersButton};
 	
 	private JPanel takeRegisterButtonPanel = new JPanel();
@@ -41,10 +43,11 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public MainMenuPanel(User tempUser, GUI tempGUI, FormsInProgressList tempForms)
+	public MainMenuPanel(User tempUser, GUI tempGUI, FormsInProgressList tempFormsInProgress, FormList tempForms)
 	{
 		user = tempUser;
 		gui = tempGUI;
+		formsInProgress = tempFormsInProgress;
 		forms = tempForms;
 		
 		adminMode = user.isAdmin();
@@ -119,8 +122,23 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	
 	private void updateContinueFormLabel()
 	{
-		continueFormLabel.setText("<html><center><strong>Last form attempted:<br>FORMID</strong><br>FORMDESCRIPTION</center></html>");
-		System.out.println(forms.getMostRecentFormID());
+		String mostRecentFormID = formsInProgress.getMostRecentFormID();
+		
+		if (mostRecentFormID != null && forms.getFormByID(mostRecentFormID) != null)
+		{
+			resumeFormButton.setEnabled(true);
+			
+			Form mostRecentForm = forms.getFormByID(mostRecentFormID); // Get the form object associated with the form id
+			
+			String formTitle = mostRecentForm.getTitle();
+			String formDescription = mostRecentForm.getDescription();
+			continueFormLabel.setText("<html><center><strong>Last form attempted:<br>" + formTitle + "</strong><br>" + formDescription + "</center></html>");
+		}
+		else
+		{
+			resumeFormButton.setEnabled(false);
+			continueFormLabel.setText("<html><center>No form has been attempted.<br>Try attempting a form!</center></html>");
+		}
 		
 	}
 	
