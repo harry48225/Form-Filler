@@ -6,6 +6,8 @@ public class FormsInProgressList
 	private String databasePath;
 	private FormInProgress[] formsInProgressArray = new FormInProgress[100];
 	
+	private String mostRecentForm; // Holds the ID of the most recently attempted form
+	
 	private int nextFormInProgressLocation = 0;
 	
 	public FormsInProgressList(String username)
@@ -39,13 +41,25 @@ public class FormsInProgressList
 			}
 		}
 		
+		if (result != null)
+		{
+			mostRecentForm = result.getFormID();
+		}
+		
 		return result;
 		
+	}
+	
+	public String getMostRecentFormID()
+	{
+		return mostRecentForm;
 	}
 	
 	public void addFormInProgress(FormInProgress formInProgressToAdd)
 	{
 		formsInProgressArray[nextFormInProgressLocation] = formInProgressToAdd; // Add the form at the next free location
+		
+		mostRecentForm = formInProgressToAdd.getFormID();
 		
 		nextFormInProgressLocation++; 
 	}
@@ -65,6 +79,8 @@ public class FormsInProgressList
 		try
 		{
 			FileWriter fw = new FileWriter(databasePath + "/" + databaseFileName);
+			
+			fw.write(mostRecentForm + "\r\n");
 			
 			for (int i = 0; i < nextFormInProgressLocation; i++) // For each form in the array
 			{
@@ -97,6 +113,10 @@ public class FormsInProgressList
 			
 			String line = br.readLine(); // Read the line from the database
 			
+			mostRecentForm = line;
+			
+			line = br.readLine();
+			
 			while (line != null) // While there is still data to load from the file
 			{
 				
@@ -107,25 +127,7 @@ public class FormsInProgressList
 		}
 		catch(Exception e)
 		{
-			System.out.println("[ERROR] <FORMS_IN_PROGRESS_LIST> Error loading database " + e); // Print the error message
-			e.printStackTrace();
-		}
-		
-		// Now we need to determine the number of formsInProgress objects in the array to
-		// avoid overwriting and to correctly set nextFormInProgressLocation
-		
-		nextFormInProgressLocation = 0;
-		
-		for (FormInProgress fP : formsInProgressArray)
-		{	
-			if (fP != null) // If the space in the array is occupied
-			{
-				nextFormInProgressLocation++; // Increment the nextFormInProgressLocation as the space is taken
-			}
-			else // Space is free
-			{
-				break; // Stop incrementing
-			}
+			System.out.println("[ERROR] <FORMS_IN_PROGRESS_LIST> Error loading database most likely user hasn't attempted a form yet" + e); // Print the error message
 		}
 		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> " + nextFormInProgressLocation + " formsInProgress loaded from file");

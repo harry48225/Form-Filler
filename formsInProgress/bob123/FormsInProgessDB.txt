@@ -1,3 +1,0 @@
-Q52837697;0;0~Q52837697$label:Birthday||datepicker:0.0.0
-Q36849304;0;1~Q36849304$label:Gender||radiobuttons:Male;false.Female;false.Other;false
-F55994369;0;0~header:a header,Q77076291$label:First name||textfield:;none,Q36849304$label:Gender||radiobuttons:Male;false.Female;false.Other;false,Q98078854$label:Jame's question||radiobuttons:1;false.2;false.3;false.34;false.324;false

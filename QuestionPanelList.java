@@ -113,7 +113,14 @@ public class QuestionPanelList
 			}
 		}
 		
-		return result.clone();
+		if (result != null)
+		{
+			return result.clone();
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 }

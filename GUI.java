@@ -5,6 +5,11 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
+
+import java.io.*;
+
+import java.net.URL;
 
 public class GUI extends JFrame implements ChangeListener// Main GUI class
 {
@@ -70,9 +75,25 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
                     usernames[0])); // Show the user a dropdown with all the current users
 	}
 	
+	private List<Image> getIcons()
+	{
+		List<Image> images = new ArrayList<Image>();
+		
+		images.add(new ImageIcon("icons/icon-12.png").getImage());
+		images.add(new ImageIcon("icons/icon-16.png").getImage());
+		images.add(new ImageIcon("icons/icon-24.png").getImage());
+		images.add(new ImageIcon("icons/icon-48.png").getImage());
+		images.add(new ImageIcon("icons/icon-96.png").getImage());
+		images.add(new ImageIcon("icons/icon-240.png").getImage());
+		
+		return images;
+	}
+	
 	private void prepareGUI()
 	{
 		this.setTitle("Form Filler");
+		
+		this.setIconImages(getIcons());
 		
 		this.setSize(1200,700);
 		this.setLocation(500,200);
@@ -81,11 +102,16 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		tabs.add("Main menu", new MainMenuPanel(currentUser, this, formsInProgress, forms));
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		tabs.add("View Forms", new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
-		tabs.add("Create questions", new QuestionCreationPanel(questions, this));
-		tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
-		tabs.add("Users", new UserPanel(users));
+		
+		if (currentUser.isAdmin())
+		{
+			tabs.add("Create questions", new QuestionCreationPanel(questions, this));
+			tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
+			tabs.add("Users", new UserPanel(users));
+		}
 		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
 		
@@ -230,6 +256,11 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			ImportExportPanel Iep = (ImportExportPanel) selectedComponent;
 			Iep.refreshTables(); // Refresh the tables.
 		}
+		else if (selectedComponent instanceof MainMenuPanel)
+		{
+			MainMenuPanel mmP = (MainMenuPanel) selectedComponent;
+			mmP.update();
+		}
 		
 	}
 	
@@ -251,7 +282,41 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void refreshFormTab() // Refreshes the form tab
 	{
-		FormDisplayPanel fDP = (FormDisplayPanel) tabs.getComponentAt(1); // The form display panel is at index 1
-		fDP.refreshTable();
+		// Search through the tabs to find the one that the one
+		// that is the form display panel
+		
+		for (int i = 0; i < tabs.getTabCount(); i++) // For each tab
+		{
+			Component currentTab = tabs.getComponentAt(i);
+			if (currentTab instanceof FormDisplayPanel)
+			{
+				FormDisplayPanel fDP = (FormDisplayPanel) currentTab;
+				fDP.refreshTable();
+				
+				break;
+			}
+		}
+	}
+	
+	public void setSelectedTab(String tabToSelect)
+	{
+		System.out.println("[INFO] <GUI> Running setSelectedTab");
+		
+		// Search through the tabs to find the one that the one
+		// that is of the the class that matches the parameter
+		
+		for (int i = 0; i < tabs.getTabCount(); i++) // For each tab
+		{
+			Component currentTab = tabs.getComponentAt(i);
+			if (currentTab.getClass().getName().equals(tabToSelect))
+			{
+				tabs.setSelectedIndex(i);
+			}
+		}
+	}
+	
+	public void openRegister()
+	{
+		new Register(users);
 	}
 }
