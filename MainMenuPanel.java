@@ -6,6 +6,9 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 
+import java.time.*;
+import java.util.Date;
+
 public class MainMenuPanel extends JPanel implements ActionListener
 {
 	private boolean adminMode;
@@ -38,6 +41,9 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private JPanel continueFormPanel = new JPanel();
 	private JLabel continueFormLabel = new JLabel();
 	private JButton resumeFormButton = new JButton("Resume form");
+	
+	private JPanel attendancePanel = new JPanel();
+	private JLabel attendanceLabel = new JLabel();
 
 	private JPanel mainPanel = new JPanel();
 	
@@ -62,6 +68,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		if (!adminMode)
 		{
 			updateContinueFormLabel();
+			updateAttendanceLabel();
 		}
 	}
 	
@@ -92,6 +99,65 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		this.add(exitButtonPanel, BorderLayout.SOUTH);
 	}
 	
+	private void prepareAttendancePanel()
+	{
+		attendancePanel.setLayout(new GridLayout(1,1));
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Attendance");
+		
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		attendancePanel.setBorder(border); // Set the border
+		
+		attendancePanel.setMinimumSize(new Dimension(200,200));
+		attendancePanel.setPreferredSize(new Dimension(300,300));
+		attendancePanel.setMaximumSize(new Dimension(300,300));
+		
+		updateAttendanceLabel();
+		
+		attendanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		attendanceLabel.setVerticalAlignment(SwingConstants.CENTER);
+		
+		currentFont = attendanceLabel.getFont();
+		attendanceLabel.setFont(currentFont.deriveFont(Font.BOLD, 32)); // Make the font larger and bold
+		
+		attendancePanel.add(attendanceLabel);
+	}
+	
+	private void updateAttendanceLabel()
+	{
+		long DAY_IN_MS = 1000 * 60 * 60 * 24;
+		Date fiveWeeksAgo = new Date(System.currentTimeMillis() - (36 * DAY_IN_MS)); // Calculate the date five weeks ago
+		
+		int numberAttended = 0;
+		
+		for (String session : user.getSessionsAttended()) // For each session
+		{
+			String[] splitSession = session.split("-");
+			int day = Integer.parseInt(splitSession[0]);
+			int month = Integer.parseInt(splitSession[1]);
+			int year = Integer.parseInt(splitSession[2]);
+			Date sessionDate = new Date(year, month, day);
+			
+			if (sessionDate.after(fiveWeeksAgo)) // If the date is after 5 weeks ago
+			{
+				numberAttended++;
+			}
+		}
+		
+		if (numberAttended > 5)
+		{
+			numberAttended = 5;
+		}
+		
+		int percentage = (numberAttended * 100)/5; // Calcuate the percentage of sessions attended in the past 5 weeks
+		
+		attendanceLabel.setText(percentage + "%");
+	}
+	
 	private void prepareUserMode()
 	{
 		System.out.println("[INFO] <MAIN_MENU_PANEL> Running prepareUserMode");
@@ -103,12 +169,18 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		
 		buttonNavigationPanel.setPreferredSize(new Dimension(400,300));
 		buttonNavigationPanel.setMaximumSize(new Dimension(600,400));
-		
 		mainPanel.add(Box.createHorizontalGlue());
+		
 		mainPanel.add(buttonNavigationPanel);
 		mainPanel.add(Box.createHorizontalGlue());
 		
 		mainPanel.add(continueFormPanel);
+		mainPanel.add(Box.createHorizontalGlue());
+		
+		prepareAttendancePanel();
+		mainPanel.add(attendancePanel);
+		mainPanel.add(Box.createHorizontalGlue());
+		
 		
 		mainPanel.add(Box.createHorizontalGlue());
 	}
