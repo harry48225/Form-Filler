@@ -41,13 +41,13 @@ public class FormsInProgressList
 			}
 		}
 		
-		if (result != null)
-		{
-			mostRecentForm = result.getFormID();
-		}
-		
 		return result;
 		
+	}
+	
+	public void setMostRecentAttempted(String formID)
+	{
+		mostRecentForm = formID;
 	}
 	
 	public String getMostRecentFormID()
@@ -58,8 +58,6 @@ public class FormsInProgressList
 	public void addFormInProgress(FormInProgress formInProgressToAdd)
 	{
 		formsInProgressArray[nextFormInProgressLocation] = formInProgressToAdd; // Add the form at the next free location
-		
-		mostRecentForm = formInProgressToAdd.getFormID();
 		
 		nextFormInProgressLocation++; 
 	}

@@ -225,7 +225,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	private void updateContinueFormLabel()
 	{
 		String mostRecentFormID = formsInProgress.getMostRecentFormID();
-		
+		System.out.println(mostRecentFormID);
 		if (mostRecentFormID != null && forms.getFormByID(mostRecentFormID) != null)
 		{
 			resumeFormButton.setEnabled(true);

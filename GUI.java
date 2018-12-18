@@ -145,7 +145,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 				fP.setFormComponents(buildFormComponentArray(f));
 			}
 			
-			formComponents = formsInProgress.getByID(f.getID()).getQuestionPanels(); // Get the saved formQuestionPanels
+			FormInProgress inProgress = formsInProgress.getByID(f.getID());
+			formComponents = inProgress.getQuestionPanels(); // Get the saved formQuestionPanels
 		}
 		else // The form is not in the forms in progress list
 		{
@@ -157,6 +158,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			
 		}
 		
+		formsInProgress.setMostRecentAttempted(f.getID());
 		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
 		
 	}
