@@ -101,23 +101,53 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		prepareButtonNavigationPanel();
 		prepareContinueFormPanel();
 		
+		buttonNavigationPanel.setPreferredSize(new Dimension(400,600));
+		buttonNavigationPanel.setMaximumSize(new Dimension(600,800));
+		
+		mainPanel.add(Box.createHorizontalGlue());
 		mainPanel.add(buttonNavigationPanel);
+		mainPanel.add(Box.createHorizontalGlue());
 		
 		mainPanel.add(continueFormPanel);
+		
+		mainPanel.add(Box.createHorizontalGlue());
 	}
 	
 	private void prepareContinueFormPanel()
 	{
-		continueFormPanel.setLayout(new BoxLayout(continueFormPanel, BoxLayout.PAGE_AXIS));
+		continueFormPanel.setLayout(new BorderLayout());
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Continue?");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		continueFormPanel.setBorder(border); // Set the border
 		
 		updateContinueFormLabel();
 		
-		continueFormPanel.add(continueFormLabel);
 		
+		JPanel continueFormLabelPanel = new JPanel();
+		continueFormLabelPanel.setLayout(new BoxLayout(continueFormLabelPanel, BoxLayout.LINE_AXIS));
+		
+		continueFormLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		continueFormLabelPanel.add(Box.createHorizontalStrut(15));
+		continueFormLabelPanel.add(Box.createHorizontalGlue());
+		continueFormLabelPanel.add(continueFormLabel);
+		continueFormLabelPanel.add(Box.createHorizontalGlue());
+		continueFormLabelPanel.add(Box.createHorizontalStrut(15));
+		
+		continueFormPanel.add(continueFormLabelPanel, BorderLayout.CENTER);
+			
 		resumeFormButton.addActionListener(this);
 		resumeFormButton.setBackground(new Color(130,183,75));
+	
+		continueFormPanel.add(resumeFormButton, BorderLayout.SOUTH);
 		
-		continueFormPanel.add(resumeFormButton);
+		continueFormPanel.setPreferredSize(new Dimension(400,400));
+		continueFormPanel.setMaximumSize(new Dimension(600,300));
 	}
 	
 	private void updateContinueFormLabel()
@@ -132,12 +162,12 @@ public class MainMenuPanel extends JPanel implements ActionListener
 			
 			String formTitle = mostRecentForm.getTitle();
 			String formDescription = mostRecentForm.getDescription();
-			continueFormLabel.setText("<html><center><strong>Last form attempted:<br>" + formTitle + "</strong><br>" + formDescription + "</center></html>");
+			continueFormLabel.setText("<html><center><strong>Last form attempted:<br><br>" + formTitle + "</strong><br><br>Description:<br>" + formDescription + "</center></html>");
 		}
 		else
 		{
 			resumeFormButton.setEnabled(false);
-			continueFormLabel.setText("<html><center>No form has been attempted.<br>Try attempting a form!</center></html>");
+			continueFormLabel.setText("<html><center>No form has been attempted.<br><br><br>Try attempting a form!</center></html>");
 		}
 		
 	}
