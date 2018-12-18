@@ -101,8 +101,8 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		prepareButtonNavigationPanel();
 		prepareContinueFormPanel();
 		
-		buttonNavigationPanel.setPreferredSize(new Dimension(400,600));
-		buttonNavigationPanel.setMaximumSize(new Dimension(600,800));
+		buttonNavigationPanel.setPreferredSize(new Dimension(400,300));
+		buttonNavigationPanel.setMaximumSize(new Dimension(600,400));
 		
 		mainPanel.add(Box.createHorizontalGlue());
 		mainPanel.add(buttonNavigationPanel);
@@ -146,7 +146,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	
 		continueFormPanel.add(resumeFormButton, BorderLayout.SOUTH);
 		
-		continueFormPanel.setPreferredSize(new Dimension(400,400));
+		continueFormPanel.setPreferredSize(new Dimension(400,200));
 		continueFormPanel.setMaximumSize(new Dimension(600,300));
 	}
 	
