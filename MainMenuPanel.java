@@ -335,6 +335,14 @@ public class MainMenuPanel extends JPanel implements ActionListener
 			
 			gui.openRegister();
 		}
+		else if (evt.getSource() == resumeFormButton)
+		{
+			System.out.println("[INFO] <MAIN_MENU_PANEL> resumeFormButton pressed");
+			String mostRecentFormID = formsInProgress.getMostRecentFormID();
+			Form mostRecentForm = forms.getFormByID(mostRecentFormID);
+			
+			gui.openForm(mostRecentForm);
+		}
 		
 	}
 }
