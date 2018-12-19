@@ -45,11 +45,14 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	{
 		UserList u = new UserList();
 		
+		u.loadSensitiveDatabase("harris");
 		for (User us : u.getUsers())
 		{
 			System.out.println(us.toString());
 			System.out.println(us.getQuestionStats().toString());
 		}
+		
+		
 		//u.writeDatabase();
 		//u.writeSensitiveDatabase("harris");
 	}

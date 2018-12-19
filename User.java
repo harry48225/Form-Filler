@@ -56,6 +56,16 @@ public class User
 		questionStats = tempQuestionStats;
 	}
 	
+	public void addSensitiveInformation(String sensitiveInfoString)
+	{
+		String[] splitData = sensitiveInfoString.split(",");
+		
+		firstName = splitData[0];
+		lastName = splitData[1];
+		dateOfBirth = splitData[2];
+		phoneNumber = splitData[3];
+	}
+	
 	public boolean isAdmin()
 	{
 		return admin;
@@ -121,7 +131,7 @@ public class User
 	
 	public String getSensitiveString()
 	{
-		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + ",";
+		return id + "||" + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber;
 	}
 	
 	public String[] toStringArray()

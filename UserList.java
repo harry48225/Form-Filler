@@ -71,7 +71,7 @@ public class UserList
 	
 	public User getUserByID(String id) // Returns the User corresponding to an ID
 	{
-		System.out.println("[INFO] <USER_LIST> Running getUserByID"); // Debug
+		//System.out.println("[INFO] <USER_LIST> Running getUserByID"); // Debug
 		
 		User result = null; // The user that was found
 		
@@ -273,6 +273,40 @@ public class UserList
 		}
 	}
 	
+	public void loadSensitiveDatabase(String key) // Loads the sensitive information
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadSensitiveDatabase");
+		
+		Encrypter enc = new Encrypter();
+		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(sensitiveDatabaseName)); // Open the file for reading
+			
+			String line = br.readLine();
+			
+			while (line != null) // While there is data to read from the file
+			{
+				
+				String decryptedLine = enc.decode(line, key);
+				String[] splitData = decryptedLine.split("\\|\\|");
+				String userID = splitData[0];
+				
+				getUserByID(userID).addSensitiveInformation(splitData[1]);
+				
+				line = br.readLine();
+				
+			}
+			
+			System.out.println("[INFO] <USER_LIST> " + nextUserLocation + " users loaded from file");
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error loading credential database "+  e);
+		}
+	}
+	
 	private void loadQuestionStatDatabase() // Loads just the question stats
 	{
 		System.out.println("[INFO] <USER_LIST> Running loadQuestionStatDatabase");
@@ -314,6 +348,7 @@ public class UserList
 		
 		loadCredentialDatabase();
 		loadQuestionStatDatabase();
+		
 		/*
 		nextUserLocation = 0; // Ensure that the users get added to the start of the array
 		
@@ -368,6 +403,8 @@ public class UserList
 			System.out.println("[ERROR] <USER_LIST> Error loading database "+  e);
 		}
 		*/
+		
+		
 	}
 	
 	public void addUser(User newUser)
