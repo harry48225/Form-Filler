@@ -95,6 +95,16 @@ public class User
 		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + "," + admin + "," + sessionsToString();
 	}
 	
+	public String getCredentialString()
+	{
+		return id + "," + username + "," + password + "," + admin + "," + sessionsToString();
+	}
+	
+	public String getSensitiveString()
+	{
+		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + ",";
+	}
+	
 	public String[] toStringArray()
 	{
 		return toString().split(",");

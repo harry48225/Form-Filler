@@ -4,6 +4,9 @@ import java.util.*;
 public class UserList
 {
 	private String databaseFileName = "users/UserDB.txt";
+	private String credentialDatabaseName = "users/Credentials.txt";
+	private String questionStatDatabaseName = "users/QuestionStats.txt";
+	private String sensitiveDatabaseName = "users/userInfo.txt";
 	
 	public User[] userArray = new User[100];
 	
@@ -159,10 +162,87 @@ public class UserList
 		return trimmedArray;
 	}
 	
+	private void writeCredentialDatabase()
+	{
+		System.out.println("[INFO] <USER_LIST> Running writeCredentialDatabase");
+		
+		try
+		{
+			FileWriter fw = new FileWriter(credentialDatabaseName);
+			
+			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			{
+				fw.write(userArray[i].getCredentialString());
+				
+				fw.write("\r\n"); // Move onto a new line
+			}
+			
+			fw.close(); // Close the file
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error writing credential database to file " + e);
+		}
+	
+	}
+	
+	public void writeSensitiveDatabase(String encryptionKey)
+	{
+		System.out.println("[INFO] <USER_LIST> Running writeSensitiveDatabase");
+		
+		Encrypter enc = new Encrypter();
+		try
+		{
+			FileWriter fw = new FileWriter(sensitiveDatabaseName);
+			
+			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			{
+				String userData = userArray[i].getSensitiveString();
+				String encryptedUserData = enc.encode(userData, encryptionKey);
+				fw.write(encryptedUserData);
+				
+				fw.write("\r\n"); // Move onto a new line
+			}
+			
+			fw.close(); // Close the file
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error writing sensitive database to file " + e);
+		}
+	
+	}
+	
+	private void writeQuestionStatDatabase()
+	{
+		System.out.println("[INFO] <USER_LIST> Running writeQuestionStatDatabase");
+		
+		try
+		{
+			FileWriter fw = new FileWriter(questionStatDatabaseName);
+			
+			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			{
+				fw.write(userArray[i].getID() + "||" + userArray[i].getQuestionStats().toString());
+				
+				fw.write("\r\n"); // Move onto a new line
+			}
+			
+			fw.close(); // Close the file
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error writing question stat database to file " + e);
+		}
+	}
+	
 	public void writeDatabase()
 	{
 		System.out.println("[INFO] <USER_LIST> Running writeDatabase");
 		
+		writeCredentialDatabase();
+		writeQuestionStatDatabase();
+		/*
 		try
 		{
 			FileWriter fw = new FileWriter(databaseFileName);
@@ -178,8 +258,9 @@ public class UserList
 		}
 		catch (Exception e)
 		{
-			System.out.println("[ERROR] <USER_LIST> Error writing database to file " + e); // Out the error
+			System.out.println("[ERROR] <USER_LIST> Error writing database to file " + e); // Output the error
 		}
+		*/
 	}
 	
 	public void loadDatabase()

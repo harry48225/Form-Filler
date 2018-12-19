@@ -30,7 +30,8 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testOptionsPanel();
 		//t.testSelectQuestionsPanel();
 		//t.testSelectFormsPanel();
-		t.testComponentSaving();
+		//t.testComponentSaving();
+		t.testEncryption();
 	}
 	
 	public void setup()
@@ -38,6 +39,14 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		test = new JFrame();
 		test.setLayout(new GridLayout(0,1));
 		test.setSize(300,300);
+	}
+	
+	public void testEncryption()
+	{
+		UserList u = new UserList();
+		
+		u.writeDatabase();
+		u.writeSensitiveDatabase("harris");
 	}
 	
 	public void testComponentSaving()
