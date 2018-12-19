@@ -242,31 +242,79 @@ public class UserList
 		
 		writeCredentialDatabase();
 		writeQuestionStatDatabase();
-		/*
+	}
+	
+	private void loadCredentialDatabase() // Loads just the non sensitive information
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadCredentialDatabase");
+		
+		nextUserLocation = 0; // Ensure that the users get added to the start of the array
+		
 		try
 		{
-			FileWriter fw = new FileWriter(databaseFileName);
+			BufferedReader br = new BufferedReader(new FileReader(credentialDatabaseName)); // Open the file for reading
 			
-			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			String line = br.readLine();
+			
+			while (line != null) // While there is data to read from the file
 			{
-				fw.write(userArray[i].toString() + "||" + userArray[i].getQuestionStats().toString());
+				addUser(new User(line));
 				
-				fw.write("\r\n"); // Move onto a new line
+				line = br.readLine();
+				
 			}
 			
-			fw.close(); // Close the file
+			System.out.println("[INFO] <USER_LIST> " + nextUserLocation + " users loaded from file");
+			
 		}
 		catch (Exception e)
 		{
-			System.out.println("[ERROR] <USER_LIST> Error writing database to file " + e); // Output the error
+			System.out.println("[ERROR] <USER_LIST> Error loading credential database "+  e);
 		}
-		*/
+	}
+	
+	private void loadQuestionStatDatabase() // Loads just the question stats
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadQuestionStatDatabase");
+		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(questionStatDatabaseName)); // Open the file for reading
+			
+			String line = br.readLine();
+			
+			while (line != null) // While there is data to read from the file
+			{
+				String[] splitLine = line.split("\\|\\|"); // Split at ||
+				
+				QuestionStatList questionStats = new QuestionStatList(); // Empty question stat list
+				
+				if (splitLine.length > 1) // If there is a saved QuestionStatList
+				{
+					questionStats = new QuestionStatList(splitLine[1]); // Load the question stat list 
+				}
+				
+				String userID = splitLine[0];
+				getUserByID(userID).setQuestionStats(questionStats);
+				
+				line = br.readLine();
+				
+			}
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error loading questionStat database "+  e);
+		}
 	}
 	
 	public void loadDatabase()
 	{
 		System.out.println("[INFO] <USER_LIST> Running loadDatabase");
 		
+		loadCredentialDatabase();
+		loadQuestionStatDatabase();
+		/*
 		nextUserLocation = 0; // Ensure that the users get added to the start of the array
 		
 		try
@@ -319,6 +367,7 @@ public class UserList
 		{
 			System.out.println("[ERROR] <USER_LIST> Error loading database "+  e);
 		}
+		*/
 	}
 	
 	public void addUser(User newUser)
