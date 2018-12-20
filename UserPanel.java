@@ -45,6 +45,22 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	public void refresh()
 	{
 		populateTable(users.getArray());
+		
+		refreshButtons();
+	}
+	
+	private void refreshButtons() // Enables the buttons if the databse has been decrypted
+	{
+		if (users.isDecrypted())
+		{
+			registerButton.setEnabled(true);
+			searchButton.setEnabled(true);
+			
+			addUserButton.setEnabled(true);
+			editTableButton.setEnabled(true);
+			deleteUserButton.setEnabled(true);
+			saveButton.setEnabled(true);
+		}
 	}
 	
 	private void prepareGUI()
@@ -68,6 +84,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		registerButton.addActionListener(this);
 		registerButton.setBackground(new Color(169,196,235));
+		registerButton.setEnabled(false);
 		actionPanel.add(registerButton);
 		
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
@@ -79,24 +96,28 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		editTableButton.addActionListener(this);
 		editTableButton.setBackground(new Color(169,196,235));
+		editTableButton.setEnabled(false);
 		actionPanel.add(editTableButton);
 
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
 		addUserButton.addActionListener(this);
 		addUserButton.setBackground(new Color(169,196,235));
+		addUserButton.setEnabled(false);
 		actionPanel.add(addUserButton);
 
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
 		deleteUserButton.addActionListener(this);
 		deleteUserButton.setBackground(new Color(169,196,235));
+		deleteUserButton.setEnabled(false);
 		actionPanel.add(deleteUserButton);
 		
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 
 		saveButton.addActionListener(this);
 		saveButton.setBackground(new Color(169,196,235));
+		saveButton.setEnabled(false);
 		actionPanel.add(saveButton);
 		
 	}
@@ -145,7 +166,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		searchButton.addActionListener(this);
 		searchButton.setBackground(new Color(169,196,235));
-		searchButton.setBackground(new Color(169,196,235));
+		searchButton.setEnabled(false);
 		
 		firstNameSearchTextField.addActionListener(this);
 		
