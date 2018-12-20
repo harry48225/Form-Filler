@@ -25,6 +25,11 @@ public class UserList
 		return decrypted;
 	}
 	
+	public void setKey(String newKey)
+	{
+		encryptionKey = newKey;
+	}
+	
 	public User[] filterByFirstName(String firstname) // Gets all of the users with a specified first name
 	{
 		System.out.println("[INFO] <USER_LIST> Running filterByFirstname");
@@ -317,7 +322,7 @@ public class UserList
 		}
 		catch (Exception e)
 		{
-			System.out.println("[ERROR] <USER_LIST> Error loading credential database "+  e);
+			System.out.println("[ERROR] <USER_LIST> Error loading sensitive database "+  e);
 		}
 	}
 	

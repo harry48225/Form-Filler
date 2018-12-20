@@ -292,6 +292,20 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		// We've not hit a return therefore everything must have been correct therefore
 		// write the changes to file.
+		
+		// Ask if they want to change the encryption key
+		int changeKey = JOptionPane.showConfirmDialog(null, "Would you like to change the encryption key?", "Change key?", JOptionPane.YES_NO_OPTION);
+		
+		if (changeKey == 0)
+		{
+			String newKey = JOptionPane.showInputDialog(null, "Please enter a new key");
+			
+			if (newKey != null && !newKey.isEmpty())
+			{
+				users.setKey(newKey);
+			}
+		}
+		
 		users.writeDatabase();
 		
 	}
@@ -421,7 +435,10 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		}
 		else if (evt.getSource() == saveButton)
 		{
-			saveChanges();
+			if (users.isDecrypted())
+			{
+				saveChanges();
+			}
 		}
 	}
 	
