@@ -20,7 +20,7 @@ public class UserList
 		loadDatabase();
 	}
 	
-	public boolean getDecrypted()
+	public boolean isDecrypted()
 	{
 		return decrypted;
 	}

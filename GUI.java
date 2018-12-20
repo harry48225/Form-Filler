@@ -110,7 +110,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			tabs.add("Create questions", new QuestionCreationPanel(questions, this));
 			tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
-			tabs.add("Users", new UserPanel(users));
+			tabs.add("Users", new UserPanel(users, this));
 		}
 		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
@@ -267,14 +267,26 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			UserPanel uP = (UserPanel) selectedComponent;
 			
-			if (!users.getDecrypted())
+			if (!users.isDecrypted()) // If the database hasn't been decrypted yet
 			{	
-				String key = JOptionPane.showInputDialog("Please enter a key to decrypt the database");
-				if (key != null)
-				{
-					users.loadSensitiveDatabase(key);
-					uP.refresh();
-				}
+				decryptUserdatabase();
+			}
+			
+			uP.refresh();
+		}
+		
+	}
+	
+	private void decryptUserdatabase()
+	{
+		String key = JOptionPane.showInputDialog("Please enter a key to decrypt the database");
+		if (key != null)
+		{
+			users.loadSensitiveDatabase(key);
+			
+			if (!users.isDecrypted()) // If the database was not successfully decrypted
+			{
+				JOptionPane.showMessageDialog(null, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		
@@ -333,6 +345,21 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	public void openRegister()
 	{
-		new Register(users);
+		// Need to make sure that the database is decrypted first otherwise
+		// all of the names will be encrypted
+		
+		if (!users.isDecrypted())
+		{
+			decryptUserdatabase();
+			
+			if (users.isDecrypted()) // If the decryption was successful
+			{
+				new Register(users);
+			}
+		}
+		else
+		{
+			new Register(users);
+		}
 	}
 }

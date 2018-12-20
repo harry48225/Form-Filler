@@ -8,6 +8,7 @@ import java.util.regex.*;
 public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private UserList users;
+	private GUI gui;
 	
 	// For the view table
 	private String[] tableHeaders = new String[] {"ID",  "Username", "Password", "First Name",
@@ -33,9 +34,10 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	
 	private JButton registerButton = new JButton("Take register");
 	
-	public UserPanel(UserList tempUserList)
+	public UserPanel(UserList tempUserList, GUI tempGUI)
 	{
 		users = tempUserList;
+		gui = tempGUI;
 		
 		prepareGUI();
 	}
@@ -409,7 +411,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			System.out.println("[INFO] <USER_PANEL> registerButton pressed");
 			
-			new Register(users);
+			gui.openRegister();
+			
+			refresh();
 		}
 		else if (evt.getSource() == firstNameSearchTextField)
 		{
