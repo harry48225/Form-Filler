@@ -263,6 +263,20 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			MainMenuPanel mmP = (MainMenuPanel) selectedComponent;
 			mmP.update();
 		}
+		else if (selectedComponent instanceof UserPanel)
+		{
+			UserPanel uP = (UserPanel) selectedComponent;
+			
+			if (!users.getDecrypted())
+			{	
+				String key = JOptionPane.showInputDialog("Please enter a key to decrypt the database");
+				if (key != null)
+				{
+					users.loadSensitiveDatabase(key);
+					uP.refresh();
+				}
+			}
+		}
 		
 	}
 	

@@ -40,6 +40,11 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		prepareGUI();
 	}
 	
+	public void refresh()
+	{
+		populateTable(users.getArray());
+	}
+	
 	private void prepareGUI()
 	{
 		System.out.println("[INFO] <USER_PANEL> Running prepareGUI");
