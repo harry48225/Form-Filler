@@ -91,11 +91,47 @@ public class QuestionPanelList
 	
 	public void addQuestionPanel(QuestionPanel tempQuestionPanel)
 	{
-		System.out.println("[INFO] <QUESTION_PANEL_LIST> Running addQuestionPanel"); // Debug
+		System.out.println("[INFO] <QUESTION_PANEL_LIST> Running addQuestionPanel"); // Debug		
 		
-		panels[nextQuestionPanelLocation] = tempQuestionPanel; // Add the question to the next free space in the array
+		// Search for the first panel panel with an id greater than it and insert it before that id
+		// This ensures that the array remains in order - ascending
 		
-		nextQuestionPanelLocation++; // Increment the location
+		boolean inserted = false;
+		int questionIDNumber = Integer.parseInt(tempQuestionPanel.getQuestionID().replace("Q","")); // Remove the Q from the id and convert to int
+		
+		for (int i = 0; i < nextQuestionPanelLocation; i++)
+		{
+			int questionIDNumberInArray = Integer.parseInt(panels[i].getQuestionID().replace("Q",""));
+			
+			if (questionIDNumberInArray > questionIDNumber)
+			{
+				nextQuestionPanelLocation++; // Increment the location
+				
+				// Insert the question before it in the array and shuffle all elements over
+				QuestionPanel previous = panels[i];
+				panels[i] = tempQuestionPanel;
+				
+				for (int j = i+1; j < nextQuestionPanelLocation; j++)
+				{
+					QuestionPanel temp = panels[j];
+					panels[j] = previous;
+					previous = temp;
+				}
+				
+				inserted = true;
+				
+				break;
+			}	
+		}
+		
+		// If there was no question panel with an id greater than it, add it to the end
+		if (!inserted)
+		{
+			panels[nextQuestionPanelLocation] = tempQuestionPanel;
+			
+			nextQuestionPanelLocation++;
+		}
+		
 	}
 	
 	public QuestionPanel getByID(String questionID)
