@@ -4,6 +4,12 @@ import java.util.*;
 public class UserList
 {
 	private String databaseFileName = "users/UserDB.txt";
+	private String credentialDatabaseName = "users/Credentials.txt";
+	private String questionStatDatabaseName = "users/QuestionStats.txt";
+	private String sensitiveDatabaseName = "users/userInfo.txt";
+	
+	private boolean decrypted = false;
+	private String encryptionKey;
 	
 	public User[] userArray = new User[100];
 	
@@ -12,6 +18,16 @@ public class UserList
 	public UserList()
 	{
 		loadDatabase();
+	}
+	
+	public boolean isDecrypted()
+	{
+		return decrypted;
+	}
+	
+	public void setKey(String newKey)
+	{
+		encryptionKey = newKey;
 	}
 	
 	public User[] filterByFirstName(String firstname) // Gets all of the users with a specified first name
@@ -68,7 +84,7 @@ public class UserList
 	
 	public User getUserByID(String id) // Returns the User corresponding to an ID
 	{
-		System.out.println("[INFO] <USER_LIST> Running getUserByID"); // Debug
+		//System.out.println("[INFO] <USER_LIST> Running getUserByID"); // Debug
 		
 		User result = null; // The user that was found
 		
@@ -159,17 +175,17 @@ public class UserList
 		return trimmedArray;
 	}
 	
-	public void writeDatabase()
+	private void writeCredentialDatabase()
 	{
-		System.out.println("[INFO] <USER_LIST> Running writeDatabase");
+		System.out.println("[INFO] <USER_LIST> Running writeCredentialDatabase");
 		
 		try
 		{
-			FileWriter fw = new FileWriter(databaseFileName);
+			FileWriter fw = new FileWriter(credentialDatabaseName);
 			
 			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
 			{
-				fw.write(userArray[i].toString() + "||" + userArray[i].getQuestionStats().toString());
+				fw.write(userArray[i].getCredentialString());
 				
 				fw.write("\r\n"); // Move onto a new line
 			}
@@ -178,54 +194,89 @@ public class UserList
 		}
 		catch (Exception e)
 		{
-			System.out.println("[ERROR] <USER_LIST> Error writing database to file " + e); // Out the error
+			System.out.println("[ERROR] <USER_LIST> Error writing credential database to file " + e);
+		}
+	
+	}
+	
+	public void writeSensitiveDatabase(String encryptionKey)
+	{
+		System.out.println("[INFO] <USER_LIST> Running writeSensitiveDatabase");
+		
+		Encrypter enc = new Encrypter();
+		try
+		{
+			FileWriter fw = new FileWriter(sensitiveDatabaseName);
+			
+			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			{
+				String userData = userArray[i].getSensitiveString();
+				String encryptedUserData = enc.encode(userData, encryptionKey);
+				fw.write(encryptedUserData);
+				
+				fw.write("\r\n"); // Move onto a new line
+			}
+			
+			fw.close(); // Close the file
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error writing sensitive database to file " + e);
+		}
+	
+	}
+	
+	private void writeQuestionStatDatabase()
+	{
+		System.out.println("[INFO] <USER_LIST> Running writeQuestionStatDatabase");
+		
+		try
+		{
+			FileWriter fw = new FileWriter(questionStatDatabaseName);
+			
+			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
+			{
+				fw.write(userArray[i].getID() + "||" + userArray[i].getQuestionStats().toString());
+				
+				fw.write("\r\n"); // Move onto a new line
+			}
+			
+			fw.close(); // Close the file
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error writing question stat database to file " + e);
 		}
 	}
 	
-	public void loadDatabase()
+	public void writeDatabase()
 	{
-		System.out.println("[INFO] <USER_LIST> Running loadDatabase");
+		System.out.println("[INFO] <USER_LIST> Running writeDatabase");
+		
+		writeCredentialDatabase();
+		writeQuestionStatDatabase();
+		
+		if (decrypted)
+		{
+			writeSensitiveDatabase(encryptionKey);
+		}
+	}
+	
+	private void loadCredentialDatabase() // Loads just the non sensitive information
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadCredentialDatabase");
 		
 		nextUserLocation = 0; // Ensure that the users get added to the start of the array
 		
 		try
 		{
-			BufferedReader br = new BufferedReader(new FileReader(databaseFileName)); // Open the file for reading
+			BufferedReader br = new BufferedReader(new FileReader(credentialDatabaseName)); // Open the file for reading
 			
 			String line = br.readLine();
 			
 			while (line != null) // While there is data to read from the file
 			{
-				
-				String[] splitData = line.split("\\|\\|"); // Separate into the user data and the QuestionStatList
-				
-				String[] splitUserData = splitData[0].split(",");
-				
-				String id = splitUserData[0];
-				String username = splitUserData[1];
-				String password = splitUserData[2];
-				String firstName = splitUserData[3];
-				String lastName = splitUserData[4];
-				String dateOfBirth = splitUserData[5];
-				String phoneNumber = splitUserData[6];
-				boolean admin = Boolean.parseBoolean(splitUserData[7]);
-				
-				String[] sessionsPresentAt = new String[0];
-				
-				if (splitUserData.length > 8) // If this data is present in the file.
-				{
-					sessionsPresentAt = splitUserData[8].split("\\.");
-				}
-				
-				QuestionStatList questionStats = new QuestionStatList(); // Empty question stat list
-				
-				
-				if (splitData.length > 1) // If there is a saved QuestionStatList
-				{
-					questionStats = new QuestionStatList(splitData[1]); // Load the question stat list 
-				}
-				
-				addUser(new User(id, username, password, firstName, lastName, dateOfBirth, phoneNumber, admin, sessionsPresentAt, questionStats));
+				addUser(new User(line));
 				
 				line = br.readLine();
 				
@@ -236,8 +287,87 @@ public class UserList
 		}
 		catch (Exception e)
 		{
-			System.out.println("[ERROR] <USER_LIST> Error loading database "+  e);
+			System.out.println("[ERROR] <USER_LIST> Error loading credential database "+  e);
 		}
+	}
+	
+	public void loadSensitiveDatabase(String key) // Loads the sensitive information
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadSensitiveDatabase");
+		
+		Encrypter enc = new Encrypter();
+		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(sensitiveDatabaseName)); // Open the file for reading
+			
+			String line = br.readLine();
+			
+			while (line != null) // While there is data to read from the file
+			{
+				
+				String decryptedLine = enc.decode(line, key);
+				String[] splitData = decryptedLine.split("\\|\\|");
+				String userID = splitData[0];
+				
+				getUserByID(userID).addSensitiveInformation(splitData[1]);
+				
+				line = br.readLine();
+				
+			}
+			
+			encryptionKey = key;
+			decrypted = true;
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error loading sensitive database "+  e);
+		}
+	}
+	
+	private void loadQuestionStatDatabase() // Loads just the question stats
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadQuestionStatDatabase");
+		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(questionStatDatabaseName)); // Open the file for reading
+			
+			String line = br.readLine();
+			
+			while (line != null) // While there is data to read from the file
+			{
+				String[] splitLine = line.split("\\|\\|"); // Split at ||
+				
+				QuestionStatList questionStats = new QuestionStatList(); // Empty question stat list
+				
+				if (splitLine.length > 1) // If there is a saved QuestionStatList
+				{
+					questionStats = new QuestionStatList(splitLine[1]); // Load the question stat list 
+				}
+				
+				String userID = splitLine[0];
+				getUserByID(userID).setQuestionStats(questionStats);
+				
+				line = br.readLine();
+				
+			}
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println("[ERROR] <USER_LIST> Error loading questionStat database "+  e);
+		}
+	}
+	
+	public void loadDatabase()
+	{
+		System.out.println("[INFO] <USER_LIST> Running loadDatabase");
+		
+		loadCredentialDatabase();
+		loadQuestionStatDatabase();
+		
 	}
 	
 	public void addUser(User newUser)
@@ -261,7 +391,10 @@ public class UserList
 			
 			for (int i = 0; i < nextUserLocation-1; i++) // For all users but the last one
 			{
-				if (!Utils.isBeforeInDictionary(userArray[i].getFirstName(), userArray[i+1].getFirstName())) // If user 1 doesn't come before user 2
+				String user1FirstName = userArray[i].getFirstName();
+				String user2FirstName = userArray[i+1].getFirstName();
+				
+				if (!user1FirstName.equals(user2FirstName) && !Utils.isBeforeInDictionary(user1FirstName, user2FirstName)) // If user 1 doesn't come before user 2
 				{
 					User temp = userArray[i+1]; // Store the value in a temp variable
 					userArray[i + 1] = userArray[i]; // Swap the values

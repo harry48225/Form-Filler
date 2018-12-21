@@ -7,16 +7,35 @@ public class User
 	private String username;
 	private String password;
 	
-	private String firstName;
-	private String lastName;
-	private String dateOfBirth;
-	private String phoneNumber;
+	// Sensitive info
+	private String firstName = "encrypted";
+	private String lastName = "encrypted";
+	private String dateOfBirth = "encrypted";
+	private String phoneNumber = "encrypted";
 	
 	private boolean admin;
 	
 	private String[] sessionsPresentAt;
 	
 	private QuestionStatList questionStats;
+	
+	public User(String credentialString)
+	{
+	
+		String[] splitData = credentialString.split(",");
+		
+		id = splitData[0];
+		username = splitData[1];
+		password = splitData[2];
+		admin = Boolean.parseBoolean(splitData[3]);
+		
+		sessionsPresentAt = new String[0];
+		
+		if (splitData.length > 4) // If the sessions present at is present
+		{
+			sessionsPresentAt = splitData[4].split("\\.");
+		}
+	}
 	
 	public User(String tempId, String tempUsername, String tempPassword, String tempFirstName, 
 					String tempLastName, String tempDateOfBirth, String tempPhoneNumber, boolean tempAdmin,
@@ -35,6 +54,16 @@ public class User
 		sessionsPresentAt = tempSessionsPresentAt;
 		
 		questionStats = tempQuestionStats;
+	}
+	
+	public void addSensitiveInformation(String sensitiveInfoString)
+	{
+		String[] splitData = sensitiveInfoString.split(",");
+		
+		firstName = splitData[0];
+		lastName = splitData[1];
+		dateOfBirth = splitData[2];
+		phoneNumber = splitData[3];
 	}
 	
 	public boolean isAdmin()
@@ -93,6 +122,16 @@ public class User
 	public String toString()
 	{
 		return id + "," + username + "," + password + "," + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber + "," + admin + "," + sessionsToString();
+	}
+	
+	public String getCredentialString()
+	{
+		return id + "," + username + "," + password + "," + admin + "," + sessionsToString();
+	}
+	
+	public String getSensitiveString()
+	{
+		return id + "||" + firstName + "," + lastName + "," + dateOfBirth + "," + phoneNumber;
 	}
 	
 	public String[] toStringArray()
@@ -163,6 +202,11 @@ public class User
 	public void setSessionsAttended(String[] newSessionsAttended)
 	{
 		sessionsPresentAt = newSessionsAttended;
+	}
+	
+	public void setQuestionStats(QuestionStatList qStats)
+	{
+		questionStats = qStats;
 	}
 	
 	public QuestionStatList getQuestionStats()

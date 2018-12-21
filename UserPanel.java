@@ -8,6 +8,7 @@ import java.util.regex.*;
 public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private UserList users;
+	private GUI gui;
 	
 	// For the view table
 	private String[] tableHeaders = new String[] {"ID",  "Username", "Password", "First Name",
@@ -33,11 +34,33 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	
 	private JButton registerButton = new JButton("Take register");
 	
-	public UserPanel(UserList tempUserList)
+	public UserPanel(UserList tempUserList, GUI tempGUI)
 	{
 		users = tempUserList;
+		gui = tempGUI;
 		
 		prepareGUI();
+	}
+	
+	public void refresh()
+	{
+		populateTable(users.getArray());
+		
+		refreshButtons();
+	}
+	
+	private void refreshButtons() // Enables the buttons if the databse has been decrypted
+	{
+		if (users.isDecrypted())
+		{
+			registerButton.setEnabled(true);
+			searchButton.setEnabled(true);
+			
+			addUserButton.setEnabled(true);
+			editTableButton.setEnabled(true);
+			deleteUserButton.setEnabled(true);
+			saveButton.setEnabled(true);
+		}
 	}
 	
 	private void prepareGUI()
@@ -61,6 +84,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		registerButton.addActionListener(this);
 		registerButton.setBackground(new Color(169,196,235));
+		registerButton.setEnabled(false);
 		actionPanel.add(registerButton);
 		
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
@@ -72,24 +96,28 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		editTableButton.addActionListener(this);
 		editTableButton.setBackground(new Color(169,196,235));
+		editTableButton.setEnabled(false);
 		actionPanel.add(editTableButton);
 
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
 		addUserButton.addActionListener(this);
 		addUserButton.setBackground(new Color(169,196,235));
+		addUserButton.setEnabled(false);
 		actionPanel.add(addUserButton);
 
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
 		deleteUserButton.addActionListener(this);
 		deleteUserButton.setBackground(new Color(169,196,235));
+		deleteUserButton.setEnabled(false);
 		actionPanel.add(deleteUserButton);
 		
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 
 		saveButton.addActionListener(this);
 		saveButton.setBackground(new Color(169,196,235));
+		saveButton.setEnabled(false);
 		actionPanel.add(saveButton);
 		
 	}
@@ -138,7 +166,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		searchButton.addActionListener(this);
 		searchButton.setBackground(new Color(169,196,235));
-		searchButton.setBackground(new Color(169,196,235));
+		searchButton.setEnabled(false);
 		
 		firstNameSearchTextField.addActionListener(this);
 		
@@ -285,6 +313,20 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		// We've not hit a return therefore everything must have been correct therefore
 		// write the changes to file.
+		
+		// Ask if they want to change the encryption key
+		int changeKey = JOptionPane.showConfirmDialog(null, "Would you like to change the encryption key?", "Change key?", JOptionPane.YES_NO_OPTION);
+		
+		if (changeKey == 0)
+		{
+			String newKey = JOptionPane.showInputDialog(null, "Please enter a new key");
+			
+			if (newKey != null && !newKey.isEmpty())
+			{
+				users.setKey(newKey);
+			}
+		}
+		
 		users.writeDatabase();
 		
 	}
@@ -404,7 +446,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			System.out.println("[INFO] <USER_PANEL> registerButton pressed");
 			
-			new Register(users);
+			gui.openRegister();
+			
+			refresh();
 		}
 		else if (evt.getSource() == firstNameSearchTextField)
 		{
@@ -412,7 +456,10 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		}
 		else if (evt.getSource() == saveButton)
 		{
-			saveChanges();
+			if (users.isDecrypted())
+			{
+				saveChanges();
+			}
 		}
 	}
 	
