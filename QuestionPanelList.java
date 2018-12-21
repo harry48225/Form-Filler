@@ -97,11 +97,11 @@ public class QuestionPanelList
 		// This ensures that the array remains in order - ascending
 		
 		boolean inserted = false;
-		int questionIDNumber = Integer.parseInt(tempQuestionPanel.getQuestionID().replace("Q","")); // Remove the Q from the id and convert to int
+		int questionIDNumber = tempQuestionPanel.getQuestionIDNumber();
 		
 		for (int i = 0; i < nextQuestionPanelLocation; i++)
 		{
-			int questionIDNumberInArray = Integer.parseInt(panels[i].getQuestionID().replace("Q",""));
+			int questionIDNumberInArray = panels[i].getQuestionIDNumber();
 			
 			if (questionIDNumberInArray > questionIDNumber)
 			{
@@ -136,27 +136,39 @@ public class QuestionPanelList
 	
 	public QuestionPanel getByID(String questionID)
 	{
-		QuestionPanel result = null;
 		
 		System.out.println("[INFO] <QUESTION_PANEL_LIST> Running getByID");
 		
-		for (int i = 0; i < nextQuestionPanelLocation; i++) // For each question panel in the database
-		{
-			if (panels[i].getQuestionID().equals(questionID)) // If we've found the correct question panel
-			{
-				result = panels[i];
-				break; // Stop searching
-			}
-		}
+		int questionIDNumber = Integer.parseInt(questionID.replace("Q",""));
 		
-		if (result != null)
-		{
-			return result.clone();
-		}
-		else
+		QuestionPanel result = binarySearch(questionIDNumber, 0, nextQuestionPanelLocation);
+		
+		return result != null ? result.clone() : null;
+	}
+	
+	private QuestionPanel binarySearch(int questionIDNumber, int low, int high)
+	{
+		int middle = (low + high)/2;
+		
+		if (high < low)
 		{
 			return null;
 		}
+		
+		int middleQuestionIDNumber = panels[middle].getQuestionIDNumber();
+		
+		if (middleQuestionIDNumber == questionIDNumber)
+		{
+			return panels[middle];
+		}
+		else if (questionIDNumber > middleQuestionIDNumber)
+		{
+			return binarySearch(questionIDNumber, middle + 1, high);
+		}
+		else
+		{
+			return binarySearch(questionIDNumber, low, middle -1);
+		}
+		
 	}
-	
 }
