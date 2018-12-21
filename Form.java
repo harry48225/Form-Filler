@@ -104,6 +104,10 @@ public class Form implements Serializable
 		return id;
 	}
 	
+	public int getIDNumber()
+	{
+		return Integer.parseInt(id.replace("F",""));
+	}
 	public String getTitle()
 	{
 		return title;

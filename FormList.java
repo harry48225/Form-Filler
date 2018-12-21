@@ -188,9 +188,46 @@ public class FormList
 	{
 		//System.out.println("[INFO] <FORM_LIST> Running addForm"); // Debug
 		
-		formArray[nextFormLocation] = tempForm; // Add the form to the next free location
 		
-		nextFormLocation++;
+		// Search for the first panel panel with an id greater than it and insert it before that id
+		// This ensures that the array remains in order - ascending
+		
+		boolean inserted = false;
+		int formIDNumber = tempForm.getIDNumber();
+		
+		for (int i = 0; i < nextFormLocation; i++)
+		{
+			int formIDNumberInArray = formArray[i].getIDNumber();
+			
+			if (formIDNumberInArray > formIDNumber)
+			{
+				nextFormLocation++; // Increment the location
+				
+				// Insert the form before it in the array and shuffle all elements over
+				Form previous = formArray[i];
+				formArray[i] = tempForm;
+				
+				for (int j = i+1; j < nextFormLocation; j++)
+				{
+					Form temp = formArray[j];
+					formArray[j] = previous;
+					previous = temp;
+				}
+				
+				inserted = true;
+				
+				break;
+			}	
+		}
+		
+		// If there was no form with an id greater than it, add it to the end
+		if (!inserted)
+		{
+			formArray[nextFormLocation] = tempForm;
+			
+			nextFormLocation++;
+		}
+		
 	}
 	
 	public void removeForm(String formID) // Removes a form from the database
