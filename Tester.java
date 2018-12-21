@@ -31,9 +31,20 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testSelectQuestionsPanel();
 		//t.testSelectFormsPanel();
 		//t.testComponentSaving();
-		t.testEncryption();
+		//t.testEncryption();
+		t.testQuestionStatRandomAccess();
 	}
 	
+	public void testQuestionStatRandomAccess()
+	{
+		UserList users = new UserList();
+		QuestionStatList qSL = users.getUserByUsername("bob123").getQuestionStats();
+		
+		System.out.println(qSL.toString());
+		System.out.println(Arrays.toString(qSL.toString().split("\\|")));
+		System.out.println(Arrays.toString(qSL.getIDArray()));
+		System.out.println(Arrays.toString(qSL.getQuestionsStruggleTheMost(new QuestionList())));
+	}
 	public void setup()
 	{
 		test = new JFrame();
