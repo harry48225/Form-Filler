@@ -6,7 +6,7 @@ import java.util.List;
 public class LoginFrame extends JFrame implements ActionListener
 {
 	private UserList users;
-	
+	private GUI gui;
 	private List<Image> icons;
 	
 	private JLabel usernameLabel = new JLabel("Username:");
@@ -17,10 +17,11 @@ public class LoginFrame extends JFrame implements ActionListener
 	
 	private JButton loginButton = new JButton("Login");
 	
-	public LoginFrame(UserList tempUsers, List<Image> tempIcons)
+	public LoginFrame(UserList tempUsers, List<Image> tempIcons, GUI tempGUI)
 	{
 		users = tempUsers;
 		icons = tempIcons;
+		gui = tempGUI;
 		prepareGUI();
 	}
 	
@@ -89,7 +90,18 @@ public class LoginFrame extends JFrame implements ActionListener
 	
 	private void validateLogin()
 	{
-		System.out.println(checkCredentials());
+		if (checkCredentials()) // If tbey entered valid credentials
+		{
+			gui.login(users.getUserByUsername(usernameField.getText()));
+			
+			setVisible(false);
+			setVisible(false);
+			dispose();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "username/password incorrect", "Invalid login", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private boolean checkCredentials()

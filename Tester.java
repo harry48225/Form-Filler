@@ -53,7 +53,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	
 	public void testLogin()
 	{
-		new LoginFrame(new UserList(), getIcons());
+		//new LoginFrame(new UserList(), getIcons());
 	}
 	
 	public void testQuestionStatRandomAccess()
