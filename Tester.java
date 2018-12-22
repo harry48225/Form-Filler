@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.awt.event.*;
 
 import components.*;
@@ -32,7 +33,27 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testSelectFormsPanel();
 		//t.testComponentSaving();
 		//t.testEncryption();
-		t.testQuestionStatRandomAccess();
+		//t.testQuestionStatRandomAccess();
+		t.testLogin();
+	}
+	
+	private List<Image> getIcons()
+	{
+		List<Image> images = new ArrayList<Image>();
+		
+		images.add(new ImageIcon("icons/icon-12.png").getImage());
+		images.add(new ImageIcon("icons/icon-16.png").getImage());
+		images.add(new ImageIcon("icons/icon-24.png").getImage());
+		images.add(new ImageIcon("icons/icon-48.png").getImage());
+		images.add(new ImageIcon("icons/icon-96.png").getImage());
+		images.add(new ImageIcon("icons/icon-240.png").getImage());
+		
+		return images;
+	}
+	
+	public void testLogin()
+	{
+		//new LoginFrame(new UserList(), getIcons());
 	}
 	
 	public void testQuestionStatRandomAccess()

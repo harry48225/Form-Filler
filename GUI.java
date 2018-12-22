@@ -42,17 +42,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		users = new UserList();
 		
-		currentUser = getUser();
-		
-		currentUser.addPresentToday(); // Log the user's attendance
-			
-		users.writeDatabase(); // Write the database to file
-		
-		formsInProgress = new FormsInProgressList(currentUser.getUsername());
-		
-		System.out.println(formsInProgress);
-		
-		prepareGUI();
+		new LoginFrame(users, getIcons(), this);
 		
 	}
 	
@@ -75,6 +65,20 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
                     usernames[0])); // Show the user a dropdown with all the current users
 	}
 	
+	public void login(User u)
+	{
+		currentUser = u;
+		
+		currentUser.addPresentToday(); // Log the user's attendance
+			
+		users.writeDatabase(); // Write the database to file
+		
+		formsInProgress = new FormsInProgressList(currentUser.getUsername());
+		
+		System.out.println(formsInProgress);
+		
+		prepareGUI();
+	}
 	private List<Image> getIcons()
 	{
 		List<Image> images = new ArrayList<Image>();
