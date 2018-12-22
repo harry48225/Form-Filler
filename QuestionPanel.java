@@ -105,6 +105,11 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 	{
 		return questionID;
 	}
+	
+	public int getQuestionIDNumber()
+	{
+		return Integer.parseInt(questionID.replace("Q","")); // Remove the Q from the id and convert to int
+	}
 
 	public void actionPerformed(ActionEvent evt)
 	{

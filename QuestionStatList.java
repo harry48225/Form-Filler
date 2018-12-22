@@ -1,10 +1,10 @@
+import java.util.*;
+
 public class QuestionStatList // Every user has one and it stores the QuestionStat objects
 {
 	// This list class works a little differently. It doesn't actually manipulate text files itself.
-	
-	public QuestionStat[] questionStatArray = new QuestionStat[100];
-	
-	private int nextQuestionStatLocation = 0;
+
+	private HashMap<String, QuestionStat> questionStatMap = new HashMap<String, QuestionStat>();
 	
 	public QuestionStatList()
 	{
@@ -17,34 +17,22 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		
 		String[] questionStats = loadedDatabase.split("\\|"); // \\ to escape
 		
-		for (String questionStatString : questionStats)
+		for (String questionStatString : questionStats) // For each string
 		{
-			add(new QuestionStat(questionStatString.split(","))); // Add the question stat to the database
+			add(new QuestionStat(questionStatString.split(","))); // Add the questionStat to the database
 		}
 		
 	}
 	
 	public String[] getIDArray() // Returns an array containing all of the ids of the questions
 	{
-		String[] results = new String[nextQuestionStatLocation]; // Create a new array of the exact size required
-		
-		for (int i = 0; i < nextQuestionStatLocation; i ++) // For each question stat
-		{
-			results[i] = questionStatArray[i].getID(); // Store the id of the QuestionStat in the results array
-		}
-		
-		return results;
+		return questionStatMap.keySet().toArray(new String[0]);
 	}
 	
 	public String[] getQuestionsStruggleTheMost(QuestionList questions) // Returns a list of questions that the user sturggles the most on
 	{
-		QuestionStat[] questionsToSort = new QuestionStat[nextQuestionStatLocation]; // Create a new questionStat array of just the right size
-		
-		for (int i = 0; i < nextQuestionStatLocation; i++) // For each index of the array
-		{
-			questionsToSort[i] = questionStatArray[i]; // Copy over the question stats
-		}
-		
+		QuestionStat[] questionsToSort = questionStatMap.values().toArray(new QuestionStat[0]); // Create a new questionStat array of just the right size
+
 		// Bubble sort based on the average number of attempts taken to correct an error highest to lowest
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
@@ -115,10 +103,8 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 			int totalNumberOfAttemptsNeededToCorrect = 0; // Store the total number of attempts needed to correct
 			long totalTimeTakenToComplete = 0;
 			
-			for (int j = 0; j < nextQuestionStatLocation; j++) // For each question stat
+			for (QuestionStat currentQuestionStat : questionStatMap.values()) // For each question stat
 			{
-				
-				QuestionStat currentQuestionStat = questionStatArray[j]; // Get the question stat
 				Question currentQuestion = questions.getQuestionByID(currentQuestionStat.getID()); // Get the question that it corresponds to
 				
 				if (currentQuestion != null) // If a question was found and the question stat wasn't part of a deleted question
@@ -166,62 +152,30 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		return data;
 	}
 	
+	// There should be no add method only getters. And if the question isn't present it gets created automatically.
 	private void add(QuestionStat newQStat) // Private as should only be used when loading the database
 	{
-		questionStatArray[nextQuestionStatLocation] = newQStat;
-		nextQuestionStatLocation++;
+		questionStatMap.put(newQStat.getID(), newQStat);
 	}
 	
 	public QuestionStat getQuestionStatByID(String searchID)
 	{
-		QuestionStat result = null;
+		questionStatMap.putIfAbsent(searchID, new QuestionStat(searchID));
 		
-		for (int i = 0; i < nextQuestionStatLocation; i++)
-		{
-			if (questionStatArray[i].getID().equals(searchID))
-			{
-				result = questionStatArray[i];
-			}
-		}
-		
-		if (result == null) // If the QuestionStat didn't exist
-		{
-			result = new QuestionStat(searchID); // Create it 
-			add(result);
-		}
-		
-		return result;
-		
+		return questionStatMap.get(searchID);		
 	}
 	
-	// There should be no add method only getters. And if the question isn't present it gets created automatically.
 	
 	public String toString() // Returns a long string of all the questions stats object delimited by |
 	{
 		String outputString = "";
 		
-		if (nextQuestionStatLocation > 0) // If there is data in the array.
+		for (QuestionStat q : questionStatMap.values())
 		{
-			outputString = questionStatArray[0].toString();
-			
-			for (int i = 1; i < nextQuestionStatLocation; i++) // For every other questionStat in the array
-			{
-				outputString += "|" + questionStatArray[i].toString();
-			}
+			outputString += (q.toString() + "|");
 		}
 		
 		return outputString;
 	}
 	
-	public void loadString(String databaseString) // Loads the string that was previously outputted
-	{
-		nextQuestionStatLocation = 0;
-		
-		String[] questionStatStrings = databaseString.split("|"); // Get the individual questionStats
-		
-		for (String questionStatString : questionStatStrings) // For each string
-		{
-			add(new QuestionStat(questionStatString.split(","))); // Add the questionStat to the database
-		}
-	}
 }
