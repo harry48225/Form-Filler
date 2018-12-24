@@ -5,26 +5,15 @@ import java.util.*;
 import java.awt.event.*;
 import java.net.URL;
 import java.io.*;
+import java.time.*;
 
 import java.util.*;
 
+import com.github.lgooddatepicker.components.*;
+
 public class JValidatedDatePicker extends JPanel implements JValidatedComponent, JSaveableComponent
-{
-	// Hardcoded data
-	private String[] days = {"Day", "1","2","3","4","5","6","7","8","9","10",
-										  "11","12","13","14","15","16","17","18",
-										  "19","20","21","22","23","24","25","26",
-										  "27","28","29","30","31"};
-	
-	private String[] months = {"Month", "January","February","March","April","May",
-											   "June","July","August","September","October",
-											   "November","December"};
-	// ComboBoxes
-	private JComboBox<String> daysComboBox = new JComboBox<String>(days);
-	
-	private JComboBox<String> monthsComboBox = new JComboBox<String>(months);
-	
-	private JComboBox<String> yearsComboBox;
+{	
+	private DatePicker dPicker;
 	
 	private final String ERROR_STRING = "Datepicker: Please enter a valid date";
 	
@@ -36,27 +25,48 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 	
 	public JValidatedDatePicker(String saveString)
 	{
-		// saveString is formatted like this
-		// datepicker:dayIndex.monthIndex.yearIndex
+		// saveString is formatted like this uuuu-MM-dd (ISO-8601)
 		
-		String[] selectedIndexes = saveString.split(":")[1].split("\\.");
+		String selectedDateString = saveString.split(":")[1];
 		
 		setupDatePicker();
 		
-		int dayIndex = Integer.parseInt(selectedIndexes[0]);
-		int monthIndex = Integer.parseInt(selectedIndexes[1]);
-		int yearIndex = Integer.parseInt(selectedIndexes[2]);
+		if (!selectedDateString.equals("-1"))// If a date was selected
+		{
+			LocalDate selectedDate = LocalDate.parse(selectedDateString);
+			dPicker.setDate(selectedDate);
+		}
 		
+		/*
 		daysComboBox.setSelectedIndex(dayIndex);
 		monthsComboBox.setSelectedIndex(monthIndex);
 		yearsComboBox.setSelectedIndex(yearIndex);
+		*/
 		
 	}
 	
 	private void setupDatePicker()
 	{
-		this.setLayout(new GridLayout(1,3)); // 1 row 3 columns
+		this.setLayout(new GridLayout(1,1)); // 1 row 1 column
 		
+		dPicker = new DatePicker();
+		
+		DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setFormatForDatesCommonEra("dd/MM/YYYY");
+        dateSettings.setFormatForDatesBeforeCommonEra("dd/MM/uuuu");
+		
+		dPicker.setSettings(dateSettings);
+		
+		URL dateImageURL = JValidatedDatePicker.class.getResource("datepickerbutton1.png");
+        Image dateExampleImage = Toolkit.getDefaultToolkit().getImage(dateImageURL);
+        ImageIcon dateExampleIcon = new ImageIcon(dateExampleImage);
+		
+		JButton datePickerButton = dPicker.getComponentToggleCalendarButton();
+        datePickerButton.setText("");
+        datePickerButton.setIcon(dateExampleIcon);
+		
+		this.add(dPicker);
+		/*
 		String[] yearArray = new String[100]; // Store the most recent 100 years
 		
 		for (int i = yearArray.length - 2; i >= 0; i--)
@@ -70,36 +80,24 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 		
 		yearsComboBox = new JComboBox<String>(yearArray); // Create the combobox
 		
-		this.setPreferredSize(new Dimension(100, 50));
-		this.setMaximumSize(new Dimension(700, 60));
 		
 		this.add(daysComboBox);
 		this.add(monthsComboBox);
 		this.add(yearsComboBox);
+		*/
+		
+		this.setPreferredSize(new Dimension(100, 50));
+		this.setMaximumSize(new Dimension(700, 60));
 	}
 	
 	public boolean validateAnswer()
 	{
-		boolean pass = true;
-		
-		if (daysComboBox.getSelectedIndex() == 0 || monthsComboBox.getSelectedIndex() == 0 || yearsComboBox.getSelectedIndex() == 0) // If any of the fields haven't been filled in
-		{
-			pass = false;
-		}
-		
-		return pass;
+		return presenceCheck() && dPicker.isTextFieldValid(); // Return whether the text field contains a valid date
 	}
 	
 	public boolean presenceCheck()
 	{
-		boolean pass = false;
-		
-		if (daysComboBox.getSelectedIndex() != 0 || monthsComboBox.getSelectedIndex() != 0 || yearsComboBox.getSelectedIndex() != 0) // If any of the fields haven't been filled in
-		{
-			pass = true;
-		}
-		
-		return pass;
+		return !dPicker.getText().isEmpty();
 	}
 	
 	public String getErrorString()
@@ -111,7 +109,14 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 	{
 		String asString = "datepicker:";
 		
-		asString += (daysComboBox.getSelectedIndex() + "." + monthsComboBox.getSelectedIndex() + "." + yearsComboBox.getSelectedIndex());
+		String dateString = dPicker.getDateStringOrEmptyString();
+		
+		if (dateString.isEmpty())
+		{
+			dateString = "-1";
+		}
+		
+		asString += dateString;
 		
 		return asString;
 	}
