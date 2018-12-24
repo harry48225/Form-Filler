@@ -4,8 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import com.google.gson.*;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PlacesApi;
+import com.google.maps.model.*;
+import com.google.maps.PlaceAutocompleteRequest.SessionToken;
+
+import java.util.*;
+
 public class JValidatedLocationEntry extends JPanel implements JValidatedComponent, JSaveableComponent, KeyListener
 {
+	private GeoApiContext context;
+	private SessionToken session = new SessionToken();
 	private JPanel mainPanel = new JPanel();
 	
 	private JLabel addressLabel = new JLabel("Address");
@@ -13,9 +23,59 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	public JValidatedLocationEntry()
 	{
+		setup();
 		prepareGUI();
 	}
 	
+	private void setup()
+	{
+		context = new GeoApiContext.Builder().apiKey("AIzaSyBgcCPoJcVPvdsClek4TljQ7E7XzcMbU4I").build();
+	}
+	
+	private AutocompletePrediction[] predictPlaces(String stringToPredictFrom)
+	{
+		
+		AutocompletePrediction[] results = null;
+		
+		if (!stringToPredictFrom.isEmpty())
+		{
+			
+			System.out.println("[INFO] <JVALIDATED_LOCATION_ENTRY> Getting results");
+			try
+			{
+				results = PlacesApi.placeAutocomplete(context, stringToPredictFrom, session).await();
+			}
+			catch (Exception e)
+			{
+				System.out.println(e);
+			}
+			
+			System.out.println("[INFO] <JVALIDATED_LOCATION_ENTRY> Recieved results");
+		}
+		return results;
+	}
+	
+	private void updatePrediction()
+	{
+		String currentText = (String) addressComboBox.getEditor().getItem();
+		AutocompletePrediction[] predictions = predictPlaces(currentText);
+		
+		if (predictions != null)
+		{
+			addressComboBox.removeAllItems();
+			
+			if (predictions.length <= 10)
+			{
+				for (int i = 0; i < predictions.length; i++)
+				{
+					addressComboBox.insertItemAt(predictions[i].description, i);
+				}
+			}
+			
+			addressComboBox.showPopup();
+		}
+		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(currentText); // Set the text back to what it was before the query
+	}
 	private void prepareGUI()
 	{
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
@@ -56,7 +116,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	}
 	
     public void keyTyped(KeyEvent e) {
-       System.out.println("KEY TYPED: ");
+	   updatePrediction();
     }
 
     public void keyPressed(KeyEvent e) {
