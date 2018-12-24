@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class JValidatedLocationEntry extends JPanel implements JValidatedComponent, JSaveableComponent
+public class JValidatedLocationEntry extends JPanel implements JValidatedComponent, JSaveableComponent, KeyListener
 {
 	private JPanel mainPanel = new JPanel();
 	
@@ -24,6 +24,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		mainPanel.add(Box.createHorizontalStrut(10));
 		
 		addressComboBox.setEditable(true);
+		addressComboBox.getEditor().getEditorComponent().addKeyListener(this);
 		mainPanel.add(addressComboBox);
 		
 		this.setLayout(new GridLayout(1,1));
@@ -53,4 +54,16 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		// Todo
 		return "";
 	}
+	
+    public void keyTyped(KeyEvent e) {
+       System.out.println("KEY TYPED: ");
+    }
+
+    public void keyPressed(KeyEvent e) {
+        //System.out.println("KEY Pressed: ");
+    }
+
+    public void keyReleased(KeyEvent e) {
+        //System.out.println("KEY released: ");
+    }
 }
