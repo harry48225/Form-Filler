@@ -26,7 +26,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testFormCreation();
 		//t.testCheckBoxPanel();
 		//t.testValidation();
-		t.testDatePicker();
+		//t.testDatePicker();
 		//t.testUser();
 		//t.testQuestionStat();
 		//t.testFormInProgress();
@@ -37,6 +37,14 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testEncryption();
 		//t.testQuestionStatRandomAccess();
 		//t.testLogin();
+		t.testLocationEntry();
+	}
+	
+	private void testLocationEntry()
+	{
+		test.add(new JValidatedLocationEntry());
+		
+		test.setVisible(true);
 	}
 	
 	private void testDatePicker()
