@@ -15,6 +15,8 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	
 	CheckBoxPanel cBP;
 	
+	JValidatedDatePicker dPicker;
+	
 	public static void main(String[] args)
 	{
 		Tester t = new Tester();
@@ -24,7 +26,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testFormCreation();
 		//t.testCheckBoxPanel();
 		//t.testValidation();
-		//t.testDatePicker();
+		t.testDatePicker();
 		//t.testUser();
 		//t.testQuestionStat();
 		//t.testFormInProgress();
@@ -34,7 +36,17 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testComponentSaving();
 		//t.testEncryption();
 		//t.testQuestionStatRandomAccess();
-		t.testLogin();
+		//t.testLogin();
+	}
+	
+	private void testDatePicker()
+	{
+		dPicker = new JValidatedDatePicker("datepicker:2018-12-21");
+		test.add(dPicker);
+		b = new JButton("Test validation");
+		b.addActionListener(this);
+		test.add(b);
+		test.setVisible(true);
 	}
 	
 	private List<Image> getIcons()
@@ -133,7 +145,9 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	{
 		if (e.getSource() == b)
 		{
-			System.out.println(c.toString());
+			System.out.println(dPicker.validateAnswer());
+			System.out.println(dPicker.presenceCheck());
+			System.out.println(dPicker.toString());
 		}
 	}
 	

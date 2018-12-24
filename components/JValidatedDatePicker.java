@@ -5,24 +5,51 @@ import java.util.*;
 import java.awt.event.*;
 import java.net.URL;
 import java.io.*;
+import java.time.*;
+
+import java.util.*;
+
 import com.github.lgooddatepicker.components.*;
 
-public class JValidatedDatePicker extends JPanel implements JValidatedComponent, Serializable
-{
+public class JValidatedDatePicker extends JPanel implements JValidatedComponent, JSaveableComponent
+{	
+	private DatePicker dPicker;
 	
-	private transient DatePicker dPicker; // The Date picker marked transient so that it's not to be serialized as it's not serializable.
+	private final String ERROR_STRING = "Datepicker: Please enter a valid date";
 	
 	public JValidatedDatePicker()
 	{
-		this.setLayout(new GridLayout(1,1)); // ! row 1 column so that the date picker fills it entirely.
+		setupDatePicker();
+		
+	}
+	
+	public JValidatedDatePicker(String saveString)
+	{
+		// saveString is formatted like this uuuu-MM-dd (ISO-8601)
+		
+		String selectedDateString = saveString.split(":")[1];
 		
 		setupDatePicker();
+		
+		if (!selectedDateString.equals("-1"))// If a date was selected
+		{
+			LocalDate selectedDate = LocalDate.parse(selectedDateString);
+			dPicker.setDate(selectedDate);
+		}
+		
+		/*
+		daysComboBox.setSelectedIndex(dayIndex);
+		monthsComboBox.setSelectedIndex(monthIndex);
+		yearsComboBox.setSelectedIndex(yearIndex);
+		*/
 		
 	}
 	
 	private void setupDatePicker()
 	{
-        dPicker = new DatePicker();
+		this.setLayout(new GridLayout(1,1)); // 1 row 1 column
+		
+		dPicker = new DatePicker();
 		
 		DatePickerSettings dateSettings = new DatePickerSettings();
         dateSettings.setFormatForDatesCommonEra("dd/MM/YYYY");
@@ -39,33 +66,58 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
         datePickerButton.setIcon(dateExampleIcon);
 		
 		this.add(dPicker);
+		/*
+		String[] yearArray = new String[100]; // Store the most recent 100 years
+		
+		for (int i = yearArray.length - 2; i >= 0; i--)
+		{
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+
+			yearArray[i+1] = year - i + ""; // Fill the array with the most recent date at the start and the oldest at the end
+		}
+		
+		yearArray[0] = "Year"; // Store year at the start of the array
+		
+		yearsComboBox = new JComboBox<String>(yearArray); // Create the combobox
+		
+		
+		this.add(daysComboBox);
+		this.add(monthsComboBox);
+		this.add(yearsComboBox);
+		*/
+		
+		this.setPreferredSize(new Dimension(100, 50));
+		this.setMaximumSize(new Dimension(700, 60));
 	}
-	
-	/*
-	 private void writeObject(ObjectOutputStream out) throws IOException // Runs when the object is serialized
-	 {
-		out.defaultWriteObject();
-		
-		this.removeAll(); // Remove the date picker from the JPanel so that it's not serialized
-		this.revalidate();
-		
-		System.out.println("Removed all objects from JPanel");
-		
-		
-	 }
-	
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException // Runs when the object is deserialized
-	{
-		in.defaultReadObject(); // Regular deserialization
-		
-		setupDatePicker(); // Re-setup the date picker after deserialization.
-		
-		this.add(dPicker);
-	}
-	*/
 	
 	public boolean validateAnswer()
 	{
-		return dPicker.isTextFieldValid(); // Return whether the text field contains a valid date
+		return presenceCheck() && dPicker.isTextFieldValid(); // Return whether the text field contains a valid date
+	}
+	
+	public boolean presenceCheck()
+	{
+		return !dPicker.getText().isEmpty();
+	}
+	
+	public String getErrorString()
+	{
+		return ERROR_STRING;
+	}
+	
+	public String toString()
+	{
+		String asString = "datepicker:";
+		
+		String dateString = dPicker.getDateStringOrEmptyString();
+		
+		if (dateString.isEmpty())
+		{
+			dateString = "-1";
+		}
+		
+		asString += dateString;
+		
+		return asString;
 	}
 }
