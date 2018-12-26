@@ -14,6 +14,7 @@ import java.util.*;
 
 public class JValidatedLocationEntry extends JPanel implements JValidatedComponent, JSaveableComponent, KeyListener
 {
+	private final String ERROR_STRING = "Location: Please enter an address";
 	private GeoApiContext context;
 	private SessionToken session = new SessionToken();
 	private JPanel mainPanel = new JPanel();
@@ -75,7 +76,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		String currentText = (String) addressComboBox.getEditor().getItem();
 		AutocompletePrediction[] predictions = predictPlaces(currentText);
 		
-		if (predictions != null)
+		if (predictions != null && predictions.length > 0)
 		{
 			addressComboBox.removeAllItems();
 			
@@ -108,20 +109,21 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	public String getErrorString()
 	{
-		// Todo
-		return "";
+		return ERROR_STRING;
 	}
 	
 	public boolean validateAnswer()
 	{
-		// Todo
-		return false;
+		return presenceCheck();
 	}
 	
 	public boolean presenceCheck()
 	{
-		// Todo
-		return false;
+		String currentText = (String) addressComboBox.getEditor().getItem();
+		
+		currentText = currentText.replaceAll("\\s",""); // Get rid of all of the spaces.
+		
+		return !currentText.isEmpty(); // If the string is empty then the pass fails
 	}
 	
 	public String toString()

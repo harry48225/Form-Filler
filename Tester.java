@@ -158,6 +158,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		if (e.getSource() == b)
 		{
 			System.out.println(l.toString());
+			System.out.println(l.validateAnswer());
 		}
 	}
 	
