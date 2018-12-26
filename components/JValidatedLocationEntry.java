@@ -27,6 +27,21 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		prepareGUI();
 	}
 	
+	public JValidatedLocationEntry(String saveString)
+	{
+		setup();
+		prepareGUI();
+		
+		// Save string is formatted like this
+		// locationentry:enteredaddress
+		
+		String[] splitString = saveString.split(":");
+		
+		String enteredAddress = splitString[1];
+		
+		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(enteredAddress); // Set the text back to what it was when the component was saved 
+	}
+	
 	private void setup()
 	{
 		context = new GeoApiContext.Builder().apiKey("AIzaSyBgcCPoJcVPvdsClek4TljQ7E7XzcMbU4I").build();
@@ -111,8 +126,9 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	public String toString()
 	{
-		// Todo
-		return "";
+		String currentText = (String) addressComboBox.getEditor().getItem();
+		
+		return "locationentry:" + currentText;
 	}
 	
     public void keyTyped(KeyEvent e) {
