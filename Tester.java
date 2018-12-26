@@ -16,6 +16,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	CheckBoxPanel cBP;
 	
 	JValidatedDatePicker dPicker;
+	JValidatedLocationEntry l;
 	
 	public static void main(String[] args)
 	{
@@ -26,7 +27,7 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testFormCreation();
 		//t.testCheckBoxPanel();
 		//t.testValidation();
-		t.testDatePicker();
+		//t.testDatePicker();
 		//t.testUser();
 		//t.testQuestionStat();
 		//t.testFormInProgress();
@@ -37,6 +38,17 @@ public class Tester implements ActionListener // Just to quickly test things wit
 		//t.testEncryption();
 		//t.testQuestionStatRandomAccess();
 		//t.testLogin();
+		t.testLocationEntry();
+	}
+	
+	private void testLocationEntry()
+	{
+		l = new JValidatedLocationEntry("locationentry:Runshaw College, Leyland, UK");
+		test.add(l);
+		b = new JButton("Test validation");
+		b.addActionListener(this);
+		test.add(b);
+		test.setVisible(true);
 	}
 	
 	private void testDatePicker()
@@ -145,9 +157,8 @@ public class Tester implements ActionListener // Just to quickly test things wit
 	{
 		if (e.getSource() == b)
 		{
-			System.out.println(dPicker.validateAnswer());
-			System.out.println(dPicker.presenceCheck());
-			System.out.println(dPicker.toString());
+			System.out.println(l.toString());
+			System.out.println(l.validateAnswer());
 		}
 	}
 	

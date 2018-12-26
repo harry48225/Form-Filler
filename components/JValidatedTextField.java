@@ -21,7 +21,7 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 		if (tempType.contains(":")) // If it's a save string
 		{
 			// saveString is formatted like this
-			// filechooser:enteredText;type
+			// textfield:enteredText;type
 			
 			String[] textFieldData = tempType.split(":")[1].split(";");
 			

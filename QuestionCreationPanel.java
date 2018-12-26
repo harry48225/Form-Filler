@@ -52,9 +52,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	private JButton addPasswordFieldButton = new JButton("Add password field");
 	private JButton addCalendarEntryButton = new JButton("Add calendar entry");
 	private JButton addFileChooserButton = new JButton("Add file chooser");
+	private JButton addLocationEntryButton = new JButton("Add location entry");
 	private JButton[] creationButtons = {addTextFieldButton, addRadioButtonsButton,
 										 addComboboxButton, addCheckboxesButton, addPasswordFieldButton,
-										 addCalendarEntryButton, addFileChooserButton}; // To handle the buttons all at once more easily
+										 addCalendarEntryButton, addFileChooserButton, addLocationEntryButton}; // To handle the buttons all at once more easily
 	
 	
 	private EnterOptionsPanel optionEntry = new EnterOptionsPanel();
@@ -335,14 +336,14 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		row1.add(Box.createHorizontalGlue());
 		row1.add(creationButtons[3]);
 		
-		// 3 Buttons on row 2
-		row2.add(Box.createHorizontalGlue());
+		// 4 Buttons on row 2
 		row2.add(creationButtons[4]);
 		row2.add(Box.createHorizontalGlue());
 		row2.add(creationButtons[5]);
 		row2.add(Box.createHorizontalGlue());
 		row2.add(creationButtons[6]);
 		row2.add(Box.createHorizontalGlue());
+		row2.add(creationButtons[7]);
 		
 		componentCreationButtons.add(row1);
 		componentCreationButtons.add(row2);
@@ -419,6 +420,12 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			System.out.println("[INFO] <QUESTION_CREATION_PANEL> addFileChooserButton pressed");
 
 			addFileChooser();
+		}
+		else if (evt.getSource() == addLocationEntryButton)
+		{
+			System.out.println("[INFO] <QUESTION_CREATION_PANEL> addLocationEntryButton pressed");
+			
+			addLocationEntry();
 		}
 		else if (evt.getSource() == finishButton) // If the finish button was pressed
 		{
@@ -517,6 +524,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		}
 	}
 	
+	
 	private void addNewType()
 	{
 		type = JOptionPane.showInputDialog("What's the question's type?"); // Get the type
@@ -578,6 +586,13 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		{
 			addComponent(new JValidatedTextField(s)); // Create a new JValidatedTextField of the correct type
 		}
+	}
+
+	private void addLocationEntry()
+	{
+		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addLocationEntry");
+		
+		addComponent(new JValidatedLocationEntry());	
 	}
 
 	private void addFileChooser() // Adds a file chooser to the question

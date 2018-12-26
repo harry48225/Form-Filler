@@ -170,7 +170,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		this.addWindowListener(this);
 		
 		this.setLayout(new GridLayout(1,1)); // Set a grid layout
-		this.setSize(400,600); // Set the size
+		this.setSize(600,800); // Set the size
+		this.setMinimumSize(new Dimension(600,800)); // Set the size
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)); // Set a box layout
