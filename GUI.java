@@ -98,11 +98,10 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		this.setTitle("Form Filler");
 		
 		this.setIconImages(getIcons());
-		
 		this.setSize(1200,700);
-		this.setLocation(500,200);
 		this.setMinimumSize(new Dimension(900,600));
 		this.setLayout(new GridLayout(1,1)); // Only 1 row and 1 column as it'll only store panels
+		this.setLocationRelativeTo(null); // Center it
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
