@@ -17,9 +17,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	private final String ERROR_STRING = "Location: Please enter an address";
 	private GeoApiContext context;
 	private SessionToken session = new SessionToken();
-	private JPanel mainPanel = new JPanel();
-	
-	private JLabel addressLabel = new JLabel("Address");
+
 	private JComboBox<String> addressComboBox = new JComboBox();
 	
 	public JValidatedLocationEntry()
@@ -37,8 +35,12 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		// locationentry:enteredaddress
 		
 		String[] splitString = saveString.split(":");
+		String enteredAddress = "";
 		
-		String enteredAddress = splitString[1];
+		if (splitString.length > 1) // If the location entry was non-empty when it was saved
+		{
+			enteredAddress = splitString[1];
+		}
 		
 		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(enteredAddress); // Set the text back to what it was when the component was saved 
 	}
@@ -93,18 +95,11 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(currentText); // Set the text back to what it was before the query
 	}
 	private void prepareGUI()
-	{
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
-		mainPanel.add(addressLabel);
-		
-		mainPanel.add(Box.createHorizontalStrut(10));
-		
+	{	
+		this.setLayout(new GridLayout(1,1));
 		addressComboBox.setEditable(true);
 		addressComboBox.getEditor().getEditorComponent().addKeyListener(this);
-		mainPanel.add(addressComboBox);
-		
-		this.setLayout(new GridLayout(1,1));
-		this.add(mainPanel);
+		this.add(addressComboBox);
 	}
 	
 	public String getErrorString()

@@ -77,6 +77,9 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			case "radiobuttons":
 				component = new RadioButtonPanel(componentString);
 				break;
+			case "locationentry":
+				component = new JValidatedLocationEntry(componentString);
+				break;
 		}
 		
 		return component;
