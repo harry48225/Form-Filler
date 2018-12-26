@@ -80,6 +80,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		
 		if (predictions != null && predictions.length > 0)
 		{
+			addressComboBox.hidePopup();
 			addressComboBox.removeAllItems();
 			
 			if (predictions.length <= 10)
@@ -100,6 +101,9 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		addressComboBox.setEditable(true);
 		addressComboBox.getEditor().getEditorComponent().addKeyListener(this);
 		this.add(addressComboBox);
+		
+		this.setPreferredSize(new Dimension(200,40));
+		this.setMaximumSize(new Dimension(200,50));
 	}
 	
 	public String getErrorString()
