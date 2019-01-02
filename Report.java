@@ -9,7 +9,7 @@ import java.time.*;
 
 public class Report extends JPanel
 {
-	private String[] tableHeaders = new String[] {"<html><center>Question<br>type</html>", "<html><center>Number of times<br>failed validation</html>", "<html><center>Average number of attempts<br>needed to correct</html>", "<html><center>Average time<br>to complete (seconds)</html>"}; // The headers for the table
+	private String[] tableHeaders = new String[] {"<html><center>Question<br>type<</html>", "<html><center>Number of times<br>failed validation</html>", "<html><center>Average number<br>of attempts<br>needed to correct</html>", "<html><center>Average time<br>to complete (seconds)</html>"}; // The headers for the table
 	private String[][] reportData; // The data about how the user is performing with the questions
 	private JTable reportTable;
 	private JScrollPane reportTableScrollPane;
@@ -69,7 +69,14 @@ public class Report extends JPanel
 		reportTablePanel.setBackground(Color.WHITE);
 		reportTablePanel.add(reportTableScrollPane, BorderLayout.CENTER);
 		
-		
+		// Make the headers taller by overriding the getPreferredSize method
+		reportTableScrollPane.setColumnHeader(new JViewport() {
+				@Override public Dimension getPreferredSize() {
+					Dimension d = super.getPreferredSize();
+					d.height = 50;
+						return d;
+				}
+		});
 		
 		reportTablePanel.add(createHeaderPanel(), BorderLayout.NORTH);
 	}
