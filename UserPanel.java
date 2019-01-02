@@ -31,6 +31,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	private JButton editTableButton = new JButton("Edit table");
 	private JButton deleteUserButton = new JButton("Delete user");
 	private JButton saveButton = new JButton("Save changes");
+	private JButton produceReportsButton = new JButton("Produce report(s)");
 	
 	private JButton registerButton = new JButton("Take register");
 	
@@ -55,6 +56,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			registerButton.setEnabled(true);
 			searchButton.setEnabled(true);
+			produceReportsButton.setEnabled(true);
 			
 			addUserButton.setEnabled(true);
 			editTableButton.setEnabled(true);
@@ -86,6 +88,13 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		registerButton.setBackground(new Color(169,196,235));
 		registerButton.setEnabled(false);
 		actionPanel.add(registerButton);
+		
+		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		
+		produceReportsButton.addActionListener(this);
+		produceReportsButton.setBackground(new Color(169,196,235));
+		produceReportsButton.setEnabled(false);
+		actionPanel.add(produceReportsButton);
 		
 		actionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		
@@ -450,6 +459,15 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			
 			refresh();
 		}
+		else if (evt.getSource() == produceReportsButton)
+		{
+			System.out.println("[INFO] <USER_PANEL> produceReportsButton pressed");
+			
+			if (userTable.getSelectedRows().length > 0);
+			{
+				produceReports();
+			}
+		}
 		else if (evt.getSource() == firstNameSearchTextField)
 		{
 			searchButton.doClick();
@@ -460,6 +478,18 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			{
 				saveChanges();
 			}
+		}
+	}
+	
+	private void produceReports()
+	{
+		int[] selectedRows = userTable.getSelectedRows();
+		
+		for (int row : selectedRows)
+		{
+			String selectedID = (String) userTable.getModel().getValueAt(row, 0); // Get the userID
+			User u = users.getUserByID(selectedID);
+			System.out.println(u.getQuestionStats());
 		}
 	}
 	
