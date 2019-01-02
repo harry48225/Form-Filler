@@ -5,10 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.regex.*;
 
-public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener
+import java.awt.print.*;
+
+public class UserPanel extends JPanel implements ActionListener, TableColumnModelListener, Printable
 {
 	private UserList users;
 	private GUI gui;
+	private QuestionList questions;
 	
 	// For the view table
 	private String[] tableHeaders = new String[] {"ID",  "Username", "Password", "First Name",
@@ -35,10 +38,13 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	
 	private JButton registerButton = new JButton("Take register");
 	
-	public UserPanel(UserList tempUserList, GUI tempGUI)
+	private JPanel[] reportPanels;
+	
+	public UserPanel(UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
 	{
 		users = tempUserList;
 		gui = tempGUI;
+		questions = tempQuestions;
 		
 		prepareGUI();
 	}
@@ -463,9 +469,10 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		{
 			System.out.println("[INFO] <USER_PANEL> produceReportsButton pressed");
 			
-			if (userTable.getSelectedRows().length > 0);
+			if (userTable.getSelectedRows().length > 0)
 			{
-				produceReports();
+				System.out.println(userTable.getSelectedRows().length);
+				runPrint();
 			}
 		}
 		else if (evt.getSource() == firstNameSearchTextField)
@@ -484,12 +491,77 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	private void produceReports()
 	{
 		int[] selectedRows = userTable.getSelectedRows();
+		reportPanels = new JPanel[selectedRows.length];
 		
-		for (int row : selectedRows)
+		for (int i = 0; i < selectedRows.length; i++)
 		{
+			int row = selectedRows[i];
+			
 			String selectedID = (String) userTable.getModel().getValueAt(row, 0); // Get the userID
 			User u = users.getUserByID(selectedID);
-			System.out.println(u.getQuestionStats());
+			QuestionStatList questionStats = u.getQuestionStats();
+			String[][] reportData = questionStats.produceReport(questions);
+			
+			reportPanels[i] = new Report(reportData, u.getUsername());
+		}
+	}
+	
+	public int print(Graphics g, PageFormat pf, int page) throws PrinterException 
+	{
+		if (page < reportPanels.length) 
+		{
+			JPanel report = reportPanels[page];
+			
+			JFrame reportFrame = new JFrame(); // Holds the report but is invisible
+			reportFrame.setSize(600,800);
+			reportFrame.add(report);
+			reportFrame.repaint();
+			reportFrame.pack();
+			report.setVisible(true);
+			
+			Graphics2D g2d = (Graphics2D)g;
+			g2d.translate(pf.getImageableX(), pf.getImageableY());
+			double scaleFactor = pf.getImageableWidth()/report.getWidth();
+			g2d.scale(scaleFactor, scaleFactor);
+
+			// Print the reportTablePanel
+			report.printAll(g);
+
+			return PAGE_EXISTS;
+		}
+		else
+		{
+			System.out.println("[INFO] <USER_PANEL> Printed reports");
+			return NO_SUCH_PAGE;
+		}
+
+	}
+	
+	private void runPrint()
+	{
+		System.out.println("[INFO] <USER_PANEL> Running runPrint");
+		
+		produceReports();
+		
+		PrinterJob job = PrinterJob.getPrinterJob();
+		
+		PageFormat pf = job.defaultPage();
+		pf.setOrientation(PageFormat.PORTRAIT); // Make the print job portrait
+		
+		job.setPrintable(this, pf);
+		
+		boolean doPrint = job.printDialog();
+		
+		if (doPrint)
+		{
+			try
+			{
+				job.print();
+			}
+			catch (PrinterException e)
+			{
+				System.out.println("[ERROR] <USER_PANEL> Error printing " + e);
+			}
 		}
 	}
 	
