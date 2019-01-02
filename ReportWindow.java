@@ -7,6 +7,10 @@ import javax.swing.table.*;
 
 import java.time.*;
 
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+
 public class ReportWindow extends JFrame implements ActionListener, Printable
 {
 	// For the table
@@ -16,9 +20,13 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 	private JScrollPane reportTableScrollPane;
 	private JPanel reportTablePanel = new JPanel(); // Stores the table
 	
+	private JPanel reportPreviewPanel = new JPanel();
+	
 	private JButton printButton = new JButton("Print");
 	
 	private String username; // The user's username
+	
+	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
 	public ReportWindow(String[][] tempReportData, String tempUsername)
 	{
@@ -39,12 +47,51 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		
 		this.setResizable(false);
 		
-		this.setSize(700,500);
+		this.setSize(600,800);
+		
+		prepareReportTable();
+		
+		reportPreviewPanel.setLayout(new GridLayout(1,1));
+		reportPreviewPanel.add(reportTablePanel);
+		
+		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Report preview");
+		Font currentFont = border.getTitleFont();
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
+		
+		reportPreviewPanel.setBorder(border); // Set the border
 		
 		
+		this.add(reportPreviewPanel, BorderLayout.CENTER);
+			
+		printButton.addActionListener(this);
+		printButton.setBackground(new Color(130,183,75)); // green
+		this.add(printButton, BorderLayout.SOUTH);
+
+		this.setVisible(true);
+		
+	}
+	
+	private void prepareReportTable()
+	{
 		reportTable = new JTable(reportData, tableHeaders); // Create a new table
 		reportTableScrollPane = new JScrollPane(reportTable);
 		
+		
+		// Make the background of the table white
+		reportTable.setOpaque(true);
+		reportTable.setFillsViewportHeight(true);
+		reportTable.setBackground(Color.WHITE);
+		
+		// Make it non selectable and non editable
+		reportTable.setFocusable(false);
+		reportTable.setRowSelectionAllowed(false);
+		reportTable.setEnabled(false);
+		
+		// Disable dragging of the columns and resizing
+		reportTable.getTableHeader().setReorderingAllowed(false);
+		reportTable.getTableHeader().setResizingAllowed(false);
 		
 		// Center the text in the cells
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -55,25 +102,19 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		reportTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		
 		reportTablePanel.setLayout(new BorderLayout());
+		reportTablePanel.setBackground(Color.WHITE);
 		reportTablePanel.add(reportTableScrollPane, BorderLayout.CENTER);
 		
 		
 		
 		reportTablePanel.add(createHeaderPanel(), BorderLayout.NORTH);
-		
-		this.add(reportTablePanel, BorderLayout.CENTER);
-			
-		printButton.addActionListener(this);
-		this.add(printButton, BorderLayout.SOUTH);
-
-		this.setVisible(true);
-		
 	}
 	
 	private JPanel createHeaderPanel()
 	{
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
+		headerPanel.setBackground(Color.WHITE);
 		
 		headerPanel.add(Box.createHorizontalStrut(10));
 		headerPanel.add(new JLabel(username + "\'s report"));
