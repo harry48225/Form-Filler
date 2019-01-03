@@ -524,13 +524,22 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 		else if (evt.getSource() == deleteButton)
 		{
-			/*
+			
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> deleteButton pressed"); // Debug
 			int row = formTable.getSelectedRow();
 			String  selectedFormID = formTable.getModel().getValueAt(row, 0).toString(); // Get the form id
+			String formTitle = formTable.getModel().getValueAt(row, 1).toString(); // Get the form title
 			
-			forms.removeForm(selectedFormID); // Remove the form
-			*/
+			int delete = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \"" + formTitle + "\"?" , "Are you sure?", JOptionPane.YES_NO_OPTION); // Confirm the delete
+			
+			if (delete == 0) // If they pressed yes
+			{
+				forms.removeForm(selectedFormID); // Remove the form
+				forms.writeDatabase();
+			}
+			
+			refreshTable();
+			
 		}
 		else if (evt.getSource() == attemptUserWeaknessesFormButton)
 		{
@@ -540,7 +549,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		else if (evt.getSource() == helpButton)
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> helpButton pressed");
-			JOptionPane.showMessageDialog(null,"This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. \r\n By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. \r\n You can filter and sort forms using the buttons on the right.");
+			JOptionPane.showMessageDialog(this,"This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. \r\n By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. \r\n You can filter and sort forms using the buttons on the right.");
 		}
 	}
 	
