@@ -363,7 +363,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			
 			if (editFormComboBox.getSelectedIndex() != 0)
 			{
-				Form formBeingEdited = forms.getTrimmedArray()[editFormComboBox.getSelectedIndex()];
+				Form formBeingEdited = forms.getTrimmedArray()[editFormComboBox.getSelectedIndex() - 1]; // Subtract 1 because at index 0 is the current form in the dropdown
 				
 				loadFormToBeEdited(formBeingEdited); // Load the form to be edited
 			}
@@ -426,8 +426,15 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		formID = formToEdit.getID();
 		formBeingCreated = new Form.FormBuilder(formID, questions);
-		formPreview.removeAll(); // Clear the formPreview
 		
+		formPreview.removeAll(); // Clear the formPreview
+		formPreview.revalidate();
+		formPreview.repaint();
+		
+		// Empty the questionPreviewPanel array
+		questionPreviews = new JPanel[50];
+		nextQuestionPreviewLocation = 0;
+	
 		for (String question : formToEdit.getQuestionIDs()) // For each question currently in the form
 		{
 			addComponentToForm(question); // Add the question to the form preview
