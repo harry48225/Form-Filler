@@ -331,7 +331,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		if (errorString != "") // If the user failed to fill something in
 		{
-			JOptionPane.showMessageDialog(null, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return errorString == "";
@@ -339,7 +339,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void addHeader()
 	{
-		String headerText = JOptionPane.showInputDialog(null, "Please enter a header");
+		String headerText = JOptionPane.showInputDialog(this, "Please enter a header");
 		// The input dialog will return null if the user pressed cancel
 		// If this happens we should stop adding the new header
 		if (headerText != null & !headerText.isEmpty()) // If they pressed ok and typed something
@@ -370,7 +370,31 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		else if (evt.getSource() == addQuestionButton)
 		{
-			addComponentToForm(selectionPanel.getSelectedQuestionID());
+			String selectedQuestionID = selectionPanel.getSelectedQuestionID();
+			
+			if (selectedQuestionID != null)
+			{
+				boolean inForm = false;
+				
+				for (int i = 0; i < nextQuestionPreviewLocation; i++)
+				{
+					if (questionPreviews[i].getName().equals(selectedQuestionID))
+					{
+						inForm = true;
+						break;
+					}
+				}
+				
+				if (inForm)
+				{
+					JOptionPane.showMessageDialog(this, "You may only add each question to a form once.", "Question already in form!", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				else
+				{
+					addComponentToForm(selectedQuestionID);
+				}
+			}
 		}
 		else if (evt.getSource() == addHeaderButton)
 		{
