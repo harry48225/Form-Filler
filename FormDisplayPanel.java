@@ -190,6 +190,17 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void prepareTable()
 	{
+		formTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
+		formTable.setDefaultEditor(Object.class, null); // Disable editing
+		// Make double clicking on a row open that question to be attempted.
+		formTable.addMouseListener(new MouseAdapter() {
+							public void mousePressed(MouseEvent mouseEvent) {
+								JTable table =(JTable) mouseEvent.getSource();
+								if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+									attemptButton.doClick();
+								}
+							}
+						});
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
 
@@ -514,8 +525,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> attemptButton pressed"); // Debug
 			int row = formTable.getSelectedRow();
-			Form selectedForm = forms.getFormByID(formTable.getModel().getValueAt(row, 0).toString()); // Get the form id and get the form
-			gui.openForm(selectedForm); // Open the form
+			if (row != -1) // If a row was actually selected
+			{
+				Form selectedForm = forms.getFormByID(formTable.getModel().getValueAt(row, 0).toString()); // Get the form id and get the form
+				gui.openForm(selectedForm); // Open the form
+			}
 		}
 		else if (evt.getSource() == resetButton)
 		{
@@ -527,19 +541,22 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 			
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> deleteButton pressed"); // Debug
 			int row = formTable.getSelectedRow();
-			String  selectedFormID = formTable.getModel().getValueAt(row, 0).toString(); // Get the form id
-			String formTitle = formTable.getModel().getValueAt(row, 1).toString(); // Get the form title
 			
-			int delete = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \"" + formTitle + "\"?" , "Are you sure?", JOptionPane.YES_NO_OPTION); // Confirm the delete
-			
-			if (delete == 0) // If they pressed yes
+			if (row != -1) // If a row was actually selected
 			{
-				forms.removeForm(selectedFormID); // Remove the form
-				forms.writeDatabase();
+				String  selectedFormID = formTable.getModel().getValueAt(row, 0).toString(); // Get the form id
+				String formTitle = formTable.getModel().getValueAt(row, 1).toString(); // Get the form title
+				
+				int delete = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \"" + formTitle + "\"?" , "Are you sure?", JOptionPane.YES_NO_OPTION); // Confirm the delete
+				
+				if (delete == 0) // If they pressed yes
+				{
+					forms.removeForm(selectedFormID); // Remove the form
+					forms.writeDatabase();
+				}
+				
+				refreshTable();
 			}
-			
-			refreshTable();
-			
 		}
 		else if (evt.getSource() == attemptUserWeaknessesFormButton)
 		{
