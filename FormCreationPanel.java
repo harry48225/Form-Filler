@@ -326,7 +326,27 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		if (formDifficultyCombobox.getSelectedIndex() == 0)
 		{
-			errorString += "Please select a difficulty";
+			errorString += "Please select a difficulty. ";
+		}
+		
+		// Check to see if there any questions in the form
+		boolean anyQuestions = false;
+		
+		for (int i = 0; i < nextQuestionPreviewLocation; i++)
+		{
+			String questionID = questionPreviews[i].getName();
+			boolean isAQuestion = questions.getQuestionByID(questionID) != null; // If a question is returned then the component is a question
+			
+			if (isAQuestion)
+			{
+				anyQuestions = true;
+				break;
+			}
+		}
+		
+		if (!anyQuestions) // If there are no questions in the form
+		{
+			errorString += "Please add at least 1 question. ";	
 		}
 		
 		if (errorString != "") // If the user failed to fill something in
