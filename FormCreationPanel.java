@@ -159,11 +159,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		String[] formIDs = new String[formArray.length + 1]; // Create an array to store the ids
 		
-		formIDs[0] = "Creating new form: " + formID; // Default entry for when a form hasn't been selected to edit
+		formIDs[0] = "Creating new form"; // Default entry for when a form hasn't been selected to edit
 		
 		for (int i = 0; i < formArray.length; i++) // For each form
 		{
-			formIDs[i+1] = formArray[i].getID() + ": " + formArray[i].getTitle();
+			formIDs[i+1] = formArray[i].getTitle();
 		}
 		
 		DefaultComboBoxModel model = new DefaultComboBoxModel(formIDs);
