@@ -48,7 +48,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	// Edit form panel
 	private JPanel editFormPanel = new JPanel();
 	private JLabel editFormLabel = new JLabel("Select a form to edit");
-	private JComboBox<String> editFormComboBox;
+	private JComboBox<String> editFormComboBox = new JComboBox<String>();
 	private JButton editFormButton = new JButton("Edit");
 	
 	// General buttons
@@ -79,6 +79,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	public void refreshTable()
 	{
 		selectionPanel.refreshTable();
+		refreshEditFormDropdown();
+		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private void prepareGUI()
@@ -147,8 +151,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formInformationPanel.add(descriptionPanel);
 	}
 	
-	private void prepareEditPanel()
+	private void refreshEditFormDropdown()
 	{
+		System.out.println("[INFO] <FORM_CREATION_PANEL> Running refreshEditFormDropdown");
 		
 		Form[] formArray = forms.getTrimmedArray(); // Get the array of forms
 		
@@ -161,7 +166,14 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			formIDs[i+1] = formArray[i].getID() + ": " + formArray[i].getTitle();
 		}
 		
-		editFormComboBox = new JComboBox<String>(formIDs); // Fill the combobox with the ids
+		DefaultComboBoxModel model = new DefaultComboBoxModel(formIDs);
+		
+		editFormComboBox.setModel(model);
+	}
+	
+	private void prepareEditPanel()
+	{
+		refreshEditFormDropdown();
 		
 		editFormPanel.setLayout(new BoxLayout(editFormPanel, BoxLayout.LINE_AXIS)); // Only 1 row
 		
@@ -292,6 +304,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			{
 				forms.writeDatabase(); 
 				JOptionPane.showMessageDialog(null, "Form saved!");
+				
+				refreshEditFormDropdown();
 			}
 		}
 		
