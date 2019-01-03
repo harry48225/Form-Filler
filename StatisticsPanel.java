@@ -93,7 +93,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		
 		// Add the report button
 		produceReportButton.addActionListener(this);
-		produceReportButton.setBackground(new Color(130,183,75));
+		produceReportButton.setBackground(new Color(130,183,75)); // green
 		leftSide.add(produceReportButton, BorderLayout.SOUTH);
 		
 		mainPanel.add(leftSide);
