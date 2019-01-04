@@ -45,11 +45,11 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		
 		this.setLayout(new BorderLayout());
 		
-		this.setLocationRelativeTo(null); // Center it
 		
 		this.setResizable(false);
 		
 		this.setSize(600,800);
+		this.setLocationRelativeTo(null); // Center it
 		
 		reportTablePanel = new Report(reportData, username);
 		
