@@ -124,6 +124,7 @@ public class SelectFormsPanel extends JPanel implements ActionListener, TableCol
 	private void prepareTable()
 	{
 		formTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
+		formTable.setDefaultEditor(Object.class, null); // Disable editing
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
 
