@@ -245,7 +245,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		saveFormButton.addActionListener(this);
 		
-
 		this.setVisible(true);
 	}
 
@@ -298,14 +297,22 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 			forms.addForm(formBeingCreated.build()); // Add the form to the list
 		
-			int save = JOptionPane.showConfirmDialog(null, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+			int save = JOptionPane.showConfirmDialog(this, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+			
+			refreshEditFormDropdown();
 		
 			if (save == 0) // If they selected yes
 			{
 				forms.writeDatabase(); 
-				JOptionPane.showMessageDialog(null, "Form saved!");
+				JOptionPane.showMessageDialog(this, "Form saved!");
 				
-				refreshEditFormDropdown();
+			}
+				
+			int reset = JOptionPane.showConfirmDialog(this, "Would you like to reset the panel?", "Reset?", JOptionPane.YES_NO_OPTION); // Ask if they want to reset the form creation panel
+			
+			if (reset == 0)
+			{
+				gui.resetTab(this); // Reset the tab
 			}
 		}
 		
