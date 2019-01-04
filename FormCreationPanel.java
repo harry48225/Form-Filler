@@ -251,8 +251,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		this.add(entryContainerPanel);
 		this.add(formPreviewScroller);
 		
-		saveFormButton.addActionListener(this);
-		
 		this.setVisible(true);
 	}
 
