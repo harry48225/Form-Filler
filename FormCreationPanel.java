@@ -55,6 +55,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	private JButton addHeaderButton = new JButton("Add header");
 	private JButton resetFormButton = new JButton("Reset Form");
 	private JButton saveFormButton = new JButton("Save Form");
+	private JPanel buttonPanel = new JPanel();
 	
 	private ImageIcon deleteIcon;
 	private ImageIcon requiredIcon;
@@ -195,6 +196,31 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		editFormPanel.setBorder(border);
 	}
 	
+	private void prepareButtonPanel()
+	{
+		buttonPanel.setLayout(new GridLayout(3,1)); // 3 rows 1 column
+		
+		buttonPanel.setMaximumSize(new Dimension(10000, 180));
+	
+
+		// Make the buttons the correct colours
+		addHeaderButton.setBackground(new Color(169,196,235));
+		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
+		resetFormButton.setForeground(Color.WHITE);
+		saveFormButton.setBackground(new Color(130,183,75)); // Make the button green
+		
+		// Add action listeners
+		addHeaderButton.addActionListener(this);
+		resetFormButton.addActionListener(this);
+		saveFormButton.addActionListener(this);
+		
+		
+		// Add them to the panel
+		buttonPanel.add(addHeaderButton);
+		buttonPanel.add(resetFormButton);
+		buttonPanel.add(saveFormButton);
+	}
+	
 	private void prepareMainPanel()
 	{
 		
@@ -215,27 +241,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		entryContainerPanel.add(selectionPanel);
 		
-		addHeaderButton.addActionListener(this);
-		addHeaderButton.setBackground(new Color(169,196,235));
-		addHeaderButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		addHeaderButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
+		prepareButtonPanel();
 		
-		entryContainerPanel.add(addHeaderButton);
-		entryContainerPanel.add(Box.createVerticalGlue());
-		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
-		resetFormButton.setForeground(Color.WHITE);
-		resetFormButton.addActionListener(this);
-		resetFormButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		resetFormButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		
-		entryContainerPanel.add(resetFormButton);
-		entryContainerPanel.add(Box.createVerticalGlue());
-		
-		saveFormButton.setBackground(new Color(130,183,75)); // Make the button green
-		saveFormButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		saveFormButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		
-		entryContainerPanel.add(saveFormButton);
+		entryContainerPanel.add(buttonPanel);
 		
 		prepareFormPreview();
 
