@@ -48,13 +48,14 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	// Edit form panel
 	private JPanel editFormPanel = new JPanel();
 	private JLabel editFormLabel = new JLabel("Select a form to edit");
-	private JComboBox<String> editFormComboBox;
+	private JComboBox<String> editFormComboBox = new JComboBox<String>();
 	private JButton editFormButton = new JButton("Edit");
 	
 	// General buttons
 	private JButton addHeaderButton = new JButton("Add header");
 	private JButton resetFormButton = new JButton("Reset Form");
 	private JButton saveFormButton = new JButton("Save Form");
+	private JPanel buttonPanel = new JPanel();
 	
 	private ImageIcon deleteIcon;
 	private ImageIcon requiredIcon;
@@ -79,6 +80,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	public void refreshTable()
 	{
 		selectionPanel.refreshTable();
+		refreshEditFormDropdown();
+		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private void prepareGUI()
@@ -147,21 +152,29 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formInformationPanel.add(descriptionPanel);
 	}
 	
-	private void prepareEditPanel()
+	private void refreshEditFormDropdown()
 	{
+		System.out.println("[INFO] <FORM_CREATION_PANEL> Running refreshEditFormDropdown");
 		
 		Form[] formArray = forms.getTrimmedArray(); // Get the array of forms
 		
 		String[] formIDs = new String[formArray.length + 1]; // Create an array to store the ids
 		
-		formIDs[0] = "Creating new form: " + formID; // Default entry for when a form hasn't been selected to edit
+		formIDs[0] = "Creating new form"; // Default entry for when a form hasn't been selected to edit
 		
 		for (int i = 0; i < formArray.length; i++) // For each form
 		{
-			formIDs[i+1] = formArray[i].getID() + ": " + formArray[i].getTitle();
+			formIDs[i+1] = formArray[i].getTitle();
 		}
 		
-		editFormComboBox = new JComboBox<String>(formIDs); // Fill the combobox with the ids
+		DefaultComboBoxModel model = new DefaultComboBoxModel(formIDs);
+		
+		editFormComboBox.setModel(model);
+	}
+	
+	private void prepareEditPanel()
+	{
+		refreshEditFormDropdown();
 		
 		editFormPanel.setLayout(new BoxLayout(editFormPanel, BoxLayout.LINE_AXIS)); // Only 1 row
 		
@@ -181,6 +194,31 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
 		editFormPanel.setBorder(border);
+	}
+	
+	private void prepareButtonPanel()
+	{
+		buttonPanel.setLayout(new GridLayout(3,1)); // 3 rows 1 column
+		
+		buttonPanel.setMaximumSize(new Dimension(10000, 180));
+	
+
+		// Make the buttons the correct colours
+		addHeaderButton.setBackground(new Color(169,196,235));
+		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
+		resetFormButton.setForeground(Color.WHITE);
+		saveFormButton.setBackground(new Color(130,183,75)); // Make the button green
+		
+		// Add action listeners
+		addHeaderButton.addActionListener(this);
+		resetFormButton.addActionListener(this);
+		saveFormButton.addActionListener(this);
+		
+		
+		// Add them to the panel
+		buttonPanel.add(addHeaderButton);
+		buttonPanel.add(resetFormButton);
+		buttonPanel.add(saveFormButton);
 	}
 	
 	private void prepareMainPanel()
@@ -203,27 +241,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		entryContainerPanel.add(selectionPanel);
 		
-		addHeaderButton.addActionListener(this);
-		addHeaderButton.setBackground(new Color(169,196,235));
-		addHeaderButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		addHeaderButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
+		prepareButtonPanel();
 		
-		entryContainerPanel.add(addHeaderButton);
-		entryContainerPanel.add(Box.createVerticalGlue());
-		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
-		resetFormButton.setForeground(Color.WHITE);
-		resetFormButton.addActionListener(this);
-		resetFormButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		resetFormButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		
-		entryContainerPanel.add(resetFormButton);
-		entryContainerPanel.add(Box.createVerticalGlue());
-		
-		saveFormButton.setBackground(new Color(130,183,75)); // Make the button green
-		saveFormButton.setMaximumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		saveFormButton.setMinimumSize(new Dimension(10000, 30)); // Large width to ensure that it fills the screen horizontally
-		
-		entryContainerPanel.add(saveFormButton);
+		entryContainerPanel.add(buttonPanel);
 		
 		prepareFormPreview();
 
@@ -231,9 +251,6 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		this.add(entryContainerPanel);
 		this.add(formPreviewScroller);
 		
-		saveFormButton.addActionListener(this);
-		
-
 		this.setVisible(true);
 	}
 
@@ -286,12 +303,22 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 			forms.addForm(formBeingCreated.build()); // Add the form to the list
 		
-			int save = JOptionPane.showConfirmDialog(null, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+			int save = JOptionPane.showConfirmDialog(this, "Form added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+			
+			refreshEditFormDropdown();
 		
 			if (save == 0) // If they selected yes
 			{
 				forms.writeDatabase(); 
-				JOptionPane.showMessageDialog(null, "Form saved!");
+				JOptionPane.showMessageDialog(this, "Form saved!");
+				
+			}
+				
+			int reset = JOptionPane.showConfirmDialog(this, "Would you like to reset the panel?", "Reset?", JOptionPane.YES_NO_OPTION); // Ask if they want to reset the form creation panel
+			
+			if (reset == 0)
+			{
+				gui.resetTab(this); // Reset the tab
 			}
 		}
 		
@@ -312,12 +339,32 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		if (formDifficultyCombobox.getSelectedIndex() == 0)
 		{
-			errorString += "Please select a difficulty";
+			errorString += "Please select a difficulty. ";
+		}
+		
+		// Check to see if there any questions in the form
+		boolean anyQuestions = false;
+		
+		for (int i = 0; i < nextQuestionPreviewLocation; i++)
+		{
+			String questionID = questionPreviews[i].getName();
+			boolean isAQuestion = questions.getQuestionByID(questionID) != null; // If a question is returned then the component is a question
+			
+			if (isAQuestion)
+			{
+				anyQuestions = true;
+				break;
+			}
+		}
+		
+		if (!anyQuestions) // If there are no questions in the form
+		{
+			errorString += "Please add at least 1 question. ";	
 		}
 		
 		if (errorString != "") // If the user failed to fill something in
 		{
-			JOptionPane.showMessageDialog(null, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return errorString == "";
@@ -325,7 +372,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void addHeader()
 	{
-		String headerText = JOptionPane.showInputDialog(null, "Please enter a header");
+		String headerText = JOptionPane.showInputDialog(this, "Please enter a header");
 		// The input dialog will return null if the user pressed cancel
 		// If this happens we should stop adding the new header
 		if (headerText != null & !headerText.isEmpty()) // If they pressed ok and typed something
@@ -349,15 +396,38 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			
 			if (editFormComboBox.getSelectedIndex() != 0)
 			{
-				String selectedFormID = ((String) editFormComboBox.getSelectedItem()).split(":")[0]; // Get the id
-				Form formBeingEdited = forms.getFormByID(selectedFormID); // Get the selected form
+				Form formBeingEdited = forms.getTrimmedArray()[editFormComboBox.getSelectedIndex() - 1]; // Subtract 1 because at index 0 is the current form in the dropdown
 				
 				loadFormToBeEdited(formBeingEdited); // Load the form to be edited
 			}
 		}
 		else if (evt.getSource() == addQuestionButton)
 		{
-			addComponentToForm(selectionPanel.getSelectedQuestionID());
+			String selectedQuestionID = selectionPanel.getSelectedQuestionID();
+			
+			if (selectedQuestionID != null)
+			{
+				boolean inForm = false;
+				
+				for (int i = 0; i < nextQuestionPreviewLocation; i++)
+				{
+					if (questionPreviews[i].getName().equals(selectedQuestionID))
+					{
+						inForm = true;
+						break;
+					}
+				}
+				
+				if (inForm)
+				{
+					JOptionPane.showMessageDialog(this, "You may only add each question to a form once.", "Question already in form!", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				else
+				{
+					addComponentToForm(selectedQuestionID);
+				}
+			}
 		}
 		else if (evt.getSource() == addHeaderButton)
 		{
@@ -413,8 +483,15 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		formID = formToEdit.getID();
 		formBeingCreated = new Form.FormBuilder(formID, questions);
-		formPreview.removeAll(); // Clear the formPreview
 		
+		formPreview.removeAll(); // Clear the formPreview
+		formPreview.revalidate();
+		formPreview.repaint();
+		
+		// Empty the questionPreviewPanel array
+		questionPreviews = new JPanel[50];
+		nextQuestionPreviewLocation = 0;
+	
 		for (String question : formToEdit.getQuestionIDs()) // For each question currently in the form
 		{
 			addComponentToForm(question); // Add the question to the form preview

@@ -25,6 +25,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private JTabbedPane tabs = new JTabbedPane(); // To store the different sections of the program
 	
+	private List<Image> icons;
+	
 	public GUI() // Constructor
 	{
 		setup(); // Run the setup method
@@ -42,7 +44,9 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		users = new UserList();
 		
-		new LoginFrame(users, getIcons(), this);
+		getIcons();
+		
+		new LoginFrame(users, icons, this);
 		
 	}
 	
@@ -79,7 +83,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		prepareGUI();
 	}
-	private List<Image> getIcons()
+	private void getIcons()
 	{
 		List<Image> images = new ArrayList<Image>();
 		
@@ -90,14 +94,14 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		images.add(new ImageIcon("icons/icon-96.png").getImage());
 		images.add(new ImageIcon("icons/icon-240.png").getImage());
 		
-		return images;
+		icons = images;
 	}
 	
 	private void prepareGUI()
 	{
 		this.setTitle("Form Filler");
 		
-		this.setIconImages(getIcons());
+		this.setIconImages(icons);
 		this.setSize(1200,700);
 		this.setMinimumSize(new Dimension(900,600));
 		this.setLayout(new GridLayout(1,1)); // Only 1 row and 1 column as it'll only store panels
@@ -115,7 +119,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
 			tabs.add("Users", new UserPanel(users, this, questions));
 		}
-		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
+		tabs.add("Statistics", new StatisticsPanel(currentUser, questions, icons));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
 		
 		tabs.addChangeListener(this);
@@ -162,7 +166,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		}
 		
 		formsInProgress.setMostRecentAttempted(f.getID());
-		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
+		new FormDisplayer(f, formComponents, currentUser, users, this, questions, icons); // Open the form
 		
 	}
 	
@@ -282,14 +286,14 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void decryptUserdatabase()
 	{
-		String key = JOptionPane.showInputDialog("Please enter a key to decrypt the database");
+		String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
 		if (key != null)
 		{
 			users.loadSensitiveDatabase(key);
 			
 			if (!users.isDecrypted()) // If the database was not successfully decrypted
 			{
-				JOptionPane.showMessageDialog(null, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		
@@ -355,14 +359,12 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			decryptUserdatabase();
 			
-			if (users.isDecrypted()) // If the decryption was successful
-			{
-				new Register(users);
-			}
 		}
-		else
+		
+		if (users.isDecrypted()) // If the decryption was successful
 		{
-			new Register(users);
+			new Register(users, icons);
 		}
+		
 	}
 }

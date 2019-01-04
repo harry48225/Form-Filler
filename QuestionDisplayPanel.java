@@ -177,6 +177,18 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTable()
 	{
+		
+		questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
+		questionTable.setDefaultEditor(Object.class, null); // Disable editing
+		// Make double clicking on a row open that question to be attempted.
+		questionTable.addMouseListener(new MouseAdapter() {
+							public void mousePressed(MouseEvent mouseEvent) {
+								JTable table =(JTable) mouseEvent.getSource();
+								if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+									attemptButton.doClick();
+								}
+							}
+						});
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
 
@@ -460,8 +472,12 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> attemptButton pressed"); // Debug
 			int row = questionTable.getSelectedRow();
-			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
-			openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
+			
+			if (row != -1) // If a question has been selected
+			{
+				String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
+				openQuestionInWindow(questionTable.getModel().getValueAt(row, 0).toString()); // Get the id of the question in the selected row and open a window
+			}
 		}
 		else if (evt.getSource() == deleteButton)
 		{

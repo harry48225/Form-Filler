@@ -449,7 +449,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			
 			if (errorString != "") // If the user failed to fill something in
 			{
-				JOptionPane.showMessageDialog(null, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
 			}
 			else // They entered everything correctly
 			{
@@ -463,14 +463,14 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 				questionPanelBeingCreated = questionPanelBeingCreated.add(questionComponents[0]).add(questionComponents[1]);
 				questions.addQuestion(questionBeingCreated, questionPanelBeingCreated.build()); // Add the question being created along with the question panel to the database
 			
-				int save = JOptionPane.showConfirmDialog(null, "Question added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
+				int save = JOptionPane.showConfirmDialog(this, "Question added! Would you like to save?", "Save?", JOptionPane.YES_NO_OPTION); // Ask if they want to save
 				
 				if (save == 0) // If they selected yes
 				{
 					questions.writeDatabase();
 					
 					
-					JOptionPane.showMessageDialog(null, "Question saved!");
+					JOptionPane.showMessageDialog(this, "Question saved!");
 				}
 				
 				gui.resetTab(this); // Reset the questionCreationPanel
@@ -490,7 +490,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			{
 				if (labelTextField.getText().isEmpty())
 				{
-					JOptionPane.showMessageDialog(null, "Please enter some text for the label to have before continuing", "No label text", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Please enter some text for the label to have before continuing", "No label text", JOptionPane.ERROR_MESSAGE);
 				}
 				else
 				{
@@ -502,7 +502,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			{
 				if (questionComponents[1] == null) // If no component has been added
 				{
-					JOptionPane.showMessageDialog(null, "Please add a component before continuing", "No component", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Please add a component before continuing", "No component", JOptionPane.ERROR_MESSAGE);
 				}
 				else
 				{
@@ -527,7 +527,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addNewType()
 	{
-		type = JOptionPane.showInputDialog("What's the question's type?"); // Get the type
+		type = JOptionPane.showInputDialog(this, "What's the question's type?"); // Get the type
 		questions.addType(type); // Add the type to the type list
 		updateTypeComboBox();
 		questionTypeCombobox.setSelectedIndex(questions.getTypes().length); // Select the most recently added type
@@ -575,7 +575,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addTextField"); // Debug
 		
 		Object[] possibilities = {"none", "phone", "email"};
-		String s = (String)JOptionPane.showInputDialog(null,"What validation is required?",
+		String s = (String)JOptionPane.showInputDialog(this,"What validation is required?",
 					"Validation?",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
@@ -600,7 +600,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addFileChooser"); // Debug
 
 		Object[] possibilities = {"all", "image", "document", "video"};
-		String userChoice = (String)JOptionPane.showInputDialog(null,"What types of files should be accepted?",
+		String userChoice = (String)JOptionPane.showInputDialog(this,"What types of files should be accepted?",
 					"Validation?",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
@@ -691,38 +691,6 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addComponent(new JValidatedDatePicker());
 	}
 	
-	private String[] getOptions() // Gets a list of options from the user
-	{
-		
-		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running getOptions"); // Debug
-		
-		int finished = 0; // To be used with a confirmationDialog. Stores whether the user is finished adding options
-		
-		int nextOptionLocation = 0; // Store the next free space in the options array
-		
-		String[] tempOptions = new String[100]; // To store the options for the combobox
-	
-		while (finished == 0)
-		{
-			String option = JOptionPane.showInputDialog("Enter an option"); // Get an option
-		
-			tempOptions[nextOptionLocation] = option; // Store the option
-			
-			nextOptionLocation++;
-			
-			finished = JOptionPane.showConfirmDialog(null, "Would you like to add any more options?", "Finished?", JOptionPane.YES_NO_OPTION); // Returns 1 if they press no
-		}
-		
-		String[] options = new String[nextOptionLocation]; // Create an array of the exact size required
-		
-		for (int i = 0; i < nextOptionLocation; i++)
-		{
-			options[i] = tempOptions[i]; // Copy across the options
-		}
-		
-		return options;
-	}
-	
 	private void updatePreview()
 	{
 		questionPreview.removeAll();
@@ -756,16 +724,9 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private boolean showEnterOptionsPanel() // Shows the enter options panel to the user and returns true if they didn't press cancel
 	{
-		int result = JOptionPane.showConfirmDialog(null, optionEntry, "Enter options", 
+		int result = JOptionPane.showConfirmDialog(this, optionEntry, "Enter options", 
 																		JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 																		
 		return result == JOptionPane.YES_OPTION && optionEntry.getOptions().length > 0; // Return true if they pressed ok and entered at least 1 option
 	}
-	private void getFinalDetails() // Gets the type and difficulty of the question from the user
-	{
-		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running getFinalDetails"); // Debug
-		//getType();
-		difficulty = Integer.parseInt(JOptionPane.showInputDialog("What's the question's difficulty?")); // Get the question's difficulty
-	}
-	
 }

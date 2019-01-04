@@ -121,6 +121,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	private void prepareTable()
 	{
 		questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
+		questionTable.setDefaultEditor(Object.class, null); // Disable editing
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
 
@@ -177,7 +178,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	public String getSelectedQuestionID()
 	{
 		int row = questionTable.getSelectedRow();
-		return row == -1 ? null:questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question in the selected row
+		return row == -1 ? null : questionTable.getModel().getValueAt(row, 0).toString(); // return null if no question is selected or the question id if a question is selected.
 	}
 	
 	private void resizeRows()
