@@ -7,6 +7,8 @@ import javax.swing.table.*;
 
 import java.time.*;
 
+import java.util.List;
+
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
@@ -25,11 +27,12 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 	
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public ReportWindow(String[][] tempReportData, String tempUsername)
+	public ReportWindow(String[][] tempReportData, String tempUsername, List<Image> icons)
 	{
 		reportData = tempReportData;
 		username = tempUsername;
 		
+		this.setIconImages(icons);
 		prepareGUI();
 	}
 	
@@ -41,6 +44,8 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		this.setTitle(username + "\'s report");
 		
 		this.setLayout(new BorderLayout());
+		
+		this.setLocationRelativeTo(null); // Center it
 		
 		this.setResizable(false);
 		

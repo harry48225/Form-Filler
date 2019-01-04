@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 
+import java.util.List;
+
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
@@ -23,6 +25,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 {
 	private User currentUser;
 	private QuestionStatList questionStats;
+	private List<Image> icons;
 	
 	private QuestionList questions;
 	
@@ -47,11 +50,12 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private ValidationChart validationChart;
 	private Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED); // Border style
 	
-	public StatisticsPanel(User tempUser, QuestionList tempQuestions)
+	public StatisticsPanel(User tempUser, QuestionList tempQuestions, List<Image> tempIcons)
 	{
 		currentUser = tempUser;
 		questionStats = currentUser.getQuestionStats();
 		questions = tempQuestions;
+		icons = tempIcons;
 		
 		prepareGUI();
 	}
@@ -167,7 +171,7 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		
 		String[][] reportData = questionStats.produceReport(questions);
 		
-		new ReportWindow(reportData, currentUser.getUsername()); // Open a report window
+		new ReportWindow(reportData, currentUser.getUsername(), icons); // Open a report window
 	}
 	
 	public void actionPerformed(ActionEvent evt)

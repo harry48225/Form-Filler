@@ -119,7 +119,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			tabs.add("Create forms", new FormCreationPanel(questions, forms, this));
 			tabs.add("Users", new UserPanel(users, this, questions));
 		}
-		tabs.add("Statistics", new StatisticsPanel(currentUser, questions));
+		tabs.add("Statistics", new StatisticsPanel(currentUser, questions, icons));
 		tabs.add("Import and Export", new ImportExportPanel(questions, forms));
 		
 		tabs.addChangeListener(this);
