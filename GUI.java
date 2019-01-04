@@ -359,14 +359,12 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		{
 			decryptUserdatabase();
 			
-			if (users.isDecrypted()) // If the decryption was successful
-			{
-				new Register(users);
-			}
 		}
-		else
+		
+		if (users.isDecrypted()) // If the decryption was successful
 		{
-			new Register(users);
+			new Register(users, icons);
 		}
+		
 	}
 }

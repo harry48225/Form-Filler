@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 import java.time.*;
 import java.util.Date;
+import java.util.List;
 
 public class Register extends JFrame implements ActionListener
 {
@@ -15,10 +16,11 @@ public class Register extends JFrame implements ActionListener
 	
 	private JButton saveButton = new JButton("Save register");
 	
-	public Register(UserList tempUsers)
+	public Register(UserList tempUsers, List<Image> icons)
 	{
 		users = tempUsers;
 		
+		this.setIconImages(icons);
 		prepareGUI();
 	}
 	
@@ -29,6 +31,7 @@ public class Register extends JFrame implements ActionListener
 		this.setLayout(new BorderLayout());
 		this.setSize(300,400);
 		this.setMinimumSize(new Dimension(300,400));
+		this.setLocationRelativeTo(null); // Center it
 		
 		this.setTitle("Register");
 		
