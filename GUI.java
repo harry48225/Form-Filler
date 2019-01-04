@@ -25,6 +25,8 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private JTabbedPane tabs = new JTabbedPane(); // To store the different sections of the program
 	
+	private List<Image> icons;
+	
 	public GUI() // Constructor
 	{
 		setup(); // Run the setup method
@@ -42,7 +44,9 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		users = new UserList();
 		
-		new LoginFrame(users, getIcons(), this);
+		getIcons();
+		
+		new LoginFrame(users, icons, this);
 		
 	}
 	
@@ -79,7 +83,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		prepareGUI();
 	}
-	private List<Image> getIcons()
+	private void getIcons()
 	{
 		List<Image> images = new ArrayList<Image>();
 		
@@ -90,14 +94,14 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		images.add(new ImageIcon("icons/icon-96.png").getImage());
 		images.add(new ImageIcon("icons/icon-240.png").getImage());
 		
-		return images;
+		icons = images;
 	}
 	
 	private void prepareGUI()
 	{
 		this.setTitle("Form Filler");
 		
-		this.setIconImages(getIcons());
+		this.setIconImages(icons);
 		this.setSize(1200,700);
 		this.setMinimumSize(new Dimension(900,600));
 		this.setLayout(new GridLayout(1,1)); // Only 1 row and 1 column as it'll only store panels
@@ -162,7 +166,7 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		}
 		
 		formsInProgress.setMostRecentAttempted(f.getID());
-		new FormDisplayer(f, formComponents, currentUser, users, this, questions); // Open the form
+		new FormDisplayer(f, formComponents, currentUser, users, this, questions, icons); // Open the form
 		
 	}
 	

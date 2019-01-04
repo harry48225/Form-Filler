@@ -5,12 +5,14 @@ import java.awt.event.*;
 import components.*;
 
 import java.util.*;
+import java.util.List;
 
 public class FormDisplayer extends JFrame implements ActionListener, MouseListener, WindowListener
 {
 	
 	private Form form;
 	private JPanel[] components;
+	private List<Image> icons;
 	
 	private JPanel[] pages;
 	private int currentPage = 0;
@@ -48,7 +50,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	
 	private ImageIcon requiredIcon;
 	
-	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
+	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions, List<Image> tempIcons)
 	{
 		form = tempF;
 		questions = tempQuestions;
@@ -56,6 +58,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		currentUser = tempU;
 		users = tempUserList;
 		gui = tempGUI;
+		icons = tempIcons;
 		
 		int numberOfQuestions = form.getQuestionIDs().length;
 		
@@ -171,7 +174,10 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		this.setLayout(new GridLayout(1,1)); // Set a grid layout
 		this.setSize(600,800); // Set the size
+		this.setLocationRelativeTo(null); // Center it
+		this.setIconImages(icons); // Set the icon to the form filler icons
 		this.setMinimumSize(new Dimension(600,800)); // Set the size
+		this.setTitle(form.getTitle());
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)); // Set a box layout
