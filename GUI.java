@@ -286,14 +286,14 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	
 	private void decryptUserdatabase()
 	{
-		String key = JOptionPane.showInputDialog("Please enter a key to decrypt the database");
+		String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
 		if (key != null)
 		{
 			users.loadSensitiveDatabase(key);
 			
 			if (!users.isDecrypted()) // If the database was not successfully decrypted
 			{
-				JOptionPane.showMessageDialog(null, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		

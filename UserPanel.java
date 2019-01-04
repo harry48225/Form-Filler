@@ -258,7 +258,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		users.addUser(new User(id,username,password,firstName,lastName,dateOfBirth,phoneNumber, false, new String[0], new QuestionStatList()));
 		
-		JOptionPane.showMessageDialog(null, "User added!");
+		JOptionPane.showMessageDialog(this, "User added!");
 		
 		populateTable(users.getArray());
 	}
@@ -288,19 +288,19 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			User otherUser = users.getUserByUsername(newUsername);
 			if (otherUser != null && otherUser != u) // If the username is already taken
 			{
-				JOptionPane.showMessageDialog(null, u.getFirstName() + " username already in use.", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, u.getFirstName() + " username already in use.", "Error saving changes", JOptionPane.ERROR_MESSAGE);
 				return; // Exit the method
 			}
 			
 			if (!validateDate(newDateOfBirth))
 			{
-				JOptionPane.showMessageDialog(null, u.getFirstName() + ": Invaid date of birth", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, u.getFirstName() + ": Invaid date of birth", "Error saving changes", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			if (!validatePhoneNumber(newPhoneNumber))
 			{
-				JOptionPane.showMessageDialog(null, u.getFirstName() + ": Invaid phone number", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, u.getFirstName() + ": Invaid phone number", "Error saving changes", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -310,7 +310,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 				{
 					if (!validateDate(session)) // If one of the dates is incorrect
 					{
-						JOptionPane.showMessageDialog(null, u.getFirstName() + " " + session + ": Invaid date (Sessions attended)", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, u.getFirstName() + " " + session + ": Invaid date (Sessions attended)", "Error saving changes", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
@@ -330,11 +330,11 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		// write the changes to file.
 		
 		// Ask if they want to change the encryption key
-		int changeKey = JOptionPane.showConfirmDialog(null, "Would you like to change the encryption key?", "Change key?", JOptionPane.YES_NO_OPTION);
+		int changeKey = JOptionPane.showConfirmDialog(this, "Would you like to change the encryption key?", "Change key?", JOptionPane.YES_NO_OPTION);
 		
 		if (changeKey == 0)
 		{
-			String newKey = JOptionPane.showInputDialog(null, "Please enter a new key");
+			String newKey = JOptionPane.showInputDialog(this, "Please enter a new key");
 			
 			if (newKey != null && !newKey.isEmpty())
 			{
@@ -343,6 +343,8 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		}
 		
 		users.writeDatabase();
+		
+		JOptionPane.showMessageDialog(this, "Database saved!");
 		
 	}
 	
@@ -404,7 +406,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(null, "Username already taken!", "Username taken", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Username already taken!", "Username taken", JOptionPane.ERROR_MESSAGE);
 			}
 		}	
 		
