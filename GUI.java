@@ -334,6 +334,44 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 		
 	}
 	
+	private void showHelp()
+	{
+		Component selectedTab = tabs.getSelectedComponent();
+		
+		if (selectedTab instanceof Helper) // If it implements the helper interface
+		{
+			Helper helperTab = (Helper) selectedTab;
+			
+			// Setup a JTextArea to contain the help string so that
+			// the text is automatically wrapped.
+			JTextArea ta = new JTextArea(helperTab.getHelpString(), 1, 20);
+			ta.setWrapStyleWord(true);
+			ta.setLineWrap(true);
+			ta.setOpaque(false);
+			ta.setBorder(null);
+			ta.setEditable(false);
+			ta.setFocusable(false);
+			
+			Font currentFont = ta.getFont();
+			ta.setFont(currentFont.deriveFont(Font.PLAIN, 14)); // Make the font larger
+			
+			// Work out the perfect size for the text area
+			// Width is always 300.
+			// 20 columns so number of rows should be number of chars / 20
+			
+			int length = helperTab.getHelpString().toCharArray().length;
+			
+			int numberOfRows = length / 20;
+			
+			int height = numberOfRows * 11;
+			
+			ta.setMinimumSize(new Dimension(300,height));
+			ta.setPreferredSize(new Dimension(300,height));
+			
+			JOptionPane.showMessageDialog(this, ta, "Help", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
 	private void decryptUserdatabase()
 	{
 		String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
@@ -418,8 +456,13 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 		
 	}
 	
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed(ActionEvent evt)
 	{
-		
+		if (evt.getSource() == helpButton)
+		{
+			System.out.println("[INFO] <GUI> helpButton pressed");
+			
+			showHelp();
+		}
 	}
 }

@@ -11,14 +11,16 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class QuestionDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener
+public class QuestionDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener, Helper
 {
+	//private final String HELP_STRING = "<html><center>This is the view questions screen. From here you can select questions and attempt them by<br>selecting them in the table and pressing the attempt button. You can<br>filter and sort questions by using the buttons on the right.</html></center>";
+	private final String HELP_STRING = "This is the view questions screen. From here you can select questions and attempt them by selecting them in the table and pressing the attempt button. You can filter and sort questions by using the buttons on the right.";
+	
 	private QuestionList questions;
 	private GUI gui;
 	private boolean adminMode;
 	
 	private JPanel mainPanel = new JPanel(); // Holds all of the components apart from the help button
-	private JButton helpButton = new JButton("Help");
 	// For the view table
 	private String[] tableHeaders = new String[] {"ID","Title", "Difficulty", "Type"}; // The headers for the table
 	private String[][] questionData = new String[0][0];
@@ -61,6 +63,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		adminMode = tempAdminMode;
 		
 		prepareGUI();
+	}
+	
+	public String getHelpString()
+	{
+		return HELP_STRING;
 	}
 	
 	private void prepareGUI() // Makes the window
@@ -167,10 +174,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		populateTable(questions.getArray()); // Populate the table with the questions
 	
 		this.add(mainPanel, BorderLayout.CENTER);
-		
-		helpButton.addActionListener(this);
-		
-		this.add(helpButton, BorderLayout.NORTH);
 		
 		this.setVisible(true);
 	}
@@ -492,11 +495,6 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> resetButton pressed"); // Debug
 			resetTable();
-		}
-		else if (evt.getSource() == helpButton)
-		{
-			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> helpButton pressed"); // Debug
-			JOptionPane.showMessageDialog(null, "This is the view questions screen. From here you can select questions and attempt them by \r\n selecting them in the table and pressing the attempt button. You can \r\n filter and sort questions by using the buttons on the right.");
 		}
 	}
 	
