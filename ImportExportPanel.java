@@ -11,10 +11,13 @@ import javax.swing.border.EtchedBorder;
 
 import java.io.*;
 
-public class ImportExportPanel extends JPanel implements ActionListener
+public class ImportExportPanel extends JPanel implements ActionListener, Helper
 {
-	QuestionList questions;
-	FormList forms;
+	
+	private final String HELP_STRING = "This is the import export panel. You can use this panel to import and export questions or forms. To export, a question/form select it in the table and press export. To import, press import and select the question/form using the file browser.";
+	
+	private QuestionList questions;
+	private FormList forms;
 	
 	private JFileChooser fileChooser = new JFileChooser();
 	
@@ -38,6 +41,11 @@ public class ImportExportPanel extends JPanel implements ActionListener
 		forms = tempForms;
 		
 		prepareGUI();
+	}
+	
+	public String getHelpString()
+	{
+		return HELP_STRING;
 	}
 	
 	public void refreshTables()

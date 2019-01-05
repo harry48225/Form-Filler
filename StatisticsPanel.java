@@ -21,8 +21,10 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.data.general.DefaultPieDataset;
 
-public class StatisticsPanel extends JPanel implements ActionListener
+public class StatisticsPanel extends JPanel implements ActionListener, Helper
 {
+	private final String HELP_STRING = "This is the statistics panel. You can view information about each question that you've filled in. To do this select the question from the drop down and press view question. You can also press produce report to produce a printable report detailing your progress with each question type.";
+	
 	private User currentUser;
 	private QuestionStatList questionStats;
 	private List<Image> icons;
@@ -30,7 +32,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 	private QuestionList questions;
 	
 	private JPanel mainPanel = new JPanel();
-	private JButton helpButton = new JButton("Help");
 	
 	private JPanel statsPanel = new JPanel();
 	private SelectQuestionsPanel questionSelector;
@@ -58,6 +59,11 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		icons = tempIcons;
 		
 		prepareGUI();
+	}
+	
+	public String getHelpString()
+	{
+		return HELP_STRING;
 	}
 	
 	public void refresh()
@@ -108,8 +114,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		
 		this.add(mainPanel, BorderLayout.CENTER); // Add the panel in the center
 		
-		helpButton.addActionListener(this);
-		this.add(helpButton, BorderLayout.NORTH);
 	}
 	
 	private void prepareStatisticsPanel()
@@ -190,12 +194,6 @@ public class StatisticsPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <STATISTICS_PANEL> produceReportButton pressed");
 			viewReport();
-		}
-		else if (evt.getSource() == helpButton)
-		{
-			System.out.println("[INFO] <STATISTICS_PANEL> helpButton pressed");
-			
-			JOptionPane.showMessageDialog(null,"This is the statistics panel. You can view information about each question that you've filled in. \r\n To do this select the question from the drop down and press view question. \r\n You can also press produce report to produce a printable report detailing your progress with each question type.");
 		}
 	}
 	

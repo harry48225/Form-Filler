@@ -9,8 +9,10 @@ import javax.swing.border.EtchedBorder;
 import java.time.*;
 import java.util.Date;
 
-public class MainMenuPanel extends JPanel implements ActionListener
+public class MainMenuPanel extends JPanel implements ActionListener, Helper
 {
+	private final String HELP_STRING = "This is the main menu. You can navigate to other areas of the system from here. You can also resume attempting the most recent form that you attempted. Your attendance is dispalyed on the right.";
+	
 	private boolean adminMode;
 	private User user;
 	private GUI gui;
@@ -59,6 +61,11 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		adminMode = user.isAdmin();
 		
 		prepareGUI();
+	}
+	
+	public String getHelpString()
+	{
+		return HELP_STRING;
 	}
 	
 	public void update() // Should be called when a user selects the tab and updates the last form attempted section

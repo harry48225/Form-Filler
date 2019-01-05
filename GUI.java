@@ -11,7 +11,9 @@ import java.io.*;
 
 import java.net.URL;
 
-public class GUI extends JFrame implements ChangeListener// Main GUI class
+import javax.swing.border.Border;
+
+public class GUI extends JFrame implements ChangeListener, ActionListener// Main GUI class
 {
 	private QuestionList questions; // The question list
 	
@@ -26,6 +28,10 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 	private JTabbedPane tabs = new JTabbedPane(); // To store the different sections of the program
 	
 	private List<Image> icons;
+	
+	private JPanel helpPanel = new JPanel();
+	
+	private JButton helpButton = new JButton("?");
 	
 	public GUI() // Constructor
 	{
@@ -104,10 +110,13 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		this.setIconImages(icons);
 		this.setSize(1200,700);
 		this.setMinimumSize(new Dimension(900,600));
-		this.setLayout(new GridLayout(1,1)); // Only 1 row and 1 column as it'll only store panels
+		this.setLayout(new GridLayout(1,1));
 		this.setLocationRelativeTo(null); // Center it
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new OverlayLayout(mainPanel));
 		
 		tabs.add("Main menu", new MainMenuPanel(currentUser, this, formsInProgress, forms));
 		tabs.add("View Questions", new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
@@ -124,9 +133,50 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 		tabs.addChangeListener(this);
 		
-		this.add(tabs);
+		tabs.setAlignmentX(1.0f); // Right align
+        tabs.setAlignmentY(0.0f); // Left align
+		Font currentFont = tabs.getFont();
+		tabs.setFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		
+		prepareHelpPanel();
+		
+		helpPanel.setAlignmentX(1.0f); // Right align
+        helpPanel.setAlignmentY(0.0f); // Left align
+		
+		mainPanel.add(helpPanel);
+		mainPanel.add(tabs);
+		
+		this.add(mainPanel);
 		
 		this.setVisible(true);
+	}
+	
+	private void prepareHelpPanel()
+	{
+		helpPanel.setLayout(new BoxLayout(helpPanel, BoxLayout.LINE_AXIS)); // Horizontal box layout
+		//helpPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		helpPanel.add(Box.createHorizontalGlue()); // Will take up horizontal space and force 
+		
+		
+		Font currentFont = helpButton.getFont();
+		helpButton.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		
+		helpButton.setBackground(new Color(0,102,204));
+		helpButton.setForeground(Color.WHITE);
+		
+		helpButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5)); // 5 thick black border
+		
+		helpButton.setMinimumSize(new Dimension(100,30));
+		helpButton.setPreferredSize(new Dimension(100,30));
+		
+		helpButton.addActionListener(this);
+		helpButton.setFocusPainted(false); // Disable the border around the text when the button is focused
+		
+		helpPanel.setMinimumSize(new Dimension(100,30));
+		helpPanel.setPreferredSize(new Dimension(100,30));
+		helpPanel.setOpaque(false); // Make the panel transparent
+		
+		helpPanel.add(helpButton);
 	}
 	
 	// public void openQuestion() Good idea?
@@ -284,6 +334,44 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 		
 	}
 	
+	private void showHelp()
+	{
+		Component selectedTab = tabs.getSelectedComponent();
+		
+		if (selectedTab instanceof Helper) // If it implements the helper interface
+		{
+			Helper helperTab = (Helper) selectedTab;
+			
+			// Setup a JTextArea to contain the help string so that
+			// the text is automatically wrapped.
+			JTextArea ta = new JTextArea(helperTab.getHelpString(), 1, 20);
+			ta.setWrapStyleWord(true);
+			ta.setLineWrap(true);
+			ta.setOpaque(false);
+			ta.setBorder(null);
+			ta.setEditable(false);
+			ta.setFocusable(false);
+			
+			Font currentFont = ta.getFont();
+			ta.setFont(currentFont.deriveFont(Font.PLAIN, 14)); // Make the font larger
+			
+			// Work out the perfect size for the text area
+			// Width is always 300.
+			// 20 columns so number of rows should be number of chars / 20
+			
+			int length = helperTab.getHelpString().toCharArray().length;
+			
+			int numberOfRows = length / 20;
+			
+			int height = numberOfRows * 11;
+			
+			ta.setMinimumSize(new Dimension(300,height));
+			ta.setPreferredSize(new Dimension(300,height));
+			
+			JOptionPane.showMessageDialog(this, ta, "Help", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
 	private void decryptUserdatabase()
 	{
 		String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
@@ -366,5 +454,15 @@ public class GUI extends JFrame implements ChangeListener// Main GUI class
 			new Register(users, icons);
 		}
 		
+	}
+	
+	public void actionPerformed(ActionEvent evt)
+	{
+		if (evt.getSource() == helpButton)
+		{
+			System.out.println("[INFO] <GUI> helpButton pressed");
+			
+			showHelp();
+		}
 	}
 }

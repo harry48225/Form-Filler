@@ -11,8 +11,10 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class FormDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener
+public class FormDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener, Helper
 {
+	private final String HELP_STRING = "This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. You can filter and sort forms using the buttons on the right.";
+	
 	private FormList forms;
 	private QuestionList questions;
 	private GUI gui;
@@ -21,7 +23,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	
 	private JPanel mainPanel = new JPanel();
-	private JButton helpButton = new JButton("Help");
 	
 	// For the view table
 	private String[] tableHeaders = new String[] {"ID","Title", "Description", 
@@ -70,6 +71,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		formsInProgress = tempFormsInProgress;
 		adminMode = tempAdminMode;
 		prepareGUI();
+	}
+	
+	public String getHelpString()
+	{
+		return HELP_STRING;
 	}
 	
 	private void prepareGUI() // Makes the window
@@ -180,10 +186,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		prepareTable();
 		
 		this.add(mainPanel, BorderLayout.CENTER);
-		
-		helpButton.addActionListener(this);
-		
-		this.add(helpButton, BorderLayout.NORTH);
 		
 		this.setVisible(true);
 	}
@@ -562,11 +564,6 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> attemptUserWeaknessesFormButton pressed");
 			gui.attemptFormFromUserWeaknesses();
-		}
-		else if (evt.getSource() == helpButton)
-		{
-			System.out.println("[INFO] <FORM_DISPLAY_PANEL> helpButton pressed");
-			JOptionPane.showMessageDialog(this,"This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. \r\n By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. \r\n You can filter and sort forms using the buttons on the right.");
 		}
 	}
 	
