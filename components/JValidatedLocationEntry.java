@@ -3,6 +3,7 @@ package components;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.InetAddress;
 
 import com.google.gson.*;
 import com.google.maps.GeoApiContext;
@@ -19,6 +20,8 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	private SessionToken session = new SessionToken();
 
 	private JComboBox<String> addressComboBox = new JComboBox();
+	
+	private boolean connection = true;
 	
 	public JValidatedLocationEntry()
 	{
@@ -48,6 +51,23 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	private void setup()
 	{
 		context = new GeoApiContext.Builder().apiKey("AIzaSyBgcCPoJcVPvdsClek4TljQ7E7XzcMbU4I").build();
+		
+		try
+		{
+			InetAddress knownGoodAddress = InetAddress.getByName("4.2.2.1");
+			
+			connection = knownGoodAddress.isReachable(5); // 5 second time out
+		}
+		catch (Exception e)
+		{
+			
+			connection = false;
+		}
+		
+		if (!connection)
+		{
+			System.out.println("[ERROR] <JVALIDATED_LOCATION_ENTRY> Error connecting to the internet");
+		}
 	}
 	
 	private AutocompletePrediction[] predictPlaces(String stringToPredictFrom)
@@ -65,7 +85,10 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 			}
 			catch (Exception e)
 			{
-				System.out.println(e);
+				//System.out.println(e);
+				System.out.println("[ERROR] <JVALIDATED_LOCATION_ENTRY> Error connecting to google maps, most likely no internet connection");
+				connection = false;
+				
 			}
 			
 			System.out.println("[INFO] <JVALIDATED_LOCATION_ENTRY> Recieved results");
@@ -133,8 +156,11 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	}
 	
     public void keyTyped(KeyEvent e) {
-	   updatePrediction();
-    }
+		if (connection)
+		{
+			updatePrediction();
+		}
+	}
 
     public void keyPressed(KeyEvent e) {
         //System.out.println("KEY Pressed: ");
