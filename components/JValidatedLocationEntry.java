@@ -51,23 +51,6 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	private void setup()
 	{
 		context = new GeoApiContext.Builder().apiKey("AIzaSyBgcCPoJcVPvdsClek4TljQ7E7XzcMbU4I").build();
-		
-		try
-		{
-			InetAddress knownGoodAddress = InetAddress.getByName("4.2.2.1");
-			
-			connection = knownGoodAddress.isReachable(5); // 5 second time out
-		}
-		catch (Exception e)
-		{
-			
-			connection = false;
-		}
-		
-		if (!connection)
-		{
-			System.out.println("[ERROR] <JVALIDATED_LOCATION_ENTRY> Error connecting to the internet");
-		}
 	}
 	
 	private AutocompletePrediction[] predictPlaces(String stringToPredictFrom)
@@ -98,25 +81,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	private void updatePrediction()
 	{
-		String currentText = (String) addressComboBox.getEditor().getItem();
-		AutocompletePrediction[] predictions = predictPlaces(currentText);
-		
-		if (predictions != null && predictions.length > 0)
-		{
-			addressComboBox.hidePopup();
-			addressComboBox.removeAllItems();
-			
-			if (predictions.length <= 10)
-			{
-				for (int i = 0; i < predictions.length; i++)
-				{
-					addressComboBox.insertItemAt(predictions[i].description, i);
-				}
-			}
-			
-			addressComboBox.showPopup();
-		}
-		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(currentText); // Set the text back to what it was before the query
+		new AutocompleteWorker(addressComboBox, context).execute();
 	}
 	private void prepareGUI()
 	{	
@@ -169,4 +134,84 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
     public void keyReleased(KeyEvent e) {
         //System.out.println("KEY released: ");
     }
+	
+	private class AutocompleteWorker extends SwingWorker<AutocompletePrediction[], AutocompletePrediction[]>
+	{
+		private JComboBox addressComboBox;
+		private GeoApiContext context;
+		
+		public AutocompleteWorker(JComboBox tempAddressComboBox, GeoApiContext tempContext)
+		{
+			addressComboBox = tempAddressComboBox;
+			context = tempContext;
+		}
+		
+		protected AutocompletePrediction[] doInBackground() throws Exception
+		{
+			String currentText = (String) addressComboBox.getEditor().getItem();
+			AutocompletePrediction[] predictions = predictPlaces(currentText);
+			
+			return predictions;
+		}
+		
+		private void addPredictions(AutocompletePrediction[] predictions)
+		{
+			String currentText = (String) addressComboBox.getEditor().getItem();
+			if (predictions != null && predictions.length > 0)
+			{
+				addressComboBox.hidePopup();
+				addressComboBox.removeAllItems();
+				
+				if (predictions.length <= 10)
+				{
+					for (int i = 0; i < predictions.length; i++)
+					{
+						addressComboBox.insertItemAt(predictions[i].description, i);
+					}
+				}
+				
+				addressComboBox.showPopup();
+			}
+			
+			
+			((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(currentText); // Set the text back to what it was before the query
+		}
+		private AutocompletePrediction[] predictPlaces(String stringToPredictFrom)
+		{
+			
+			AutocompletePrediction[] results = null;
+			
+			if (!stringToPredictFrom.isEmpty())
+			{
+				
+				System.out.println("[INFO] <JVALIDATED_LOCATION_ENTRY> Getting results");
+				try
+				{
+					results = PlacesApi.placeAutocomplete(context, stringToPredictFrom, session).await();
+				}
+				catch (Exception e)
+				{
+					//System.out.println(e);
+					System.out.println("[ERROR] <JVALIDATED_LOCATION_ENTRY> Error connecting to google maps, most likely no internet connection");
+					connection = false;
+					
+				}
+				
+				System.out.println("[INFO] <JVALIDATED_LOCATION_ENTRY> Recieved results");
+			}
+			return results;
+		}
+
+		protected void done()
+		{
+			try
+			{
+				addPredictions(get());
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+    }
+	}
 }
