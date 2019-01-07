@@ -29,7 +29,6 @@ public class LoginFrame extends JFrame implements ActionListener
 	{
 		System.out.println("[INFO] <LOGIN_FRAME> Running prepareGUI");
 		this.setLayout(new GridLayout(1,1));
-		this.setLocationRelativeTo(null); // Center it
 
 		JPanel mainPanel = new JPanel();
 		
@@ -83,6 +82,7 @@ public class LoginFrame extends JFrame implements ActionListener
 		
 		this.add(mainPanel);
 		this.setSize(300,200);
+		this.setLocationRelativeTo(null); // Center it
 		this.setTitle("Login");
 		this.setResizable(false);
 		this.setIconImages(icons);

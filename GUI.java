@@ -332,6 +332,15 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 			uP.refresh();
 		}
 		
+		if (selectedComponent instanceof Helper)
+		{
+			helpButton.setEnabled(true);
+		}
+		else
+		{
+			helpButton.setEnabled(false);
+		}
+		
 	}
 	
 	private void showHelp()
