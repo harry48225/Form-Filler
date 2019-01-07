@@ -488,7 +488,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		
 		System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
 		
-		JOptionPane.showMessageDialog(null, "Form complete!");
+		JOptionPane.showMessageDialog(this, "Form complete!");
 		
 		users.writeDatabase(); // Save the users stats
 			
