@@ -1,5 +1,10 @@
-Q77076291,2,Name,First name
-Q36849304,3,Gender,Gender
-Q98078854,4,Radio Buttons,James
-Q91968844,5,Calendar,Birthday
-Q29028398,7,Address,Address entry
+Q64356881,2,Name,Name
+Q67918670,1,Radio-buttons,Gender
+Q14805999,5,Address,Address
+Q84848110,6,Email,Email
+Q18028811,7,Photo ID,Photo ID Upload
+Q71119615,8,Calendar,Date of Birth
+Q69482524,5,Checkboxes,Days available
+Q18503635,4,Password,Password
+Q71204856,2,Drop-down,Title
+Q41647821,8,File upload,CV upload
