@@ -24,7 +24,11 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 		if (passwords.length > 0) // If there are actually passwords saved
 		{
             passwordFields[0].setText(passwords[0]);
-            passwordFields[1].setText(passwords[1]);
+            
+            if (passwords.length > 1) // If there is a second password
+            {
+                passwordFields[1].setText(passwords[1]);
+            }
 		}
 		
 		preparePanel();
