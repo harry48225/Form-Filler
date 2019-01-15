@@ -1,0 +1,5 @@
+F69383296,Q64356881.Q67918670.Q84848110.More about you.Q71119615,This form asks for basic information about the user,Name.Radio-buttons.Email.Calendar,5,Basic information,true.true.true.false.true
+F92895411,Q64356881.Q14805999.Q84848110.Q69482524,This form asks the user for basic information on how to and when they can be contacted,Name.Address.Email.Checkboxes,4,Contact information,true.true.true.true
+F72529830,Q64356881.Q67918670,This is a very basic form which serves to be a very easy introduction into filling in forms.,Name.Radio-buttons,2,Getting started,true.true
+F11932880,General Information.Q53642376.Q64356881.Q67918670.Contact information.Q84848110.Q14805999.Job information.Q69482524.Q41647821,This is a mock-up job application.,Drop-down.Name.Radio-buttons.Email.Address.Checkboxes.File upload,8,Job Application,false.true.true.true.true.false.true.true.false.true
+F88648330,Q53642376.Q64356881.Q67918670.Q84848110.Q18028811.Q14805999,This is a mock-up passport application.,Drop-down.Name.Radio-buttons.Email.Photo ID.Address,6,Passport application,true.true.true.true.true.true

@@ -242,7 +242,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			return;
 		}
 		
-		String dateOfBirth = JOptionPane.showInputDialog("Please enter your date of birth as dd/mm/yyyy");
+		String dateOfBirth = JOptionPane.showInputDialog("Please enter your date of birth as dd-mm-yyyy");
 		
 		if (dateOfBirth == null)
 		{
