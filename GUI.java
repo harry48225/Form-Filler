@@ -179,8 +179,6 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 		helpPanel.add(helpButton);
 	}
 	
-	// public void openQuestion() Good idea?
-	
 	public void openForm(Form f) // Takes a form and opens it for attempting
 	{
 		JPanel[] formComponents;

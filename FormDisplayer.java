@@ -50,6 +50,8 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 	
 	private ImageIcon requiredIcon;
 	
+	int percentComplete = 0;
+	
 	public FormDisplayer(Form tempF, JPanel[] tempComponents, User tempU, UserList tempUserList, GUI tempGUI, QuestionList tempQuestions, List<Image> tempIcons)
 	{
 		form = tempF;
@@ -489,7 +491,7 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		System.out.println("Users question stats after finishing form: " + currentUser.getQuestionStats());
 		
 		JOptionPane.showMessageDialog(this, "Form complete!");
-		
+		percentComplete = 100;
 		users.writeDatabase(); // Save the users stats
 			
 	}
@@ -596,8 +598,10 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 			}
 		}
 		
-		int percentComplete = (numberCorrect * 100)/ questionPanels.length; // Calculate what percentage of the questions are answered correctly
-		
+		if (percentComplete != 100) // If the form isn't completed
+		{
+			percentComplete = (numberCorrect * 100)/ questionPanels.length; // Calculate what percentage of the questions are answered correctly
+		}
 		
 		System.out.println("[INFO] <FORM_DISPLAYER> form is " +  percentComplete + "% complete");
 		
