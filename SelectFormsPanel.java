@@ -178,7 +178,7 @@ public class SelectFormsPanel extends JPanel implements ActionListener, TableCol
 			JPanel formPanel = new JPanel();
 			formPanel.setLayout(new GridLayout(0,1));
 			int width = 400;
-			int height = selectedForm.getQuestionIDs().length * 100;
+			int height = selectedForm.getQuestionIDs().length * 110;
 			formPanel.setSize(width, height);
 			formPanel.setMaximumSize(new Dimension(width, height));
 			formPanel.setPreferredSize(new Dimension(width, height));
@@ -196,12 +196,13 @@ public class SelectFormsPanel extends JPanel implements ActionListener, TableCol
 				}
 			}
 			JScrollPane formScroller = new JScrollPane(formPanel);
-			height = height > 600 ? 600 : height;
+			height = height > 600 ? 620 : height; // If the height is over 600 set it to 620
+			height += 20; // Add a little extra height so that the scroll bar doesn't appear if the height is less than 600
 			width += 25;
 			formScroller.setSize(width, height);
 			formScroller.setMaximumSize(new Dimension(width, height));
 			formScroller.setPreferredSize(new Dimension(width, height));
-			formScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			//formScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 			JOptionPane.showMessageDialog(this, formScroller, selectedForm.getTitle() + " Preview", JOptionPane.PLAIN_MESSAGE);
 		}
 		
