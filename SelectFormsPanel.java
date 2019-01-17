@@ -5,6 +5,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import components.*;
+
 public class SelectFormsPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
 	private FormList forms;
@@ -173,16 +175,34 @@ public class SelectFormsPanel extends JPanel implements ActionListener, TableCol
 			
 			Form selectedForm = forms.getFormByID(formID);
 			
-			JFrame formFrame = new JFrame();
-			formFrame.setLayout(new GridLayout(0,1));
-			formFrame.setSize(300, 300);
+			JPanel formPanel = new JPanel();
+			formPanel.setLayout(new GridLayout(0,1));
+			int width = 400;
+			int height = selectedForm.getQuestionIDs().length * 100;
+			formPanel.setSize(width, height);
+			formPanel.setMaximumSize(new Dimension(width, height));
+			formPanel.setPreferredSize(new Dimension(width, height));
 			
 			for (String question : selectedForm.getQuestionIDs()) // For each question id in the form
 			{
-				formFrame.add(questions.getPanelByID(question)); // Add the question to the frame
+				Question q = questions.getQuestionByID(question);
+				if (q != null) // If it's a question not a header
+				{
+					formPanel.add(questions.getPanelByID(question)); // Add the question to the frame
+				}
+				else
+				{
+					formPanel.add(new HeaderPanel(question)); // Add the header
+				}
 			}
-			
-			formFrame.setVisible(true);
+			JScrollPane formScroller = new JScrollPane(formPanel);
+			height = height > 600 ? 600 : height;
+			width += 25;
+			formScroller.setSize(width, height);
+			formScroller.setMaximumSize(new Dimension(width, height));
+			formScroller.setPreferredSize(new Dimension(width, height));
+			formScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			JOptionPane.showMessageDialog(this, formScroller, selectedForm.getTitle() + " Preview", JOptionPane.PLAIN_MESSAGE);
 		}
 		
 	
