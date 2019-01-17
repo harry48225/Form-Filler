@@ -168,11 +168,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	{
 		System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running openQuestionInWindow");
 		
-		JFrame questionFrame = new JFrame();
-		questionFrame.setLayout(new GridLayout(0,1));
-		questionFrame.setSize(300, 100);
-		questionFrame.add(questions.getPanelByID(qID));
-		questionFrame.setVisible(true);
+		JOptionPane.showMessageDialog(this, questions.getPanelByID(qID), "Question Preview", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	public String getSelectedQuestionID()
