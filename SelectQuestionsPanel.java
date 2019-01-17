@@ -168,7 +168,13 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	{
 		System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running openQuestionInWindow");
 		
-		JOptionPane.showMessageDialog(this, questions.getPanelByID(qID), "Question Preview", JOptionPane.PLAIN_MESSAGE);
+		JPanel questionPanel = questions.getPanelByID(qID);
+		int width = 400;
+		int height = 180;
+		questionPanel.setSize(width, height);
+		questionPanel.setMaximumSize(new Dimension(width, height));
+		questionPanel.setPreferredSize(new Dimension(width, height));
+		JOptionPane.showMessageDialog(this, questionPanel, "Question Preview", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	public String getSelectedQuestionID()
