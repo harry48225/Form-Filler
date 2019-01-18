@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.filechooser.*;
+import java.io.*;
 
 public class JValidatedFileChooser extends JPanel implements JValidatedComponent, ActionListener, JSaveableComponent
 {
@@ -19,17 +20,24 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	public JValidatedFileChooser(String tempType)
 	{
 		// Temp type can either be a save string or just the type
+		fileChooser = new JFileChooser();
 		
 		if (tempType.contains(":")) // If it's a save string
 		{
 			// saveString is formatted like this
-			// filechooser:type
+			// filechooser:type+path
 			
-			tempType = tempType.split(":")[1];
+			String[] saveData = tempType.split(":")[1].split("\\+");
+			
+			tempType = saveData[0];
+			
+			if (saveData.length > 1) // If there is a saved file name
+			{
+				fileChooser.setSelectedFile(new File(saveData[1]));
+			}
 		}
-		type = tempType;
 			
-		fileChooser = new JFileChooser();
+		type = tempType;
 		setFileExtensionFilter();
 		
 		this.setLayout(new GridLayout(1,1)); // This layout ensures that the button entirely fills the JPanel
@@ -100,8 +108,6 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	{
 		if (evt.getSource() == openButton)
 		{
-			fileChooser = new JFileChooser();
-			setFileExtensionFilter();
 			fileChooser.showOpenDialog(this);
 		}
 	}
@@ -113,7 +119,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public String toString()
 	{
-		String asString = "filechooser:" + type;
+		String asString = "filechooser:" + type + "+" + fileChooser.getSelectedFile();
 		
 		return asString;
 	}
