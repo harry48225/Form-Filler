@@ -31,7 +31,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 			
 			tempType = saveData[0];
 			
-			if (saveData.length > 1) // If there is a saved file name
+			if (saveData.length > 1 && !saveData[1].equals("null")) // If there is a saved file name and it isn't the text null
 			{
 				fileChooser.setSelectedFile(new File(saveData[1]));
 			}
