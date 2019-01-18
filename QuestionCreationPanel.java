@@ -488,7 +488,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			// Check to see if the label has been added if we are moving from the first screen
 			if (currentStage == 0)
 			{
-				if (labelTextField.getText().isEmpty())
+				if (labelTextField.getText().trim().isEmpty())
 				{
 					JOptionPane.showMessageDialog(this, "Please enter some text for the label to have before continuing", "No label text", JOptionPane.ERROR_MESSAGE);
 				}
