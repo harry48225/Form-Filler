@@ -18,8 +18,8 @@ public class QuestionList
 	
 	public QuestionList() // Constructor
 	{
-		loadDatabase(); // Load the database from file
 		loadTypes();
+		loadDatabase(); // Load the database from file
 		panels = new QuestionPanelList(); // Create a new question panel list
 	}
 	
@@ -112,6 +112,7 @@ public class QuestionList
 		catch (Exception e)
 		{
 			System.out.println("[ERROR] <QUESTION_LIST> Error loading database " + e); // Error message
+			e.printStackTrace();
 		}
 		
 		System.out.println("[INFO] <QUESTION_LIST> " + nextQuestionLocation + " Questions loaded from file");
@@ -276,7 +277,22 @@ public class QuestionList
 		//System.out.println("[INFO] <QUESTION_LIST> Running addQuestion"); // Debug
 		
 		questionArray[nextQuestionLocation] = tempQuestion; // Add the question to the array at the next free position
+		// Check whether the type of the question is already in the types database. It may not be if the question was imported.
+		boolean inDatabase = false;
+		for (String type : types)
+		{
+			if(type.equals(tempQuestion.getType()))
+			{
+				inDatabase = true;
+				break;
+			}	
+		}
 		
+		// If the type wasn't in the database add it to the database
+		if (!inDatabase)
+		{
+			addType(tempQuestion.getType());
+		}
 		nextQuestionLocation++; // Increment the location
 	}
 	
