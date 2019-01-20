@@ -221,7 +221,7 @@ public class ImportExportPanel extends JPanel implements ActionListener, Helper
 		questions.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question imported!");
-		JOptionPane.showMessageDialog(null, "Question imported!");
+		JOptionPane.showMessageDialog(this, "Question imported!");
 		
 		refreshTables();
 	}
@@ -288,7 +288,7 @@ public class ImportExportPanel extends JPanel implements ActionListener, Helper
 		forms.writeDatabase();
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form imported!");
-		JOptionPane.showMessageDialog(null, "Form imported!");
+		JOptionPane.showMessageDialog(this, "Form imported!");
 		
 		refreshTables();
 	}
@@ -337,7 +337,7 @@ public class ImportExportPanel extends JPanel implements ActionListener, Helper
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Question exported!");
-		JOptionPane.showMessageDialog(null, "Question exported!");
+		JOptionPane.showMessageDialog(this, "Question exported!");
 	}
 	
 	private void exportForm(String formID)
@@ -413,6 +413,6 @@ public class ImportExportPanel extends JPanel implements ActionListener, Helper
 		}
 		
 		System.out.println("[INFO] <IMPORT_EXPORT_PANEL> Form exported!");
-		JOptionPane.showMessageDialog(null, "Form exported!");
+		JOptionPane.showMessageDialog(this, "Form exported!");
 	}
 }
