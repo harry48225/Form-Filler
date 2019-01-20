@@ -332,7 +332,7 @@ public class QuestionList
 	private void loadTypes() // Loads the types from file
 	{
 		System.out.println("[INFO] <QUESTION_LIST> Running loadTypes"); // Debug
-		
+		types = new String[0];
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(typesFileName)); // Open the database file name
