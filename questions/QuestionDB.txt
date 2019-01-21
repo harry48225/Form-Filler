@@ -9,3 +9,8 @@ Q84848110,6,Email,Email
 Q18028811,7,Photo ID,Photo ID Upload
 Q71119615,8,Calendar,Date of Birth
 Q41647821,8,File upload,CV upload
+Q52753027,3,TEST TYPE,Test
+Q04318322,3,TEST TYPE 2,dsf
+Q97640406,1,TEST3,test 3
+Q54418944,3,test4,ewrewr
+Q64613021,4,test5,Test

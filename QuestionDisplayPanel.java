@@ -308,7 +308,23 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		typeFilterPanel.add(typeFilterButton, typeFilterPanelConstraints);
 	}
 	
-	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	public void refresh() // Refreshes the tab
+	{
+		refreshTable();
+		
+		refreshTypeFilterButtons();
+	}
+	
+	private void refreshTypeFilterButtons()
+	{
+		if (typeRadioButtons.length != questions.getTypes().length)
+		{
+			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Types have changed, resetting panel");
+			gui.resetTab(this); // Reset the tab.
+		}
+	}
+	
+	private void refreshTable() // Refreshes the table. Preserves sorts and filters
 	{
 		Question[] questionData = questions.getArray();
 		
@@ -366,6 +382,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTypeRadioButtons()
 	{
+		typeRadioButtonPanel = new JPanel();
 		typeRadioButtonPanel.setLayout(new GridLayout(0,3)); // 3 rows infinite columns
 		
 		String[] questionTypes = questions.getTypes(); // Get the types

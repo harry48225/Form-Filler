@@ -354,7 +354,12 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 	}
 	
-	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	public void refresh()
+	{
+		refreshTable();
+	}
+	
+	private void refreshTable() // Refreshes the table. Preserves sorts and filters
 	{
 		Form[] formData = forms.getArray();
 		

@@ -291,12 +291,12 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 		if (selectedComponent instanceof QuestionDisplayPanel)
 		{
 			QuestionDisplayPanel qDP = (QuestionDisplayPanel) selectedComponent;
-			 qDP.refreshTable(); // Refresh the table
+			qDP.refresh(); // Refresh the tab
 		}
 		else if (selectedComponent instanceof FormDisplayPanel)
 		{
 			FormDisplayPanel fDP = (FormDisplayPanel) selectedComponent;
-			fDP.refreshTable(); // Refresh the table
+			fDP.refresh(); // Refresh the tab
 		}
 		else if (selectedComponent instanceof StatisticsPanel)
 		{
@@ -408,6 +408,11 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 			// Add a new form creation panel at the index of the old one
 			tabs.setComponentAt(index, new FormCreationPanel(questions, forms, this));
 		}
+		if (componentToReset instanceof QuestionDisplayPanel)
+		{
+			// Add a new question display panel at the index of the old one
+			tabs.setComponentAt(index, new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
+		}
 	}
 	
 	private void refreshFormTab() // Refreshes the form tab
@@ -421,7 +426,7 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 			if (currentTab instanceof FormDisplayPanel)
 			{
 				FormDisplayPanel fDP = (FormDisplayPanel) currentTab;
-				fDP.refreshTable();
+				fDP.refresh();
 				
 				break;
 			}
