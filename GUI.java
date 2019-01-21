@@ -413,6 +413,11 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 			// Add a new question display panel at the index of the old one
 			tabs.setComponentAt(index, new QuestionDisplayPanel(questions, this, currentUser.isAdmin()));
 		}
+		if (componentToReset instanceof FormDisplayPanel)
+		{
+			// Add a new form display panel at the index of the old one
+			tabs.setComponentAt(index, new FormDisplayPanel(forms, this, questions, formsInProgress,currentUser.isAdmin()));
+		}
 	}
 	
 	private void refreshFormTab() // Refreshes the form tab

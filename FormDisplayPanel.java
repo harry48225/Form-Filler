@@ -357,7 +357,18 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	public void refresh()
 	{
 		refreshTable();
+		
+		refreshTypeFilterButtons();
 	}
+	
+	private void refreshTypeFilterButtons()
+	{
+		if (typeCheckBoxes.length != questions.getTypes().length)
+		{
+			System.out.println("[INFO] <FORM_DISPLAY_PANEL> Types have changed, resetting panel");
+			gui.resetTab(this); // Reset the tab.
+		}
+	}	
 	
 	private void refreshTable() // Refreshes the table. Preserves sorts and filters
 	{
