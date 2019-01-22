@@ -334,7 +334,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		
 		if (changeKey == 0)
 		{
-			String newKey = JOptionPane.showInputDialog(this, "Please enter a new key");
+			String newKey = JOptionPane.showInputDialog(this, "Please enter a new key", "Key?");
 			
 			if (newKey != null && !newKey.isEmpty())
 			{
@@ -398,7 +398,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			
 		while (!success) // While a unique username hasn't been chosen yet
 		{
-			username = JOptionPane.showInputDialog("Please enter a username");
+			username = JOptionPane.showInputDialog(this,"Please enter a username");
 			
 			if (users.getUserByUsername(username) == null) // If a unique username has been chosen
 			{

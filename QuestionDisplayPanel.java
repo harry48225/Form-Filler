@@ -448,6 +448,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void resetTable()
 	{
+		// The following method resets the table by setting all of the
+		// sorts and filters to false.
 		typeRadioButtonGroup.clearSelection();
 		
 		typeSort = false;
@@ -517,6 +519,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void resizeRows()
 	{
+		// Adjusts the sizes of the rows so that all of the text can be seen.
 		for (int row = 0; row < questionTable.getRowCount(); row ++)
 		{
 			int requiredHeight = 0;
