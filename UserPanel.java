@@ -221,35 +221,35 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			return;
 		}
 		
-		String password = JOptionPane.showInputDialog("Please enter a password");
+		String password = JOptionPane.showInputDialog(this,"Please enter a password");
 		
 		if (password == null)
 		{
 			return;
 		}
 		
-		String firstName = JOptionPane.showInputDialog("Please enter your first name");
+		String firstName = JOptionPane.showInputDialog(this,"Please enter your first name");
 		
 		if (firstName == null)
 		{
 			return;
 		}
 		
-		String lastName = JOptionPane.showInputDialog("Please enter your last name");
+		String lastName = JOptionPane.showInputDialog(this,"Please enter your last name");
 		
 		if (lastName == null)
 		{
 			return;
 		}
 		
-		String dateOfBirth = JOptionPane.showInputDialog("Please enter your date of birth as dd-mm-yyyy");
+		String dateOfBirth = JOptionPane.showInputDialog(this,"Please enter your date of birth as dd-mm-yyyy");
 		
 		if (dateOfBirth == null)
 		{
 			return;
 		}
 		
-		String phoneNumber = JOptionPane.showInputDialog("Please enter your phone number");
+		String phoneNumber = JOptionPane.showInputDialog(this,"Please enter your phone number");
 			
 		if (phoneNumber == null)
 		{
@@ -398,7 +398,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			
 		while (!success) // While a unique username hasn't been chosen yet
 		{
-			username = JOptionPane.showInputDialog(this,"Please enter a username");
+			username = JOptionPane.showInputDialog(this, "Please enter a username");
 			
 			if (users.getUserByUsername(username) == null) // If a unique username has been chosen
 			{
