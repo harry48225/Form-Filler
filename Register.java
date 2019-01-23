@@ -56,7 +56,7 @@ public class Register extends JFrame implements ActionListener
 		for (int i = 0; i < allUsers.length; i++) // For each user
 		{
 			attendanceBoxes[i] = new JCheckBox(allUsers[i].getFirstName() + " " + allUsers[i].getLastName()); // Make a new check box with their full name
-			
+			attendanceBoxes[i].setName(allUsers[i].getUsername());
 			userPanel.add(attendanceBoxes[i]); // Add the check box to the window
 			userPanel.add(Box.createRigidArea(new Dimension(0,5))); // Add some padding
 		}
@@ -68,7 +68,11 @@ public class Register extends JFrame implements ActionListener
 		{
 			if (attendanceBoxes[i].isSelected()) // If it's checked
 			{
-				users.getUsers()[i].addPresentToday(); // Add the date to the users sessionsPresentAtArray
+				// Each checkbox is called the username of the user that's for
+				// therefore this line will get the user that the box corressponds with.
+				User u =  users.getUserByUsername(attendanceBoxes[i].getName());
+				System.out.println("Adding present" + u.getUsername());
+				u.addPresentToday(); // Add the date to the users sessionsPresentAtArray
 			}
 		}
 		
@@ -149,6 +153,8 @@ public class Register extends JFrame implements ActionListener
 			System.out.println("[INFO] <REGISTER> saveButton pressed");
 			
 			addAttendance();
+			
+			this.dispose();
 		}
 	}
 }
