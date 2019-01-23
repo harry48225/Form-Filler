@@ -13,7 +13,7 @@ import java.net.URL;
 
 import javax.swing.border.Border;
 
-public class GUI extends JFrame implements ChangeListener, ActionListener// Main GUI class
+public class GUI extends JFrame implements ChangeListener, ActionListener, WindowListener// Main GUI class
 {
 	private QuestionList questions; // The question list
 	
@@ -468,7 +468,8 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 		
 		if (users.isDecrypted()) // If the decryption was successful
 		{
-			new Register(users, icons);
+			Register r = new Register(users, icons);
+			r.addWindowListener(this);
 		}
 		
 	}
@@ -480,6 +481,38 @@ public class GUI extends JFrame implements ChangeListener, ActionListener// Main
 			System.out.println("[INFO] <GUI> helpButton pressed");
 			
 			showHelp();
+		}
+	}
+	
+	public void windowActivated(WindowEvent e) 
+	{  
+	}  
+	public void windowClosing(WindowEvent e) 
+	{  
+	}  
+	public void windowDeactivated(WindowEvent e) 
+	{  
+	}  
+	public void windowDeiconified(WindowEvent e) 
+	{   
+	}  
+	public void windowIconified(WindowEvent e) 
+	{  
+	}  
+	public void windowOpened(WindowEvent e) 
+	{  
+	}  
+	
+	public void windowClosed(WindowEvent e)
+	{
+		// This will be run when the register is closed therefore we should refresh the usertab if it's visible
+		
+		Component selectedTab = tabs.getSelectedComponent();
+		
+		if (selectedTab instanceof UserPanel)
+		{
+			UserPanel uP = (UserPanel) selectedTab;
+			uP.refresh();
 		}
 	}
 }
