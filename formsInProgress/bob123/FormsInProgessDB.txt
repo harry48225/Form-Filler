@@ -27,4 +27,4 @@ F79996144;0;0~Q14805999$label:Address||locationentry:,Q71119615$label:Birthday||
 F60018747;50;0~Q64356881$label:Name||textfield:tyttrytryty;none,Q84848110$label:Email Address||textfield:;email
 Q03869306;100;2~Q03869306$label:Checkbox test||checkboxes:this is a very g;false.\u002e\u002e\u002e;false.bad \u002c \u0024 \u007c\u007c;false.Set of checkboxes \u002c\u002c\u002c \u007c;false
 Q99184684;0;0~Q99184684$label:Radio button test||radiobuttons:This shopuld\u002c ;false.\u002c be \u007c\u007c;false.e\u0024caped properly;false
-F07300981;0;0~Q18503635$label:Password||password:this\u002cshouil\u002cbe;asdfedf\u0024\u0024\u007c\u007c
+F07300981;50;1~Q18503635$label:Password||password:;,Q71119615$label:Birthday||datepicker:2019-01-02

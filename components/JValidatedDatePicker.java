@@ -25,9 +25,11 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 	
 	public JValidatedDatePicker(String saveString)
 	{
+		//Load the datepicker from file
+		
 		// saveString is formatted like this uuuu-MM-dd (ISO-8601)
 		
-		String selectedDateString = saveString.split(":")[1];
+		String selectedDateString = StringEscaper.unescape(saveString.split(":")[1]); // Get the date and unescape it
 		
 		setupDatePicker();
 		
@@ -36,12 +38,6 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 			LocalDate selectedDate = LocalDate.parse(selectedDateString);
 			dPicker.setDate(selectedDate);
 		}
-		
-		/*
-		daysComboBox.setSelectedIndex(dayIndex);
-		monthsComboBox.setSelectedIndex(monthIndex);
-		yearsComboBox.setSelectedIndex(yearIndex);
-		*/
 		
 	}
 	
@@ -107,6 +103,7 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 	
 	public String toString()
 	{
+		// This returns a string that fully describes the date picker
 		String asString = "datepicker:";
 		
 		String dateString = dPicker.getDateStringOrEmptyString();
@@ -116,7 +113,7 @@ public class JValidatedDatePicker extends JPanel implements JValidatedComponent,
 			dateString = "-1";
 		}
 		
-		asString += dateString;
+		asString += StringEscaper.escape(dateString); // Escape the date string
 		
 		return asString;
 	}
