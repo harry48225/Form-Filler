@@ -31,6 +31,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	public JValidatedLocationEntry(String saveString)
 	{
+		// Loads a saved location entry from file
 		setup();
 		prepareGUI();
 		
@@ -42,7 +43,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 		
 		if (splitString.length > 1) // If the location entry was non-empty when it was saved
 		{
-			enteredAddress = splitString[1];
+			enteredAddress = StringEscaper.unescape(splitString[1]);
 		}
 		
 		((JTextField) addressComboBox.getEditor().getEditorComponent()).setText(enteredAddress); // Set the text back to what it was when the component was saved 
@@ -115,9 +116,10 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	
 	public String toString()
 	{
+		// Returns a string that fully describes the location entry component
 		String currentText = (String) addressComboBox.getEditor().getItem();
 		
-		return "locationentry:" + currentText;
+		return "locationentry:" + StringEscaper.escape(currentText);
 	}
 	
     public void keyTyped(KeyEvent e) {
