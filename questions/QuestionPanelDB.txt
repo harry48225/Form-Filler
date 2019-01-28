@@ -1,4 +1,3 @@
-Q03869306$label:Checkbox test||checkboxes:this is a very g;false.\u002e\u002e\u002e;false.bad \u002c \u0024 \u007c\u007c;false.Set of checkboxes \u002c\u002c\u002c \u007c;false
 Q14805999$label:Address||locationentry:
 Q18028811$label:Photo ID||filechooser:image+null
 Q18503635$label:Password||password:;

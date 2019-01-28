@@ -25,7 +25,7 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 			
 			String[] textFieldData = tempType.split(":")[1].split(";");
 			
-			String enteredText = textFieldData[0];
+			String enteredText = StringEscaper.unescape(textFieldData[0]);
 			
 			tempType = textFieldData[1];
 			
@@ -95,7 +95,9 @@ public class JValidatedTextField extends JTextField implements JValidatedCompone
 	
 	public String toString()
 	{
-		String asString = "textfield:" + getText() + ";" + type;
+		// Returns a string that fully describes the text field.
+		
+		String asString = "textfield:" + StringEscaper.escape(getText()) + ";" + type;
 		
 		return asString;
 	}
