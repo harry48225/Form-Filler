@@ -10,3 +10,4 @@ Q18028811,7,Photo ID,Photo ID Upload
 Q71119615,8,Calendar,Date of Birth
 Q41647821,8,File upload,CV upload
 Q99184684,3,Drop-down,Radio button escaping
+Q69428317,5,Drop-down,Combox escape test

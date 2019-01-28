@@ -18,6 +18,8 @@ public class JValidatedComboBox extends JComboBox<String> implements JValidatedC
 	
 	public JValidatedComboBox(String saveString)
 	{
+		// Loads a saved combobox
+		
 		// Date should look like
 		// combobox:option.option.option;selectedIndex
 		String[] componentData = saveString.split(":")[1].split(";");
@@ -35,7 +37,7 @@ public class JValidatedComboBox extends JComboBox<String> implements JValidatedC
 	{
 		for (String option : options)
 		{
-			addItem(option);
+			addItem(StringEscaper.unescape(option)); // Each option is escaped so it needs to be unescaped before being added
 		}
 	}
 	
@@ -60,7 +62,7 @@ public class JValidatedComboBox extends JComboBox<String> implements JValidatedC
 		
 		for (String option : options)
 		{
-			optionString += option + ".";
+			optionString += StringEscaper.escape(option) + ".";
 		}
 		
 		optionString = optionString.substring(0, optionString.length() - 1); // Trim off the trailing ,
@@ -70,6 +72,7 @@ public class JValidatedComboBox extends JComboBox<String> implements JValidatedC
 	
 	public String toString()
 	{
+		// Returns a string that fully describes the combobox
 		String asString = "combobox:";
 		
 		asString += getOptionsString();

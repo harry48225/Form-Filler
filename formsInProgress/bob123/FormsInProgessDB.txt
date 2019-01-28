@@ -27,4 +27,4 @@ F79996144;0;0~Q14805999$label:Address||locationentry:,Q71119615$label:Birthday||
 F60018747;50;0~Q64356881$label:Name||textfield:tyttrytryty;none,Q84848110$label:Email Address||textfield:;email
 Q03869306;100;2~Q03869306$label:Checkbox test||checkboxes:this is a very g;false.\u002e\u002e\u002e;false.bad \u002c \u0024 \u007c\u007c;false.Set of checkboxes \u002c\u002c\u002c \u007c;false
 Q99184684;0;0~Q99184684$label:Radio button test||radiobuttons:This shopuld\u002c ;false.\u002c be \u007c\u007c;false.e\u0024caped properly;false
-F07300981;25;3~Q18503635$label:Password||password:;,Q71119615$label:Birthday||datepicker:-1,Q18028811$label:Photo ID||filechooser:image+null,Q14805999$label:Address||locationentry:Runshaw College\u002c Leyland\u002c UK
+F07300981;25;4~Q18503635$label:Password||password:;,Q71119615$label:Birthday||datepicker:-1,Q14805999$label:Address||locationentry:,Q69428317$label:Combobox||combobox:Select an option.dsfdsf.\u002c\u002c.sdf\u002e\u002e.sdf\u002e.\u007c\u007c.\u0024sdfsd.\u0024\u002cdsfsdf;5
