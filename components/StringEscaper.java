@@ -2,6 +2,12 @@ package components;
 
 public class StringEscaper
 {
+	// This is an important class as it means that any characters that the user
+	// has entered that the system uses as delimiters will be replaced
+	// by unicode escapes so that they do not cause errors in the databases
+	// this all happens behind the scenes and the user will not notice
+	// as the strings are unescaped before they are dispalyed to the user.
+	
 	public static String escape(String toEscape)
 	{
 		// This replaces all of the characters that are used as delimiters with

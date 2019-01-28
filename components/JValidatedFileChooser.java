@@ -19,6 +19,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public JValidatedFileChooser(String tempType)
 	{
+		// Loads a file chooser form file / creates a new one
 		// Temp type can either be a save string or just the type
 		fileChooser = new JFileChooser();
 		
@@ -33,7 +34,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 			
 			if (saveData.length > 1 && !saveData[1].equals("null")) // If there is a saved file name and it isn't the text null
 			{
-				fileChooser.setSelectedFile(new File(saveData[1]));
+				fileChooser.setSelectedFile(new File(StringEscaper.unescape(saveData[1]))); // Set the selected file as the file loaded from text.
 			}
 		}
 			
@@ -119,7 +120,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public String toString()
 	{
-		String asString = "filechooser:" + type + "+" + fileChooser.getSelectedFile();
+		// Returns a string that fully describes the file chooser
+		String asString = "filechooser:" + type + "+" + StringEscaper.escape(fileChooser.getSelectedFile() + "");
 		
 		return asString;
 	}
