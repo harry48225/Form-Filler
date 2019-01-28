@@ -21,13 +21,14 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 		
 		String[] passwords = saveString.split(":")[1].split(";");
 		
+		// Load the passwords and unescape them if they are present
 		if (passwords.length > 0) // If there are actually passwords saved
 		{
-            passwordFields[0].setText(passwords[0]);
+            passwordFields[0].setText(StringEscaper.unescape(passwords[0]));
             
             if (passwords.length > 1) // If there is a second password
             {
-                passwordFields[1].setText(passwords[1]);
+                passwordFields[1].setText(StringEscaper.unescape(passwords[1]));
             }
 		}
 		
@@ -67,7 +68,8 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	
 	public String toString()
 	{
-		String asString = "password:" + new String(passwordFields[0].getPassword()) + ";" + new String(passwordFields[1].getPassword());
+		// Returns an escaped string that fully describe the password fields and their contents.
+		String asString = "password:" + StringEscaper.escape(new String(passwordFields[0].getPassword())) + ";" + StringEscaper.escape(new String(passwordFields[1].getPassword()));
 		
 		return asString;
 	}
