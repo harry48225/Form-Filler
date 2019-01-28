@@ -26,7 +26,7 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 		{	
 			String[] optionData = options[i].split(";");
 			
-			buttons[i] = new JRadioButton(optionData[0]);
+			buttons[i] = new JRadioButton(StringEscaper.unescape(optionData[0])); // Unescape the text after loading
 			buttons[i].setSelected(Boolean.parseBoolean(optionData[1]));
 		}
 		
@@ -108,7 +108,7 @@ public class RadioButtonPanel extends JPanel implements JValidatedComponent, JSa
 		
 		for (JRadioButton button : buttons)
 		{
-			options += (button.getText() + ";" + button.isSelected() + ".");
+			options += (StringEscaper.escape(button.getText()) + ";" + button.isSelected() + ".");
 		}
 		
 		options = options.substring(0, options.length() - 1); // Trim off the trailing ,
