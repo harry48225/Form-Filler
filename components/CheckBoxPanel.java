@@ -2,8 +2,6 @@ package components;
 
 import javax.swing.*;
 import java.awt.*;
-
-
 public class CheckBoxPanel extends JPanel implements JSaveableComponent // A better class for managing check boxes
 {
 	private JCheckBox[] boxes; 
@@ -30,7 +28,7 @@ public class CheckBoxPanel extends JPanel implements JSaveableComponent // A bet
 			
 			String[] optionData = options[i].split(";");
 			
-			boxes[i] = new JCheckBox(optionData[0]);
+			boxes[i] = new JCheckBox(StringEscaper.unescape(optionData[0])); // The label text is stored escaped we need to un escape it.
 			boxes[i].setSelected(Boolean.parseBoolean(optionData[1]));
 		}
 		
@@ -97,11 +95,13 @@ public class CheckBoxPanel extends JPanel implements JSaveableComponent // A bet
 	
 	private String getOptionsString()
 	{
+		// Returns each of the options and whether they are selected or not as a string
+		
 		String options = "";
 		
 		for (JCheckBox checkBox : boxes)
 		{
-			options += (checkBox.getText() + ";" + checkBox.isSelected() + ".");
+			options += (StringEscaper.escape(checkBox.getText()) + ";" + checkBox.isSelected() + ".");
 		}
 		
 		options = options.substring(0, options.length() - 1); // Trim off the trailing ,
@@ -111,6 +111,7 @@ public class CheckBoxPanel extends JPanel implements JSaveableComponent // A bet
 	
 	public String toString()
 	{
+		// Returns an escaped string that fully describes the checkbox panel
 		String asString = "checkboxes:";
 		
 		asString += getOptionsString();
