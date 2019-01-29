@@ -14,7 +14,8 @@ public class JSaveableLabel extends JLabel implements JSaveableComponent
 		
 		if (saveString.contains(":"))
 		{
-			text = saveString.split(":")[1];
+			// The text in the save string is esacped therefore it needs to be unescaped before it is displayed
+			text =  StringEscaper.unescape(saveString.split(":")[1]);
 		}
 		else
 		{
@@ -26,6 +27,7 @@ public class JSaveableLabel extends JLabel implements JSaveableComponent
 	
 	public String toString()
 	{
-		return "label:" + text;
+		// Returns a string that fully describes all of the 
+		return "label:" + StringEscaper.escape(text);
 	}
 }
