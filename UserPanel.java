@@ -292,6 +292,12 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 				return; // Exit the method
 			}
 			
+			if (newPassword.contains(","))
+			{
+				JOptionPane.showMessageDialog(this, u.getFirstName() + " please remove commas from password.", "Error saving changes", JOptionPane.ERROR_MESSAGE);
+				return; // Exit the method
+			}
+			
 			if (!validateDate(newDateOfBirth))
 			{
 				JOptionPane.showMessageDialog(this, u.getFirstName() + ": Invaid date of birth", "Error saving changes", JOptionPane.ERROR_MESSAGE);
@@ -316,13 +322,20 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 				}
 			}
 			
-			u.setUsername(newUsername);
-			u.setPassword(newPassword);
-			u.setFirstName(newFirstName);
-			u.setLastName(newLastName);
-			u.setDateOfBirth(newDateOfBirth);
-			u.setPhoneNumber(newPhoneNumber);
-			u.setSessionsAttended(newSessionsAttended.split(" "));
+			// commas and || are not allowed as they could break the database therefore we should remove them.
+			String[] userData = {newUsername, newPassword, newFirstName, newLastName, newDateOfBirth, newPhoneNumber, newSessionsAttended};
+			for (int i = 0; i < userData.length; i++)
+			{
+				userData[i] = userData[i].replace(",","").replaceAll("\\|", "");
+			}
+			
+			u.setUsername(userData[0]);
+			u.setPassword(userData[1]);
+			u.setFirstName(userData[2]);
+			u.setLastName(userData[3]);
+			u.setDateOfBirth(userData[4]);
+			u.setPhoneNumber(userData[5]);
+			u.setSessionsAttended(userData[6].split(" "));
 			
 		}
 		
