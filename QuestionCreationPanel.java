@@ -527,8 +527,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addNewType()
 	{
+		// Asks the user for a new type and adds it to the system
+		
 		type = JOptionPane.showInputDialog(this, "What's the question's type?"); // Get the type
-		questions.addType(type); // Add the type to the type list
+		questions.addType(type.replace(",", "")); // Add the type to the type list after first removing commas.
 		updateTypeComboBox();
 		questionTypeCombobox.setSelectedIndex(questions.getTypes().length); // Select the most recently added type
 		this.revalidate(); // Update the window
