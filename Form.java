@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+import components.*;
 public class Form implements Serializable
 {
 	private String id; // ID unique to each form
@@ -33,7 +33,7 @@ public class Form implements Serializable
 	
 		id = data[0]; // The first item is the id
 		questions = data[1].split("\\."); // Questions are delimited by a .
-		description = data[2];
+		description = StringEscaper.unescape(data[2]); // Load the description and unescape it
 		mainSkillsTested = data[3].split("\\.");
 		difficulty = Integer.parseInt(data[4]);
 		title = data[5];
@@ -92,10 +92,10 @@ public class Form implements Serializable
 		return arrayToString(mainSkillsTested);
 	}
 	
-	public String toString() // Outputs attributes as String
+	public String toString() // Outputs attributes as an escaped String
 	{
 		return id + ","  + arrayToString(questions) + "," 
-				+ description + "," + arrayToString(mainSkillsTested) 
+				+ StringEscaper.escape(description) + "," + arrayToString(mainSkillsTested) 
 				+ "," + difficulty + "," + title + "," + arrayToString(requiredQuestions); 
 	}
 	
@@ -126,7 +126,9 @@ public class Form implements Serializable
 	
 	public String[] toStringArray() // Outputs attributes as string array
 	{
-		return toString().split(",");
+		String[] output = toString().split(",");
+		output[2] = StringEscaper.unescape(output[2]); // Unescape the description so that it's displayed correctly to the user.
+		return output;
 	}
 
 

@@ -722,7 +722,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	{
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running getFinalDetails"); // Debug
 		
-		String title = formTitleField.getText();
+		String title = formTitleField.getText().replace(",", ""); // Remove commas from the title and get the title that the user has entered.
 		
 		String description = formDescriptionField.getText(); // Get a description of the form
 		
