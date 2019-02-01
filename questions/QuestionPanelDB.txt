@@ -6,5 +6,4 @@ Q41647821$label:CV||filechooser:document+null
 Q53642376$label:Title||combobox:Select an option.Mr.Mrs.Ms.Miss;0
 Q64356881$label:Name||textfield:;none
 Q67918670$label:Gender||radiobuttons:Male;false.Female;false.Other;false
-Q69428317$label:Combobox||combobox:Select an option.dsfdsf.\u002c\u002c.sdf\u002e\u002e.sdf\u002e.\u007c\u007c.\u0024sdfsd.\u0024\u002cdsfsdf;0
 Q69482524$label:Days available||checkboxes:Monday;false.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;false

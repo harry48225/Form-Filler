@@ -104,6 +104,7 @@ public class Register extends JFrame implements ActionListener
 			for (String session : u.getSessionsAttended()) // For each session
 			{
 				String[] splitSession = session.split("-");
+				System.out.println(u.getUsername() + " " + session);
 				int day = Integer.parseInt(splitSession[0]);
 				int month = Integer.parseInt(splitSession[1]);
 				int year = Integer.parseInt(splitSession[2]);

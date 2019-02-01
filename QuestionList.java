@@ -50,9 +50,9 @@ public class QuestionList
 		questionArray = newArray; // Overwrite the old array
 		nextQuestionLocation--; // There is one less question in the array so a free spot has opened
 		
-		writeDatabase();
-		
 		panels.removeQuestionPanel(questionID); // Remove it from the question panel database also
+		
+		writeDatabase();
 	}
 	
 	public Question getQuestionByID(String id) // Returns an a question that corresponds to the id

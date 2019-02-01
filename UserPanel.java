@@ -329,13 +329,18 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 				userData[i] = userData[i].replace(",","").replaceAll("\\|", "");
 			}
 			
+			String[] sessionsAttendedArray = new String[0];
+			if (userData[6].length() > 5) // If there is a date
+			{
+				sessionsAttendedArray = userData[6].split(" ");
+			}
 			u.setUsername(userData[0]);
 			u.setPassword(userData[1]);
 			u.setFirstName(userData[2]);
 			u.setLastName(userData[3]);
 			u.setDateOfBirth(userData[4]);
 			u.setPhoneNumber(userData[5]);
-			u.setSessionsAttended(userData[6].split(" "));
+			u.setSessionsAttended(sessionsAttendedArray);
 			
 		}
 		

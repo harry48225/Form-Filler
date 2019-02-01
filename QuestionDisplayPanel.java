@@ -505,9 +505,20 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> deleteButton pressed"); // Debug
 			int row = questionTable.getSelectedRow();
-			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
-			questions.removeQuestion(selectedQuestion); // Delete the question
-			refreshTable();
+			
+			if (row != -1) // If a row was actually selected
+			{
+				String selectedQuestionID = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
+				Question selectedQuestion = questions.getQuestionByID(selectedQuestionID);
+				int delete = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \"" + selectedQuestion.getTitle() + "\"?" , "Are you sure?", JOptionPane.YES_NO_OPTION); // Confirm the delete
+				
+				if (delete == 0) // If they pressed yes
+				{
+					questions.removeQuestion(selectedQuestionID); // Delete the question
+				}
+				
+				refreshTable();
+			}
 			
 		}
 		else if (evt.getSource() == resetButton)
