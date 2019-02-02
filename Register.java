@@ -8,11 +8,12 @@ import java.util.List;
 
 public class Register extends JFrame implements ActionListener
 {
+	/* This is a window that allows the user to take a register by checking boxes next to each user's name */
 	private UserList users;
 	
 	private JPanel userPanel = new JPanel();
-	private JScrollPane userPanelScroller = new JScrollPane(userPanel);
-	private JCheckBox[] attendanceBoxes;
+	private JScrollPane userPanelScroller = new JScrollPane(userPanel); // Allows the list of users to be scrolled if it's too large
+	private JCheckBox[] attendanceBoxes; // Stores the checkboxes
 	
 	private JButton saveButton = new JButton("Save register");
 	
@@ -26,6 +27,7 @@ public class Register extends JFrame implements ActionListener
 	
 	private void prepareGUI()
 	{
+		/* Sets up the register gui */
 		System.out.println("[INFO] <REGISTER> Running prepareGUI");
 		
 		this.setLayout(new BorderLayout());
@@ -38,8 +40,9 @@ public class Register extends JFrame implements ActionListener
 		prepareCheckboxes();
 		
 		saveButton.addActionListener(this);
-		saveButton.setBackground(new Color(130,183,75));
+		saveButton.setBackground(new Color(130,183,75)); // Green
 		
+		// Add the button and checkboxes in the correct locations
 		this.add(userPanelScroller, BorderLayout.CENTER);
 		this.add(saveButton, BorderLayout.SOUTH);
 		
@@ -48,8 +51,10 @@ public class Register extends JFrame implements ActionListener
 	
 	private void prepareCheckboxes()
 	{	
-		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.PAGE_AXIS));
-		User[] allUsers = getUserOrder();
+		/* Creates a checkbox for each user with the label <firstname> <lastname> */
+		
+		userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.PAGE_AXIS)); // Vertical boxlayout
+		User[] allUsers = getUserOrder(); // Get the adjusted order of users that puts the ones most recently attended at the top
 		
 		attendanceBoxes = new JCheckBox[allUsers.length];
 		
@@ -62,8 +67,10 @@ public class Register extends JFrame implements ActionListener
 		}
 	}
 	
-	private void addAttendance() // If the user's checkbox is ticked they have todays date added to their sessionsPresentAt array
+	private void addAttendance()
 	{		
+		/* If the user's checkbox is ticked they have todays date added to their sessionsPresentAt array */
+		
 		for (int i = 0; i < attendanceBoxes.length; i++) // For each box
 		{
 			if (attendanceBoxes[i].isSelected()) // If it's checked
@@ -80,8 +87,10 @@ public class Register extends JFrame implements ActionListener
 		
 	}
 	
-	private User[] getUserOrder() // Returns a list of users with the users that have attended the most recent session at the top
+	private User[] getUserOrder()
 	{
+		/* Returns a list of users with the users that have attended the most recent session at the top */
+		
 		users.sortByFirstName();
 		
 		long DAY_IN_MS = 1000 * 60 * 60 * 24;
@@ -89,6 +98,7 @@ public class Register extends JFrame implements ActionListener
 		
 		User[] allUsers = users.getUsers();
 		
+		// One array for the users that have recently attended, the other for the rest of the users
 		User[] topUsersInRegister = new User[allUsers.length];
 		User[] restOfUsersInRegister = new User[allUsers.length];
 		
@@ -155,6 +165,7 @@ public class Register extends JFrame implements ActionListener
 			
 			addAttendance();
 			
+			// Close the window
 			this.dispose();
 		}
 	}
