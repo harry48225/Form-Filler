@@ -13,7 +13,7 @@ import components.*;
 
 public class FormCreationPanel extends JPanel implements ActionListener
 {
-	
+	/* This panel allows the user to create forms */
 	private QuestionList questions;
 	private FormList forms;
 	private GUI gui;
@@ -79,6 +79,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	public void refreshTable()
 	{
+		/* Refreshs the table with updated information */
 		selectionPanel.refreshTable();
 		refreshEditFormDropdown();
 		
@@ -88,6 +89,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareGUI()
 	{
+		/* Prepares the panel for display to the user and adds all of the components to it */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running prepareGUI"); // Debug
 		
 		deleteIcon = new ImageIcon("bin.png");
@@ -107,7 +110,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareInformationPanel()
 	{
-		formInformationPanel.setLayout(new BoxLayout(formInformationPanel, BoxLayout.PAGE_AXIS));
+		/* Prepares the panel that allows the admin to enter the title, description, and difficulty of the form */
+		formInformationPanel.setLayout(new BoxLayout(formInformationPanel, BoxLayout.PAGE_AXIS)); // Vertical box layout
 		
 		// Add the border
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Form information");
@@ -130,6 +134,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		difficultyPanel.setLayout(new GridLayout(1,2));
 		descriptionPanel.setLayout(new GridLayout(1,2));
 		
+		// Large width so that it fills the horizontal space
 		formTitleField.setMaximumSize(new Dimension(10000, 40));
 		formTitleField.setPreferredSize(new Dimension(10000, 40));
 		descriptionPanel.setMaximumSize(new Dimension(10000, 80));
@@ -146,7 +151,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		// Add them to the information panel
 		formInformationPanel.add(titlePanel);
-		formInformationPanel.add(Box.createVerticalGlue());
+		formInformationPanel.add(Box.createVerticalGlue()); // The glue fills the vertical save between each panel
 		formInformationPanel.add(difficultyPanel);
 		formInformationPanel.add(Box.createVerticalGlue());
 		formInformationPanel.add(descriptionPanel);
@@ -154,31 +159,37 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void refreshEditFormDropdown()
 	{
+		/* Refreshs the dropdown that allows the user to select a form to edit with up to date information */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running refreshEditFormDropdown");
 		
 		Form[] formArray = forms.getTrimmedArray(); // Get the array of forms
 		
-		String[] formIDs = new String[formArray.length + 1]; // Create an array to store the ids
+		String[] formTitles = new String[formArray.length + 1]; // Create an array to store the titles of the forms
 		
-		formIDs[0] = "Creating new form"; // Default entry for when a form hasn't been selected to edit
+		formTitles[0] = "Creating new form"; // Default entry for when a form hasn't been selected to edit
 		
 		for (int i = 0; i < formArray.length; i++) // For each form
 		{
-			formIDs[i+1] = formArray[i].getTitle();
+			formTitles[i+1] = formArray[i].getTitle();
 		}
 		
-		DefaultComboBoxModel model = new DefaultComboBoxModel(formIDs);
+		// Create a combobox model with the titles
+		DefaultComboBoxModel model = new DefaultComboBoxModel(formTitles);
 		
+		// Give the edit form combobox the model
 		editFormComboBox.setModel(model);
 	}
 	
 	private void prepareEditPanel()
 	{
+		/* Prepares the panel that allow the admin to select a form to edit */
+		
 		refreshEditFormDropdown();
 		
 		editFormPanel.setLayout(new BoxLayout(editFormPanel, BoxLayout.LINE_AXIS)); // Only 1 row
 		
-		editFormButton.setBackground(new Color(169,196,235));
+		editFormButton.setBackground(new Color(169,196,235)); // Blue
 		editFormButton.addActionListener(this);
 		
 		editFormComboBox.setMaximumSize(new Dimension(100, 30));
@@ -198,15 +209,18 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareButtonPanel()
 	{
+		/* Prepares the panel which contains the addHeader, resetForm, and saveForm buttons */
+		
 		buttonPanel.setLayout(new GridLayout(3,1)); // 3 rows 1 column
 		
+		// Make it have a very large horizontal width so it fills all available horizontal width
 		buttonPanel.setMaximumSize(new Dimension(10000, 180));
 	
 
 		// Make the buttons the correct colours
-		addHeaderButton.setBackground(new Color(169,196,235));
+		addHeaderButton.setBackground(new Color(169,196,235)); // Blue
 		resetFormButton.setBackground(new Color(255,127,127)); // Make the button red
-		resetFormButton.setForeground(Color.WHITE);
+		resetFormButton.setForeground(Color.WHITE); // Make the text white
 		saveFormButton.setBackground(new Color(130,183,75)); // Make the button green
 		
 		// Add action listeners
@@ -223,10 +237,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareMainPanel()
 	{
-		
+		/* Prepares the main panel of the formCreationPanel. This contains the form preview on the right and the entry panel on the left */
 		this.setLayout(new GridLayout(0,2)); // Infinite rows 2 columns
 		
-		// IMPLEMENT THE ENTRY CONTAINER PANEL
+		// This contains all components that are not the form preview
 		entryContainerPanel.setLayout(new BoxLayout(entryContainerPanel, BoxLayout.PAGE_AXIS)); // Vertical box layout
 
 		prepareEditPanel();
@@ -257,11 +271,12 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareQuestionSelectionPanel()
 	{
-		
+		/* This creates a question selection panel with an add to form button */
 		selectionPanel = new SelectQuestionsPanel(questions);
 		
+		// Add the add question button to///// t h e   s elect questions panel and make it the correct colour and size
 		addQuestionButton.addActionListener(this);
-		addQuestionButton.setBackground(new Color(169,196,235));
+		addQuestionButton.setBackground(new Color(169,196,235)); // Blue
 		addQuestionButton.setMaximumSize(new Dimension(80, 40));
 		selectionPanel.addNewButton(addQuestionButton);
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Select Questions");
@@ -273,16 +288,20 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareFormPreview()
 	{
+		/* Prepares the from preview */
+		
 		formPreview = new JPanel();
 		
-		formPreview.setLayout(new BoxLayout(formPreview, BoxLayout.PAGE_AXIS));
+		formPreview.setLayout(new BoxLayout(formPreview, BoxLayout.PAGE_AXIS)); // Vertical box layout
 		
+		// Create and add the title
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Form preview");
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
 		formPreview.setBorder(border);
 		
+		// Create a scroll pane so that the preview can be scrolled if it's too long
 		formPreviewScroller = new JScrollPane(formPreview);
 		formPreviewScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
@@ -290,6 +309,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void saveForm()
 	{
+		/* Saves the form that is currently being edited to the form database */
+		
 		Form existingForm = forms.getFormByID(formID); // Get the form if it exists 
 		
 		if (existingForm != null) // If the form already exists
@@ -299,7 +320,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		if (formInformationPresenceCheck()) // If all of the fields have the correct data
 		{
-			getFinalDetails();
+			getFinalDetails(); // Get the title, description, and difficulty
 		
 			forms.addForm(formBeingCreated.build()); // Add the form to the list
 		
@@ -309,6 +330,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 			if (save == 0) // If they selected yes
 			{
+				// Save the form and tell the user that it's been saved
 				forms.writeDatabase(); 
 				JOptionPane.showMessageDialog(this, "Form saved!");
 				
@@ -316,7 +338,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 				
 			int reset = JOptionPane.showConfirmDialog(this, "Would you like to reset the panel?", "Reset?", JOptionPane.YES_NO_OPTION); // Ask if they want to reset the form creation panel
 			
-			if (reset == 0)
+			if (reset == 0) // If they selected yes
 			{
 				gui.resetTab(this); // Reset the tab
 			}
@@ -326,7 +348,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private boolean formInformationPresenceCheck()
 	{
-		String errorString = "";
+		/* Does a presence check on the title, description, and difficutly controls */
+		
+		String errorString = ""; // This string will be filled with the errors that the user has made
 			
 		// Check to see that they've filled it all in
 		if (formTitleField.getText().isEmpty())
@@ -367,11 +391,13 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			JOptionPane.showMessageDialog(this, "Please address the following errors: " + errorString, "Insufficent details entered", JOptionPane.ERROR_MESSAGE);
 		}
 		
-		return errorString == "";
+		return errorString == ""; // Return whether then made any errors - if no errors the string will be ""
 	}
 	
 	private void addHeader()
 	{
+		/* Asks the user for header text and adds a header with that text to the form */
+		
 		String headerText = JOptionPane.showInputDialog(this, "Please enter a header");
 		// The input dialog will return null if the user pressed cancel
 		// If this happens we should stop adding the new header
@@ -394,7 +420,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			System.out.println("[INFO] <FORM_CREATION_PANEL> editFormButton pressed");
 			
-			if (editFormComboBox.getSelectedIndex() != 0)
+			if (editFormComboBox.getSelectedIndex() != 0) // If they selected a form to edit
 			{
 				Form formBeingEdited = forms.getTrimmedArray()[editFormComboBox.getSelectedIndex() - 1]; // Subtract 1 because at index 0 is the current form in the dropdown
 				
@@ -405,10 +431,12 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			String selectedQuestionID = selectionPanel.getSelectedQuestionID();
 			
+			// Check whether the question has been added to the form already, and if not, add it to the form. Otherwise show an error message
 			if (selectedQuestionID != null)
 			{
 				boolean inForm = false;
 				
+				// Iterate through the questions in the form to see whether it's already in the form
 				for (int i = 0; i < nextQuestionPreviewLocation; i++)
 				{
 					if (questionPreviews[i].getName().equals(selectedQuestionID))
@@ -441,6 +469,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		}
 		else if (evt.getSource() instanceof JButton) // If it's a JButton
 		{
+			/* This will be reached if the user has pressed any of the buttons that are after each question in the form preview.
+			   This finds the question id associated with the button and performs the correct action on the question according to which
+			   type of button was pressed. */
+			   
 			JButton pressedButton = (JButton) evt.getSource(); // Get the button
 			
 			String questionID = pressedButton.getParent().getName(); // The name of the JPanel that the button is in is the questionID that it belongs to 
@@ -481,6 +513,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 	
 	private void loadFormToBeEdited(Form formToEdit)
 	{
+		/* Loads a form to be edited. Populates the form information with the information about the form and the form preview
+			with the questions from the form */
+			
 		formID = formToEdit.getID();
 		formBeingCreated = new Form.FormBuilder(formID, questions);
 		
@@ -498,6 +533,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			formBeingCreated = formBeingCreated.setRequired(question, formToEdit.isQuestionRequired(question));
 		}
 		
+		// Find the required button for each question in the preview and make it marked as required or not required depending on whether the question is required in the form
 		for (Component questionRow : formPreview.getComponents())
 		{
 			if (questionRow instanceof JPanel)
@@ -525,8 +561,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formDifficultyCombobox.setSelectedIndex(formToEdit.getDifficulty());
 	}
 	
-	private void addComponentToForm(String component) // Adds a question or header to the preview and to the form
+	private void addComponentToForm(String component)
 	{
+		/* Adds a question or header to the preview and to the form */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running addComponentToForm"); // Debug
 		
 		JPanel questionPreviewPanel = new JPanel();
@@ -563,7 +601,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		{
 			// Prepare the required button
 			JButton requiredButton = new JButton();
-			requiredButton.setBackground(new Color(169,196,235));
+			requiredButton.setBackground(new Color(169,196,235)); // Blue
 			requiredButton.setName("required"); // For reference later
 			requiredButton.setIcon(requiredIcon);
 			requiredButton.addActionListener(this);
@@ -575,7 +613,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		// Prepare the delete button
 		JButton deleteButton = new JButton();
 		deleteButton.setIcon(deleteIcon);
-		deleteButton.setBackground(new Color(169,196,235));
+		deleteButton.setBackground(new Color(169,196,235)); // Blue
 		deleteButton.setName("delete"); // For reference later 
 		deleteButton.addActionListener(this);
 		deleteButton.setPreferredSize(new Dimension(40, 40));
@@ -587,11 +625,11 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		JButton upButton = new JButton(); // The button text is an upwards arrow
 		upButton.setIcon(upArrow);
 		upButton.setName("up");
-		upButton.setBackground(new Color(169,196,235));
+		upButton.setBackground(new Color(169,196,235)); // Blue
 		JButton downButton = new JButton(); // The button text is a downwards arrow
 		downButton.setIcon(downArrow);
 		downButton.setName("down");
-		downButton.setBackground(new Color(169,196,235));
+		downButton.setBackground(new Color(169,196,235)); // Blue
 		upButton.addActionListener(this);
 		downButton.addActionListener(this);
 		
@@ -605,7 +643,7 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		
 		actionButtonPanel.add(upAndDownPanel);
 		
-		questionPreviewPanel.add(Box.createHorizontalGlue());
+		questionPreviewPanel.add(Box.createHorizontalGlue()); // This fills the horizontal space between the question and the action buttons
 		questionPreviewPanel.add(actionButtonPanel);
 		
 		questionPreviews[nextQuestionPreviewLocation] = questionPreviewPanel; // Add the panel to the array
@@ -617,12 +655,17 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		updateFormPreview();
 	}
 	
-	private void moveQuestionUp(String questionID) // Moves a question up the form
+	private void moveQuestionUp(String questionID)
 	{
+		/* Moves a question up the form */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running moveQuestionUp"); // Debug
 		
+		// Move the question up in the form
 		formBeingCreated = formBeingCreated.moveUp(questionID);
 		
+		
+		// Move the question up in the form preview
 		int questionLocation = -1;
 		
 		for (int i = 0; i < nextQuestionPreviewLocation; i++) // Iterate over the question previews
@@ -646,12 +689,16 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		updateFormPreview();
 	}
 	
-	private void moveQuestionDown(String questionID) // Moves a question down the form
+	private void moveQuestionDown(String questionID)
 	{
+		/* Moves a question down the form */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running moveQuestionDown"); // Debug
 		
+		// Move the question down in the form
 		formBeingCreated = formBeingCreated.moveDown(questionID);
 		
+		// Move the question down in the form preview
 		int questionLocation = -1;
 		
 		for (int i = 0; i < nextQuestionPreviewLocation; i++) // Iterate over the question previews
@@ -677,6 +724,8 @@ public class FormCreationPanel extends JPanel implements ActionListener
 
 	private void updateFormPreview()
 	{
+		/* Updates the form preview */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running updateFormPreview"); // Debug
 		
 		formPreview.removeAll(); // Remove all panels from the preview
@@ -693,8 +742,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		formPreviewScroller.repaint();
 	}	
 	
-	private void removeQuestionFromForm(String questionID) // Removes a question from the form
+	private void removeQuestionFromForm(String questionID)
 	{
+		/* Removes a question from the form */
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running removeQuestionFromForm"); // Debug
 		
 		formBeingCreated = formBeingCreated.remove(questionID); // Remove the question from the builder
@@ -705,8 +755,9 @@ public class FormCreationPanel extends JPanel implements ActionListener
 			
 		for (int i = 0; i < nextQuestionPreviewLocation; i++)
 		{
-			if (!questionPreviews[i].getName().equals(questionID)) // If the question isn't the one that we don't want
+			if (!questionPreviews[i].getName().equals(questionID)) // If the question isn't the one to delete
 			{
+				// Copy the question to the new array
 				newArray[j] = questionPreviews[i];
 				j++;
 			}
@@ -718,8 +769,10 @@ public class FormCreationPanel extends JPanel implements ActionListener
 		updateFormPreview();
 	}
 	
-	private void getFinalDetails() // Gets the type and difficulty of the question from the user
+	private void getFinalDetails()
 	{
+		/* Gets the type and difficulty of the question from the user */
+		
 		System.out.println("[INFO] <FORM_CREATION_PANEL> Running getFinalDetails"); // Debug
 		
 		String title = formTitleField.getText().replace(",", ""); // Remove commas from the title and get the title that the user has entered.
