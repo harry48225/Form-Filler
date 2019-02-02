@@ -309,9 +309,9 @@ public class QuestionList
 		nextQuestionLocation++; // Increment the location
 	}
 	
-	public void addQuestion(Question tempQuestion, QuestionPanel tempQuestionPanel)/
+	public void addQuestion(Question tempQuestion, QuestionPanel tempQuestionPanel)
 	{
- /		/* A dds a question and question panel to the program */
+ 		/* Adds a question and question panel to the program */
 		addQuestion(tempQuestion); // Add the question
 		panels.addQuestionPanel(tempQuestionPanel); // Add the question panel to the database
 		
