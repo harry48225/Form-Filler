@@ -9,6 +9,8 @@ import java.io.*;
 
 public class JValidatedFileChooser extends JPanel implements JValidatedComponent, ActionListener, JSaveableComponent
 {
+	/* This is a saveable filechooser with built in validation */
+	
 	private final String type; // Allowed types are all, image, document, video
 	
 	private transient JFileChooser fileChooser; // The actual file chooser, marked transient so that it's not serialized.
@@ -19,8 +21,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public JValidatedFileChooser(String tempType)
 	{
-		// Loads a file chooser form file / creates a new one
-		// Temp type can either be a save string or just the type
+		/* Loads a file chooser form file or creates a new one
+		   Temp type can either be a save string or just the type */
 		fileChooser = new JFileChooser();
 		
 		if (tempType.contains(":")) // If it's a save string
@@ -50,6 +52,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public void setFileExtensionFilter()
 	{
+		/* Gives the file chooser the correct file extension filter */
+		
 		if (!type.equals("all")) // If something other than all has been selected
 		{
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Blank", "txt"); // Blank filter for now
@@ -73,6 +77,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 
 	public boolean validateAnswer()
 	{
+		/* Checks that the user has uploaded a file of the correct type */
 		boolean pass = false;
 		
 		if (fileChooser != null && fileChooser.getSelectedFile() != null)  // If the file chooser isn't null and a file has been selected.
@@ -88,11 +93,11 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 			{
 				pass = true;
 			}
-			else if (type.equals("document") && extension.matches("pdf|doc|docx")) 
+			else if (type.equals("document") && extension.matches("pdf|doc|docx"))  // Check if it's a document
 			{
 				pass = true;
 			}
-			else if (type.equals("video") && extension.matches("mp4|mov|avi"))
+			else if (type.equals("video") && extension.matches("mp4|mov|avi")) // Check if it's a video
 			{
 				pass = true;	
 			}
@@ -102,6 +107,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public boolean presenceCheck()
 	{
+		/* Performs a presence check */
+		
 		return fileChooser != null && fileChooser.getSelectedFile() != null;
 	}
 
@@ -115,12 +122,14 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	public String getErrorString()
 	{
+		/* Returns the error string */
+		
 		return ERROR_STRING;
 	}
 	
 	public String toString()
 	{
-		// Returns a string that fully describes the file chooser
+		/* Returns a string that fully describes the file chooser */
 		String asString = "filechooser:" + type + "+" + StringEscaper.escape(fileChooser.getSelectedFile() + "");
 		
 		return asString;
