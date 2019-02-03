@@ -13,6 +13,8 @@ import java.util.*;
 
 public class FormDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener, Helper
 {
+	/* This is a panel that displays all of the forms in the system to the user and allows them to: search and sort them, and to attempt them. */
+	
 	private final String HELP_STRING = "This is the form display panel from here you can attempt a form by selecting one from the table and pressing attempt. By pressing attempt form based on weaknesses you can attempt a form based on your weak areas. You can filter and sort forms using the buttons on the right.";
 	
 	private FormList forms;
@@ -40,6 +42,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	private JButton attemptButton = new JButton("Attempt Form"); // User presses this to attempt the selected question
 	private JButton attemptUserWeaknessesFormButton = new JButton("Attempt form based on weaknesses"); // Button that the user can press to attempt a form based on their weaknesses
 	private JButton deleteButton = new JButton("Delete Form"); // To delete the form
+
 	// Filters
 	private JPanel sortAndFilterPanel;
 	private JPanel sortPanel;
@@ -51,6 +54,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	private JPanel typeCheckBoxPanel = new JPanel();
 	private JButton typeFilterButton = new JButton("Apply main skills tested filter");
 	
+	// Stores the filter icon
 	private ImageIcon filterIcon;
 	private JLabel filterIconLabel;
 	
@@ -75,11 +79,14 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	public String getHelpString()
 	{
+		/* Returns the help string */
 		return HELP_STRING;
 	}
 	
-	private void prepareGUI() // Makes the window
+	private void prepareGUI()
 	{
+		/* Prepares the panel for display */
+		
 		System.out.println("[INFO] <FORM_DISPLAY_PANEL> Running prepareGUI"); // Debug
 			
 		this.setLayout(new BorderLayout());
@@ -88,6 +95,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		mainPanel.setLayout(layout); // Get the layout
 		
+		
+		// Prepare the constraints
 		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
 		mainPanelConstraints.fill = GridBagConstraints.BOTH;
 
@@ -113,6 +122,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		sortAndFilterPanel.setBorder(border); // Set the border
 		
+		
+		// Prepare constraints for the sort and filter panel
 		GridBagConstraints sortAndFilterPanelConstraints = new GridBagConstraints();
 
 		sortAndFilterPanelConstraints.fill = GridBagConstraints.BOTH;
@@ -147,14 +158,14 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		resetButton.addActionListener(this);
 		resetButton.setBackground(new Color(255,127,127)); // Make the button red
-		resetButton.setForeground(Color.WHITE);
+		resetButton.setForeground(Color.WHITE); // Make the text white
 		sortAndFilterPanelConstraints.gridy = 2;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		
 		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
 		
 		attemptButton.addActionListener(this);
-		attemptButton.setBackground(new Color(130,183,75));
+		attemptButton.setBackground(new Color(130,183,75)); // Make it green
 
 	
 		mainPanelConstraints.gridheight = 1;
@@ -170,13 +181,14 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		if (adminMode) // Add the delete question button if the user is an admin
 		{
 			deleteButton.addActionListener(this);
-			deleteButton.setBackground(new Color(174,59,46));
-			deleteButton.setForeground(Color.WHITE);
+			deleteButton.setBackground(new Color(174,59,46)); // Make it red
+			deleteButton.setForeground(Color.WHITE); // Make the text white
 			mainPanel.add(deleteButton, mainPanelConstraints);
 		}
 		
-		attemptUserWeaknessesFormButton.setBackground(new Color(139, 102, 153));
+		attemptUserWeaknessesFormButton.setBackground(new Color(139, 102, 153)); // Make it purple
 		attemptUserWeaknessesFormButton.addActionListener(this);
+		
 		mainPanelConstraints.gridy = 2;
 		mainPanel.add(attemptUserWeaknessesFormButton, mainPanelConstraints);
 		
@@ -192,8 +204,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void prepareTable()
 	{
+		/* Prepares the table that the forms are displayed in */
 		formTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
 		formTable.setDefaultEditor(Object.class, null); // Disable editing
+		
+		
 		// Make double clicking on a row open that question to be attempted.
 		formTable.addMouseListener(new MouseAdapter() {
 							public void mousePressed(MouseEvent mouseEvent) {
@@ -203,21 +218,27 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 								}
 							}
 						});
+		
+		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = formTable.getColumnModel();
-
 		tcm.removeColumn(tcm.getColumn(0));
 		
+		// Add the wordwrap renderer to each of the columns in the table
 		for (int i = 0; i < formTable.getColumnCount(); i++)
 		{
 			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
 			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
 		}
+		
+		// Add a listener so that we can detect when a column changes size.
 		tcm.addColumnModelListener(this);
 		
 		// Make the Title column as small as possible
 		tcm.getColumn(0).setMaxWidth(120);
 		tcm.getColumn(0).setPreferredWidth(90);
+		
+		
 		// Fix the difficulty, percentage complete, and time completed columns to the required size
 		tcm.getColumn(3).setMaxWidth(90);
 		
@@ -230,6 +251,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 	private void prepareSortPanel()
 	{
+		/* Sets up the sort panel, this contains the sort buttons as well as the filter icon */
 		
 		// Setup the filter icon
 		// Even though this is the sorts panel and not a filter panel we are putting 
@@ -244,6 +266,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortPanel = new JPanel();
 		sortPanel.setLayout(new GridBagLayout());
 		
+		// Prepare the gridbag layout constraints
 		GridBagConstraints sortPanelConstraints = new GridBagConstraints();
 		sortPanelConstraints.fill = GridBagConstraints.BOTH;
 		sortPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
@@ -252,6 +275,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortPanelConstraints.weightx = 1;
 		sortPanelConstraints.weighty = 1; 
 		
+		
+		// Make the sorts label
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		Font currentFont = sortsLabel.getFont();
 		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
@@ -262,18 +287,22 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		sortPanelConstraints.gridy = 1;
 		
 		sortDifficultyButton.addActionListener(this);
-		sortDifficultyButton.setBackground(new Color(169,196,235));
+		sortDifficultyButton.setBackground(new Color(169,196,235)); // Make it blue
 		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
 	}
 	
 	private void prepareDifficultyFilterPanel()
 	{
+		/* Prepares the difficulty filter panel and slider */
+		
 		// Prepare the difficulty filter
 		difficultyFilterPanel = new JPanel();
 		difficultyFilterPanel.setLayout(new GridBagLayout()); // Create a grid bag layout
 		
+		
+		// Prepare the gridbag constraints
 		GridBagConstraints difficultyFilterPanelConstraints = new GridBagConstraints();
-		difficultyFilterPanelConstraints.fill = GridBagConstraints.BOTH;
+		difficultyFilterPanelConstraints.fill = GridBagConstraints.BOTH; // Fill all available horizontal and vertical space
 
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
@@ -282,6 +311,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.weighty = 1; 
 		
+		// Create the label
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		Font currentFont = difficultyFilterLabel.getFont();
 		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
@@ -291,10 +321,10 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		difficultySlider.setMajorTickSpacing(1);
 		difficultySlider.setPaintTicks(true); // Add the ticks
-		difficultySlider.setPaintLabels(true);
+		difficultySlider.setPaintLabels(true); // Add the labels
 		
 		difficultyFilterButton.addActionListener(this);
-		difficultyFilterButton.setBackground(new Color(169,196,235));
+		difficultyFilterButton.setBackground(new Color(169,196,235)); // Make it blue
 		
 		difficultyFilterPanel.add(difficultySlider, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -305,16 +335,17 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void prepareTypeFilterPanel()
 	{
-		// Prepare the type filter
+		/* Prepare the type filter panel and checkboxes */
 		
 		prepareTypeCheckBoxes();
 
 		typeFilterButton.addActionListener(this);
-		typeFilterButton.setBackground(new Color(169,196,235));
+		typeFilterButton.setBackground(new Color(169,196,235)); // Make it blue
 		
 		typeFilterPanel = new JPanel();
 		typeFilterPanel.setLayout(new GridBagLayout());
 		
+		// Setup the constraints
 		GridBagConstraints typeFilterPanelConstraints = new GridBagConstraints();
 		typeFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		typeFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
@@ -323,6 +354,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		typeFilterPanelConstraints.weightx = 1;
 		typeFilterPanelConstraints.weighty = 1; 
 		
+		// Create the label
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
 		Font currentFont = typeFilterLabel.getFont();
 		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
@@ -341,6 +373,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 
 	private void prepareTypeCheckBoxes()
 	{
+		/* Prepares the type checkboxes that the user can use to filter */
+		
 		typeCheckBoxPanel.setLayout(new GridLayout(0,3)); // 3 rows infinite columns
 		
 		String[] questionTypes = questions.getTypes(); // Get the types
@@ -356,6 +390,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	public void refresh()
 	{
+		/* Refreshes the table and the type filter checkboxes */
 		refreshTable();
 		
 		refreshTypeFilterButtons();
@@ -363,6 +398,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void refreshTypeFilterButtons()
 	{
+		/* Refreshs the type filter checkboxes by resetting the tab */
+		
 		if (typeCheckBoxes.length != questions.getTypes().length)
 		{
 			System.out.println("[INFO] <FORM_DISPLAY_PANEL> Types have changed, resetting panel");
@@ -370,10 +407,13 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		}
 	}	
 	
-	private void refreshTable() // Refreshes the table. Preserves sorts and filters
+	private void refreshTable()
 	{
+		/* Refreshes the table. Preserves sorts and filters */
+		
 		Form[] formData = forms.getArray();
 		
+		// Difficulty sort the forms if the difficulty sort is applied
 		if (difficultySort)
 		{
 			forms.sortByDifficulty();
@@ -388,6 +428,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 			Form[] intersection = new Form[forms.getArray().length]; // At most it could contain every question
 			int nextIntersectionLocation = 0;
 			
+			// Add each form that is in both arrays to the intersection array
 			for (Form fD : difficulty)
 			{
 				for (Form fT : type)
@@ -409,11 +450,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 				formData[i] = intersection[i];
 			}
 		}
-		else if (difficultyFilter)
+		else if (difficultyFilter) // If just the difficulty filter is applied, perform the filter
 		{
 			formData = forms.filterByDifficulty(difficultySlider.getValue());
 		}
-		else if (typeFilter)
+		else if (typeFilter) // If just the type filter is applied, perform the filter
 		{
 			formData = forms.filterByType(getTypesSelected());
 		}
@@ -433,6 +474,9 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void clearCheckboxes()
 	{
+		/* Unselects all of the type filter checkboxes */
+		
+		// Iterate over all of the checkboxes and deselect each one
 		for (JCheckBox checkbox : typeCheckBoxes)
 		{
 			checkbox.setSelected(false);
@@ -441,6 +485,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void resetTable()
 	{
+		/* Disables all of the sorts and filters and then refreshes the table */
+		
 		clearCheckboxes();
 
 		typeFilter = false;
@@ -451,19 +497,19 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 	}
 	
-	private void populateTable(Form[] data) // Populates the table with data
+	private void populateTable(Form[] data)
 	{
+		/* Populates the table with the form data */
 		
 		System.out.println("[INFO] <FORM_DISPLAY_PANEL> Running populateTable"); // Debug
 		
-		formTableModel.setRowCount(0); // Start a zero rows
+		formTableModel.setRowCount(0); // Start at zero rows
 		
 		for (int i =0; i < data.length; i++) // For each form in the array
 		{
 			if(data[i] != null) // If there is data
 			{
-				Form f = data[i]; // The current form. The name is f as it'll be called a large amount of time. f is to make the calls 
-								  // less cluttered
+				Form f = data[i]; // The current form. The name is f as it'll be called a large amount of time. f is to make the calls less cluttered
 								  
 				String percentageComplete = "0%";
 				String timesCompleted = "0";
@@ -493,12 +539,15 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		resizeRows();
 	}
 
-	private String[] getTypesSelected() // Gets which type checkboxes are selected
+	private String[] getTypesSelected()
 	{
+		/* Gets which type checkboxes are selected */
+		
 		String[] typesSelected = new String[questions.getTypes().length]; // Create an array of the correct size
 
 		int nextLocation = 0;
 		
+		// Iterate over the type checkboxes and add the ones that are selected to the array
 		for (JCheckBox cB : typeCheckBoxes)
 		{
 			if (cB.isSelected()) //  If the box is checked
@@ -508,6 +557,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 			}
 		}
 
+		// Trim the array
+		
 		String[] typesSelectedTrimmed = new String[nextLocation]; // Create a new array of just the right size
 
 		for (int i = 0; i < nextLocation; i++)
@@ -585,6 +636,8 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	private void resizeRows()
 	{
+		/* Resizes the rows based on the column width to ensure that all of the text can be read */
+		
 		for (int row = 0; row < formTable.getRowCount(); row ++)
 		{
 			int requiredHeight = 0;
@@ -614,8 +667,11 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 	
 	public void columnMarginChanged(ChangeEvent e)
 	{
+		/* Resize the rows if a column has been resized */
 		resizeRows();
 	}
+	
+	/* These methods need to be implemented for this class to be a column listener */
 	public void columnAdded(TableColumnModelEvent e) {}
 	
 	public void columnRemoved(TableColumnModelEvent e) {}
