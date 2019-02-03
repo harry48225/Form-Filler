@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class JSaveableLabel extends JLabel implements JSaveableComponent
 {
+	/* A JLabel that is a JSaveableComponent */
+	
 	private String text;
 	
 	public JSaveableLabel(String saveString)
@@ -27,7 +29,7 @@ public class JSaveableLabel extends JLabel implements JSaveableComponent
 	
 	public String toString()
 	{
-		// Returns a string that fully describes all of the 
+		// Returns a string that fully describes the label
 		return "label:" + StringEscaper.escape(text);
 	}
 }
