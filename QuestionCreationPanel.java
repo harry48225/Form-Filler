@@ -13,6 +13,7 @@ import java.io.*;
 
 public class QuestionCreationPanel extends JPanel implements ActionListener
 {		
+	/* This panel allows the admin to create questions */
 	private QuestionList questions;
 	private GUI gui;
 	
@@ -88,6 +89,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareGUI()
 	{
+		/* Sets up the panel to be displayed */
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running prepareGUI"); // Debug
 		
 		prepareMainPanel();
@@ -96,11 +98,15 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareAddLabelPanel()
 	{
+		/* Prepares the panel that the user can use to add a label to the question */
+		
+		
+		// Create the panel
 		addLabelPanel = new JPanel();
 		addLabelPanel.setLayout(new GridBagLayout());
 		GridBagConstraints addLabelConstraints = new GridBagConstraints();
 		
-		
+		// Set up constraints
 		addLabelConstraints.fill = GridBagConstraints.BOTH;
 		addLabelConstraints.weightx = 1;
 		addLabelConstraints.weighty = 1;
@@ -116,29 +122,35 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		addLabelPanel.add(labelTextField, addLabelConstraints);
 		
+		// Make the panel the correct size
 		addLabelPanel.setMaximumSize(new Dimension(1000, 80));
 		addLabelPanel.setPreferredSize(new Dimension(1000, 80));
 	}
 	
 	private void prepareAddComponentPanel()
 	{
+		/* Prepares the panel that contains the buttons that allow the admin to add components to the question  */
 		prepareComponentCreationButtons();
 		
+		// Make the panel
 		addComponentPanel = new JPanel();
 		addComponentPanel.setLayout(new GridLayout(1,1));
 		
 		addComponentPanel.add(componentCreationButtons);
 		
+		// Make it the correct size
 		addComponentPanel.setMaximumSize(new Dimension(800, 200));
 		addComponentPanel.setPreferredSize(new Dimension(800, 200));
 	}
 	
 	private void updateTypeComboBox()
 	{
-		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running updateTypeComboBox");
-		// Add all of the type to the combo box and  
-		// a "Please select an option"
+		/* Updates the combobox that allows the admin to select the type of a question when a new type is added to the system */
 		
+		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running updateTypeComboBox");
+		
+		// Add all of the types to the combo box and  
+		// a "Please select an option"
 		questionTypeCombobox.removeAllItems();
 		questionTypeCombobox.addItem("Please select a type");
 		for (String type : questions.getTypes())
@@ -150,10 +162,11 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareEnterFinalDetailsPanel()
 	{
+		/* Prepares the last panel of the question creation process, the panel that allows the admin to enter the title, type, and difficulty. */
 		addFinalDetailsPanel = new JPanel();
 		addFinalDetailsPanel.setLayout(new GridBagLayout());
 		
-		
+		// Prepare the constraints
 		GridBagConstraints addFinalDetailsConstraints = new GridBagConstraints();
 		addFinalDetailsConstraints.fill = GridBagConstraints.BOTH;
 		addFinalDetailsConstraints.weightx = 1;
@@ -173,6 +186,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		addFinalDetailsPanel.add(questionTypeLabel, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 1;
 		
+		// Type combobox
 		updateTypeComboBox();
 		addFinalDetailsPanel.add(questionTypeCombobox, addFinalDetailsConstraints);
 		addFinalDetailsConstraints.gridx = 2;
@@ -188,12 +202,15 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		addFinalDetailsPanel.add(questionDifficultyCombobox, addFinalDetailsConstraints);
 		
+		// Make the panel the correct size
 		addFinalDetailsPanel.setMaximumSize(new Dimension(1000, 180));
 		addFinalDetailsPanel.setPreferredSize(new Dimension(1000, 180));
 	}
 	
-	private void prepareCreateQuestionPanel() // The lower half of the screen concerned with inputting the information
+	private void prepareCreateQuestionPanel()
 	{
+		/* Prepares the lower half of the screen concerned with inputting the information */
+		
 		createQuestionPanel = new JPanel();
 		
 		// Setup the border
@@ -218,8 +235,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		prepareEnterFinalDetailsPanel();
 		addFinalDetailsPanel.setVisible(false);
 		
+		// Store the panels in this array so that they can be easily accessed later
 		questionCreationStages = new JPanel[] {addLabelPanel, addComponentPanel, addFinalDetailsPanel};
 		
+		// Add all of them to the panel
 		createQuestionPanel.add(Box.createVerticalGlue());
 		createQuestionPanel.add(addLabelPanel);
 		createQuestionPanel.add(addComponentPanel);
@@ -229,13 +248,14 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		// Setup the next back and finish buttons
 		prepareButtonNavigationPanel();
 		
-		
+		// Add the navigation buttons
 		createQuestionPanel.add(buttonNavigationPanel);
 		
 	}
 	
 	private void prepareButtonNavigationPanel()
 	{
+		/* Prepares the panel which contains the next, previous, and finish buttons */
 		buttonNavigationPanel = new JPanel();
 		buttonNavigationPanel.setLayout(new BoxLayout(buttonNavigationPanel, BoxLayout.LINE_AXIS)); // Create a new box layout left to right
 		
@@ -271,17 +291,18 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		buttonNavigationPanel.add(nextButton);
 		buttonNavigationPanel.add(finishButton);
 		
+		// Make the panel the correct size
 		buttonNavigationPanel.setMaximumSize(new Dimension(1000, 60));
 	}
 	
 	private void prepareMainPanel()
 	{
-		
+		/* Prepares the panel itself and adds all of the other panels to it */
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		this.add(Box.createVerticalGlue());
+		this.add(Box.createVerticalGlue()); // Fills the empty vertical space
 		
-		prepareVisualRepresentation();
+		prepareVisualRepresentation(); // Prepare the question preview
 	
 		this.add(questionPreviewOuter);
 		
@@ -292,19 +313,21 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		this.add(createQuestionPanel);
 		
 		this.add(Box.createVerticalGlue());
-	
-		//this.add(allButtons);
 		
 		this.setVisible(true);
 	}
 	
 	private void prepareComponentCreationButtons()
 	{
+		/* Prepares the buttons that allow the admin to add components to the question */
+		
 		componentCreationButtons = new JPanel();
 		
+		// The buttosns are in 2 rows
 		JPanel row1 = new JPanel();
 		JPanel row2 = new JPanel();
 		
+		// Give each panel a horizontal box layout
 		row1.setLayout(new BoxLayout(row1, BoxLayout.LINE_AXIS));
 		row2.setLayout(new BoxLayout(row2, BoxLayout.LINE_AXIS));
 		
@@ -324,7 +347,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			b.addActionListener(this);
 			b.setMaximumSize(buttonSize);
 			b.setPreferredSize(buttonSize);
-			b.setBackground(new Color(169,196,235));
+			b.setBackground(new Color(169,196,235)); // Blue
 		}
 		
 		// 4 Buttons on row 1
@@ -352,7 +375,12 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void prepareVisualRepresentation()
 	{
+		/* Prepares the question preview */
+		
+		// The outer panel has the border
 		questionPreviewOuter = new JPanel();
+		
+		// This smaller inner panel contains the preview components
 		questionPreview = new JPanel(); // Make the panel
 		
 		questionPreviewOuter.setLayout(new BoxLayout(questionPreviewOuter, BoxLayout.LINE_AXIS)); // Horizontal box layout
@@ -369,6 +397,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		questionPreviewOuter.add(questionPreview);
 		questionPreviewOuter.add(Box.createHorizontalGlue());
 		
+		// Make the panels the correct sizes
 		questionPreviewOuter.setPreferredSize(new Dimension(600,300));
 		questionPreviewOuter.setMaximumSize(new Dimension(1000,700));
 		
@@ -488,7 +517,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 			// Check to see if the label has been added if we are moving from the first screen
 			if (currentStage == 0)
 			{
-				if (labelTextField.getText().trim().isEmpty())
+				if (labelTextField.getText().trim().isEmpty()) // If no label was added
 				{
 					JOptionPane.showMessageDialog(this, "Please enter some text for the label to have before continuing", "No label text", JOptionPane.ERROR_MESSAGE);
 				}
@@ -527,7 +556,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addNewType()
 	{
-		// Asks the user for a new type and adds it to the system
+		/* Asks the user for a new type and adds it to the system */
 		
 		type = JOptionPane.showInputDialog(this, "What's the question's type?"); // Get the type
 		questions.addType(type.replace(",", "")); // Add the type to the type list after first removing commas.
@@ -536,8 +565,10 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		this.revalidate(); // Update the window
 	}
 	
-	private void goForward() // Goes forward a step
+	private void goForward()
 	{
+		/* Goes forward a screen in the creation process */
+		
 		questionCreationStages[currentStage].setVisible(false); // Make the current stage invisible
 		currentStage++;
 		questionCreationStages[currentStage].setVisible(true); // Make the next stage visible
@@ -549,6 +580,7 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 		if (currentStage == questionCreationStages.length-1) // If we're at the last stage
 		{
+			// Replace the next button with the finish button
 			nextButton.setVisible(false);
 			finishButton.setVisible(true);
 		}
@@ -572,17 +604,20 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		}
 	}
 	
-	private void addTextField() // Adds a text field to the question
+	private void addTextField()
 	{
+		/* Adds a text field to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addTextField"); // Debug
 		
+		// The validation types that the user can select
 		Object[] possibilities = {"none", "phone", "email"};
 		String s = (String)JOptionPane.showInputDialog(this,"What validation is required?",
 					"Validation?",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     possibilities,
-                    "none");
+                    "none"); // Ask the user to select a type
 
 		if (s != null) // If they selected an option
 		{
@@ -592,22 +627,27 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 
 	private void addLocationEntry()
 	{
+		/* Adds a location entry to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addLocationEntry");
 		
 		addComponent(new JValidatedLocationEntry());	
 	}
 
-	private void addFileChooser() // Adds a file chooser to the question
+	private void addFileChooser()
 	{
+		/* Adds a file chooser to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addFileChooser"); // Debug
-
+	
+		// The types of validation that can be added to the question
 		Object[] possibilities = {"all", "image", "document", "video"};
 		String userChoice = (String)JOptionPane.showInputDialog(this,"What types of files should be accepted?",
 					"Validation?",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     possibilities,
-                    "none");
+                    "none"); // Ask the user to select a validation type
 		
 		if (userChoice != null) // If they selected an option
 		{
@@ -617,11 +657,12 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addCombobox()
 	{
+		/* Allows the user to add a combobox to the question */
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addCombobox"); // Debug
 		
 		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-			String[] options = optionEntry.getOptions();
+			String[] options = optionEntry.getOptions(); // Get the options that they entered
 			String[] adjustedOptions = new String[options.length + 1]; // Create a new array with room for the select an option
 			
 			for (int i=0; i<adjustedOptions.length; i++)
@@ -642,16 +683,18 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addRadioButtons()
 	{
+		/* Allows the user to add radiobuttons to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addRadioButtons");
 		
 		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-				String[] options = optionEntry.getOptions();
+			String[] options = optionEntry.getOptions(); // Get the options that they entered
 			
 			RadioButtonPanel.RadioButtonPanelBuilder rBuilder = new RadioButtonPanel.RadioButtonPanelBuilder();
 			for (String option : options) // For each option that the user entered
 			{
-				rBuilder = rBuilder.add(option);
+				rBuilder = rBuilder.add(option); // Add it to the radio button panel
 			}
 			
 			addComponent(rBuilder.build());
@@ -660,17 +703,18 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addCheckboxes()
 	{
+		/* Allows the user to add checkboxes to the question */
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addCheckboxes"); // Debug
 		
 		if (showEnterOptionsPanel()) // Show the option entry and run the following code if they pressed ok
 		{
-			String[] options = optionEntry.getOptions();
+			String[] options = optionEntry.getOptions(); // Get the options that the user entered
 			
 			// Add the options to the checkbox builder
 			CheckBoxPanel.CheckBoxPanelBuilder cBuilder = new CheckBoxPanel.CheckBoxPanelBuilder(); 
 			for (String option : options) // For each option that the user entered
 			{
-				cBuilder = cBuilder.add(option);
+				cBuilder = cBuilder.add(option); // Add the option
 			}
 			
 			addComponent(cBuilder.build()); // Add the checkboxpanel
@@ -679,6 +723,8 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addPasswordField()
 	{
+		/* Adds password fields to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addPasswordField");
 		
 		addComponent(new JValidatedPasswordField());
@@ -686,15 +732,17 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 	
 	private void addCalendarEntry()
 	{
+		/* Adds calendar entry to the question */
+		
 		System.out.println("[INFO] <QUESTION_CREATION_PANEL> Running addCalendarEntry");
-		
-		
 		
 		addComponent(new JValidatedDatePicker());
 	}
 	
 	private void updatePreview()
 	{
+		/* Updates the question preview by removing and readding all components */
+		
 		questionPreview.removeAll();
 		
 		// Add the non-null components to the question preview
@@ -710,13 +758,15 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		
 	}
 	
-	private void addComponent(JComponent component) // Adds the component to the question
+	private void addComponent(JComponent component)
 	{
+		/* Adds a component to the question */
+		
 		if (component instanceof JLabel) // If it's a label
 		{
 			questionComponents[0] = component; // Overwrite the label
 		}
-		else
+		else // Add it to the entry component position
 		{
 			questionComponents[1] = component;
 		}
@@ -724,8 +774,9 @@ public class QuestionCreationPanel extends JPanel implements ActionListener
 		updatePreview(); // Update the question preview
 	}
 	
-	private boolean showEnterOptionsPanel() // Shows the enter options panel to the user and returns true if they didn't press cancel
+	private boolean showEnterOptionsPanel()
 	{
+		/*  Shows the enter options panel to the user and returns true if they didn't press cancel */
 		int result = JOptionPane.showConfirmDialog(this, optionEntry, "Enter options", 
 																		JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 																		
