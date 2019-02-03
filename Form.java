@@ -156,9 +156,9 @@ public class Form implements Serializable
 		private final String id; // Must be set in constructor
 		private final QuestionList questionList;
 
-		private String title;
-		private String description;
-		private String[] mainSkillsTested;
+		private String title = "";
+		private String description = "";
+		private String[] mainSkillsTested = new String[0];
 		private int difficulty; 
 		
 		private String[] questions = new String[50]; // Store 50 questions
