@@ -1,9 +1,11 @@
 import java.util.*;
 
-public class QuestionStatList // Every user has one and it stores the QuestionStat objects
+public class QuestionStatList
 {
-	// This list class works a little differently. It doesn't actually manipulate text files itself.
+	/* Every user has one and this class stores the QuestionStat objects that belong to them
+	This list class works a little differently. It doesn't actually manipulate text files itself. */
 
+	// Maps a question id to the question stat object - random access
 	private HashMap<String, QuestionStat> questionStatMap = new HashMap<String, QuestionStat>();
 	
 	public QuestionStatList()
@@ -13,7 +15,9 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 	
 	public QuestionStatList(String loadedDatabase)
 	{
-		// The database is delimited by |.
+		/* Loads a question stat database from the save string */
+		
+		// Each QuestionStat in the database is delimited by |.
 		
 		String[] questionStats = loadedDatabase.split("\\|"); // \\ to escape
 		
@@ -24,16 +28,20 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		
 	}
 	
-	public String[] getIDArray() // Returns an array containing all of the ids of the questions
+	public String[] getIDArray()
 	{
+		/* Returns a string array containing all of the ids of the questions */
+		
 		return questionStatMap.keySet().toArray(new String[0]);
 	}
 	
-	public String[] getQuestionsStruggleTheMost(QuestionList questions) // Returns a list of questions that the user sturggles the most on
+	public String[] getQuestionsStruggleTheMost(QuestionList questions)
 	{
-		QuestionStat[] questionsToSort = questionStatMap.values().toArray(new QuestionStat[0]); // Create a new questionStat array of just the right size
+		/* Returns a list of questions that the user sturggles the most on */
+		
+		QuestionStat[] questionsToSort = questionStatMap.values().toArray(new QuestionStat[0]); // Create a new questionStat array of just the right size containing all of the question stats
 
-		// Bubble sort based on the average number of attempts taken to correct an error highest to lowest
+		// Bubble sort based on the average number of attempts taken to correct an error - highest to lowest
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
 		
@@ -65,7 +73,7 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		
 		for (int i = 0; i < questionsToSort.length; i++) // For each question
 		{
-			String questionID = questionsToSort[i].getID();
+			String questionID = questionsToSort[i].getID(); // Get the question id
 			
 			if (questions.getQuestionByID(questionID) != null) // If the question exists
 			{
@@ -83,14 +91,17 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		
 	}
 	
-	public String[][] produceReport(QuestionList questions) // Produces a report
+	public String[][] produceReport(QuestionList questions)
 	{
+		/* Produces a report */
+		
 		System.out.println("[INFO] <QUESTION_STAT_LIST> Running produceReport");
 		
 		String[] types = questions.getTypes(); // Get all the types of questions
 		
 		String[][] data = new String[types.length][]; // Create a new 2d array a row for each type
 		
+		// Work out the total number of times failed validation and average: number of attempts needed to correct, and time taken to complete for each type of question.
 		for (int i = 0; i < types.length; i++) // For each type of question
 		{
 			String currentType = types[i]; // Get the current type
@@ -103,6 +114,7 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 			int totalNumberOfAttemptsNeededToCorrect = 0; // Store the total number of attempts needed to correct
 			long totalTimeTakenToComplete = 0;
 			
+			// Get the data on each question in the hashmap
 			for (QuestionStat currentQuestionStat : questionStatMap.values()) // For each question stat
 			{
 				Question currentQuestion = questions.getQuestionByID(currentQuestionStat.getID()); // Get the question that it corresponds to
@@ -115,8 +127,8 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 					{
 						numberOfQuestions++; // Increment the number of questions
 						totalTimesFailedValidation += currentQuestionStat.getTimesFailedValidation(); // Add the number of times failed validation to the total
-						totalNumberOfAttemptsNeededToCorrect += currentQuestionStat.getAverageNumberOfAttemptsNeededToCorrect();
-						totalTimeTakenToComplete += currentQuestionStat.getAverageTimeTakenToComplete();
+						totalNumberOfAttemptsNeededToCorrect += currentQuestionStat.getAverageNumberOfAttemptsNeededToCorrect(); // Increment the total number of attempts needed to correct
+						totalTimeTakenToComplete += currentQuestionStat.getAverageTimeTakenToComplete(); // Increment the total time taken to complete
 						
 					}
 				}
@@ -128,9 +140,9 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 			
 			if (numberOfQuestions > 0) // If the question type has been attempted at least once
 			{
-				int averageNumberOfAttemptsToCorrect = totalNumberOfAttemptsNeededToCorrect / numberOfQuestions; // Calculate the average
+				// Calculate the averages
+				int averageNumberOfAttemptsToCorrect = totalNumberOfAttemptsNeededToCorrect / numberOfQuestions;
 				long averageTimeTakenToComplete = totalTimeTakenToComplete / numberOfQuestions;
-				//System.out.println(currentType + " Times failed validation: " + totalTimesFailedValidation + " Average # attempts to correct: "  + averageNumberOfAttemptsToCorrect + " Average time: " + averageTimeTakenToComplete);
 				
 				// Add the data to the array
 				rowData[1] = totalNumberOfAttemptsNeededToCorrect + "";
@@ -152,24 +164,31 @@ public class QuestionStatList // Every user has one and it stores the QuestionSt
 		return data;
 	}
 	
-	// There should be no add method only getters. And if the question isn't present it gets created automatically.
-	private void add(QuestionStat newQStat) // Private as should only be used when loading the database
+	// There should be no add method only getters. If the question isn't present it gets created automatically.
+	private void add(QuestionStat newQStat)
 	{
+		/* Adds a question stat to the database. 
+			Private as should only be used when loading the database */
 		questionStatMap.put(newQStat.getID(), newQStat);
 	}
 	
 	public QuestionStat getQuestionStatByID(String searchID)
 	{
+		/* Gets a question stat by id from the database and creates a new one if it's not in the database */
+		
 		questionStatMap.putIfAbsent(searchID, new QuestionStat(searchID));
 		
 		return questionStatMap.get(searchID);		
 	}
 	
 	
-	public String toString() // Returns a long string of all the questions stats object delimited by |
+	public String toString()
 	{
+		/* Returns a long string of all the question stat objects delimited by | which can be used to recreate the database */
+	
 		String outputString = "";
 		
+		// Append the string of each question stat to the output string
 		for (QuestionStat q : questionStatMap.values())
 		{
 			outputString += (q.toString() + "|");
