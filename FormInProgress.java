@@ -4,8 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
-public class FormInProgress implements Serializable // This object get serialized
+public class FormInProgress
 {
+	/* Stores a copy of the question panels in a form for a user's current attempt of the form.
+		Allow's their entries into the form to be saved between system restarts */
+
 	private String formID;
 	
 	private int percentComplete;
@@ -23,6 +26,8 @@ public class FormInProgress implements Serializable // This object get serialize
 	
 	public FormInProgress(String saveString)
 	{
+		/* Loads a FormInProgress form its saveString */
+
 		// The save string is a list of all of the question
 		// panels in the form sepatrated by commas.
 		// The list comprises of QuestionPanels and HeaderPanels
@@ -32,18 +37,23 @@ public class FormInProgress implements Serializable // This object get serialize
 		// It look like this
 		// formID;percentComplete;timesCompleted~QuestionPanel,QuestionPanel,HeaderPanel
 		
+		// Extract all of the information
 		String[] splitSaveString = saveString.split("~");
 		
 		String[] formInProgressData = splitSaveString[0].split(";");
-		System.out.println(splitSaveString[1]);
+
 		String[] componentStrings = splitSaveString[1].split(",");
 		
+		// Store the relevant data
 		formID = formInProgressData[0];
 		percentComplete = Integer.parseInt(formInProgressData[1]);
 		timesCompleted = Integer.parseInt(formInProgressData[2]);
 		
+
+		// Load the questionPanels from file
 		questionPanels = new JPanel[componentStrings.length];
 		
+		// Iterate over the saved question panels and load each one, or load the header if it's a header
 		for (int i = 0; i < componentStrings.length; i++)
 		{
 			// If it contains a $ it's a question panel
@@ -56,10 +66,31 @@ public class FormInProgress implements Serializable // This object get serialize
 				questionPanels[i] = new HeaderPanel(componentStrings[i]);
 			}
 		}
+
+	}
+
+	public String toString()
+	{
+		/* Returns a string that fully describes the FormInProgress and can be used to recreate it */
+
+		System.out.println("[INFO] <FORM_IN_PROGRESS> Running toString"); // Debug
+
+		String outputString = formID + ";" + percentComplete + ";" + timesCompleted + "~"; // Produce the FormInProgress output string
 		
-		System.out.println(questionPanels.length);
+		// Append all of the QuestionPanels and Headers to the output string
+		for (JPanel panel : questionPanels)
+		{
+			JSaveableComponent c = (JSaveableComponent) panel;
+			outputString += (c.toString() + ",");
+		}
+		
+		outputString = outputString.substring(0, outputString.length() - 1); // Trim off the trailing ,
+		
+		return outputString;
 	}
 	
+	/* Get and setter methods follow */
+
 	public void setPercentComplete(int newPercentComplete)
 	{
 		percentComplete = newPercentComplete;
@@ -95,22 +126,5 @@ public class FormInProgress implements Serializable // This object get serialize
 		return formID;
 	}
 	
-	public String toString()
-	{
-		System.out.println("[INFO] <FORM_IN_PROGRESS> Running toString"); // Debug
-		String outputString = formID + ";" + percentComplete + ";" + timesCompleted + "~";
-		
-		for (JPanel panel : questionPanels)
-		{
-			JSaveableComponent c = (JSaveableComponent) panel;
-			outputString += (c.toString() + ",");
-		}
-		
-		outputString = outputString.substring(0, outputString.length() - 1); // Trim off the trailing ,
-		
-		System.out.println("OS: " + outputString);
-		
-		return outputString;
-	}
 	
 }
