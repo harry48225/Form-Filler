@@ -21,9 +21,10 @@ public class WordWrapCellRenderer extends JTextPane implements TableCellRenderer
 		// If the value isn't null, i.e. there is something in the cell
 		if (value != null)
 		{
+			// Set the text of the cell to the value of the string
 			setText(value.toString());
 			
-			// Set the size of the cell to the correct size depending on its components
+			// Set the size of the cell to the correct size depending on its contents
 			setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
 			
 			
