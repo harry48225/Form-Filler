@@ -46,6 +46,8 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 	
 	private JButton registerButton = new JButton("Take register");
 	
+	private boolean edited = false;
+	
 	private JPanel[] reportPanels; // Stores all of the reports that have been generated.
 	
 	public UserPanel(UserList tempUserList, GUI tempGUI, QuestionList tempQuestions)
@@ -311,6 +313,21 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		populateTable(users.getArray());
 	}
 	
+	public void conditionalSaveChanges()
+	{
+		/* Saves changes if there has been an edit without saving */
+		
+		if (edited)
+		{
+			int result = JOptionPane.showConfirmDialog(this, "Do you want to save the changes you have made to the users?", "Unsaved changes", JOptionPane.YES_NO_OPTION);
+			
+			if (result == JOptionPane.YES_OPTION)
+			{
+				saveChanges();
+			}
+		}
+	}
+	
 	private void saveChanges()
 	{
 		/* Saves the changes that the user has made to the table */
@@ -393,6 +410,9 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 			u.setDateOfBirth(userData[4]);
 			u.setPhoneNumber(userData[5]);
 			u.setSessionsAttended(sessionsAttendedArray);
+			
+			
+			edited = false;
 			
 		}
 		
@@ -506,6 +526,7 @@ public class UserPanel extends JPanel implements ActionListener, TableColumnMode
 		/* Enables editing of the table */
 		
 		userTable.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField())); // Enable editing
+		edited = true;
 	}
 	
 	private void deleteUser()

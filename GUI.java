@@ -181,7 +181,7 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 		mainPanel.add(tabs);
 		
 		this.add(mainPanel);
-		
+		this.addWindowListener(this);
 		this.setVisible(true);
 	}
 	
@@ -574,7 +574,26 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 	
 	/* These methods need to be implemented for this class to be an window listener */
 	public void windowActivated(WindowEvent e) {}  
-	public void windowClosing(WindowEvent e) {}
+	public void windowClosing(WindowEvent e) 
+	{		
+		if (e.getSource() == this)
+		{
+			// Search through the tabs to find the one that the one
+			// that is the user panel
+			
+			for (int i = 0; i < tabs.getTabCount(); i++) // For each tab
+			{
+				Component currentTab = tabs.getComponentAt(i);
+				if (currentTab instanceof UserPanel) // Check if it's the form display panel
+				{
+					UserPanel uP = (UserPanel) currentTab;
+					uP.conditionalSaveChanges();
+					
+					break;
+				}
+			}
+		}
+	}
 	public void windowDeactivated(WindowEvent e) {}
 	public void windowDeiconified(WindowEvent e) {}
 	public void windowIconified(WindowEvent e) {}
@@ -591,5 +610,6 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 			UserPanel uP = (UserPanel) selectedTab;
 			uP.refresh();
 		}
+
 	}
 }
