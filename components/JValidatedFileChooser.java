@@ -17,6 +17,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 	
 	private JButton openButton = new JButton("Upload File"); // The button that will be cliked on to open the file chooser
 	
+	private JLabel fileLabel;
+	
 	private final String ERROR_STRING = "File Upload: Please upload a file of the correct type";
 	
 	public JValidatedFileChooser(String tempType)
@@ -45,9 +47,20 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 		
 		this.setLayout(new GridLayout(1,1)); // This layout ensures that the button entirely fills the JPanel
 		
-		openButton.addActionListener(this);
 		
-		this.add(openButton);
+		JPanel openButtonAndLabelPanel = new JPanel();
+		openButtonAndLabelPanel.setLayout(new GridLayout(2,1));
+		
+		fileLabel = new JLabel("No file uploaded", SwingConstants.CENTER);
+		
+		openButton.addActionListener(this);
+		openButton.setText("Upload " + type + " file");
+		
+		
+		openButtonAndLabelPanel.add(fileLabel);
+		openButtonAndLabelPanel.add(openButton);
+		
+		this.add(openButtonAndLabelPanel);
 	}
 	
 	public void setFileExtensionFilter()
@@ -105,6 +118,19 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 		return pass;
 	}
 	
+	private void updateLabel()
+	{
+		File f = fileChooser.getSelectedFile();
+		
+		if (f != null)
+		{
+			String name = f.getName();
+			fileLabel.setText("<html>" + name + " uploaded! </html>");
+			
+			this.revalidate();
+		}
+	}
+	
 	public boolean presenceCheck()
 	{
 		/* Performs a presence check */
@@ -117,6 +143,8 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 		if (evt.getSource() == openButton)
 		{
 			fileChooser.showOpenDialog(this);
+			
+			updateLabel();
 		}
 	}
 	
