@@ -93,6 +93,16 @@ public class StatisticsPanel extends JPanel implements ActionListener, Helper
 		// Prepare the question selector
 		questionSelector = new SelectQuestionsPanel(questions);
 		
+		// Make double clicking on a row open that question to be attempted.
+		questionSelector.getTable().addMouseListener(new MouseAdapter() {
+							public void mousePressed(MouseEvent mouseEvent) {
+								JTable table =(JTable) mouseEvent.getSource();
+								if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+									viewQuestionButton.doClick();
+								}
+							}
+						});
+		
 		// Add a "Select a question" border
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Select a question");
 		Font currentFont = border.getTitleFont();

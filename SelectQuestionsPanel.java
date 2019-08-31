@@ -35,6 +35,11 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		prepareGUI();
 	}
 	
+	public JTable getTable()
+	{
+		return questionTable;
+	}
+	
 	private void prepareGUI()
 	{
 		/* Prepares the panel for display */
