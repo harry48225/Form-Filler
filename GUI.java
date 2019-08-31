@@ -467,6 +467,10 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 					encrypted = false;
 				}
 			}
+			else
+			{
+				break;
+			}
 		}
 		
 	}
