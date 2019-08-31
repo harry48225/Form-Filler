@@ -423,15 +423,32 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 	{
 		/* Asks the user for a key to decrypt the user database and decrypts it if they entered the correct key */
 		
-		String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
-		if (key != null)
+		boolean encrypted = true;
+		
+		while (encrypted)
 		{
-			users.loadSensitiveDatabase(key);
-			
-			if (!users.isDecrypted()) // If the database was not successfully decrypted
+		
+			String key = JOptionPane.showInputDialog(this, "Please enter a key to decrypt the database");
+			if (key != null)
 			{
-				// Show an error message
-				JOptionPane.showMessageDialog(this, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
+				users.loadSensitiveDatabase(key);
+				
+				if (!users.isDecrypted()) // If the database was not successfully decrypted
+				{
+					// Show an error message
+					JOptionPane.showMessageDialog(this, "<html><center>Error decrypting the database.<br>This is most likely due to an incorrect decryption key</center></html>", "Decryption error", JOptionPane.ERROR_MESSAGE);
+					
+					int reply = JOptionPane.showConfirmDialog(this, "Would you like to retry?", "Retry", JOptionPane.YES_NO_OPTION);
+					
+					if (reply == JOptionPane.NO_OPTION)
+					{
+						break;
+					}					
+				}
+				else
+				{
+					encrypted = false;
+				}
 			}
 		}
 		
