@@ -107,7 +107,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		// Prepare the border and its title
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
 		Font currentFont = border.getTitleFont();
-		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 18)); // Make the font larger and bold
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
@@ -238,10 +238,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		sortPanelConstraints.weightx = 1;
 		sortPanelConstraints.weighty = 1; 
 		
-		// Create the sorts label with bold size 14 font
+		// Create the sorts label with bold size 17 font
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		Font currentFont = sortsLabel.getFont();
-		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		
 		// Prepare the sort buttons
@@ -275,10 +275,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.weighty = 1; 
 		
-		// Create the difficulty filter label with bold size 14 text
+		// Create the difficulty filter label with bold size 17 text
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		Font currentFont = difficultyFilterLabel.getFont();
-		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -320,10 +320,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		typeFilterPanelConstraints.weightx = 1;
 		typeFilterPanelConstraints.weighty = 1; 
 		
-		// Prepare the label with bold size 14 text
+		// Prepare the label with bold size 17 text
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
 		Font currentFont = typeFilterLabel.getFont();
-		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
 		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);

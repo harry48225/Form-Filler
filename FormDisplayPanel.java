@@ -116,7 +116,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
 		Font currentFont = border.getTitleFont();
-		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 18)); // Make the font larger and bold
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
@@ -279,7 +279,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		// Make the sorts label
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		Font currentFont = sortsLabel.getFont();
-		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		sortPanel.add(sortsLabel, sortPanelConstraints);
 		
@@ -314,7 +314,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		// Create the label
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		Font currentFont = difficultyFilterLabel.getFont();
-		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
@@ -357,7 +357,7 @@ public class FormDisplayPanel extends JPanel implements ActionListener, TableCol
 		// Create the label
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
 		Font currentFont = typeFilterLabel.getFont();
-		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
 		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
