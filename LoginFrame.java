@@ -32,7 +32,7 @@ public class LoginFrame extends JFrame implements ActionListener
 		/* Prepares the window for display */
 		System.out.println("[INFO] <LOGIN_FRAME> Running prepareGUI");
 		this.setLayout(new GridLayout(1,1));
-
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel mainPanel = new JPanel();
 		
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)); // Vertical box layout
