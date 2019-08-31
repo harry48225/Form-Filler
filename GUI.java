@@ -46,15 +46,32 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 		
 		System.out.println("[INFO] <GUI> Running setup"); // Debug
 		
+		
+		JWindow window = new JWindow();
+		window.getContentPane().add(
+			new JLabel("", new ImageIcon("icons/icon-240.png"), SwingConstants.CENTER));
+		window.setBounds(500, 350, 300, 200);
+		window.setVisible(true);
+		window.setLocationRelativeTo(null); // Center it
+	
+		// Load the questions and the forms
 		questions = new QuestionList(); // Create a new question list
 		
 		forms = new FormList();
-		
+
 		users = new UserList();
 		
 		getIcons();
 		
-		new LoginFrame(users, icons, this); // Show the login dialog
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		window.setVisible(false);
+		window.dispose();
+		
+		new LoginFrame(users, icons, this); // Show the login dialog		
 		
 	}
 	
