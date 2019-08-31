@@ -199,10 +199,20 @@ public class FormDisplayer extends JFrame implements ActionListener, MouseListen
 		this.addWindowListener(this);
 		
 		this.setLayout(new GridLayout(1,1)); // Set a grid layout
-		this.setSize(600,800); // Set the size
+		
+		if (Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 1000)
+		{
+			this.setSize(600,500); // Set the size
+			this.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximise it
+			
+		}
+		else
+		{
+			this.setSize(600,800); // Set the size
+		}
 		this.setLocationRelativeTo(null); // Center it
 		this.setIconImages(icons); // Set the icon to the form filler icons
-		this.setMinimumSize(new Dimension(600,800)); // Set the size
+		this.setMinimumSize(new Dimension(600,600)); // Set the size
 		this.setTitle(form.getTitle()); // Set the title of the window to the title of the form
 		
 		JPanel mainPanel = new JPanel();
