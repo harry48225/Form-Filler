@@ -14,7 +14,7 @@ public class WordWrapHeaderRenderer extends JTextPane implements TableCellRender
 	{
 		LookAndFeel.installBorder(this, "TableHeader.cellBorder"); // Make it look like the normal header
 		Font currentFont = this.getFont();
-		this.setFont(currentFont.deriveFont(Font.BOLD, 13)); // Make the headers bold
+		this.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the headers bold
 	}
 	
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 

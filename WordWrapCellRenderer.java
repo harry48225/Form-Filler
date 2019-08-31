@@ -12,7 +12,7 @@ public class WordWrapCellRenderer extends JTextPane implements TableCellRenderer
 		
 	public WordWrapCellRenderer()
 	{
-		this.setFont(new Font("Monaco", Font.PLAIN, 13)); // Make the text larger 11
+		this.setFont(new Font("Monaco", Font.PLAIN, 16)); // Make the text larger 11
 	}
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 	{

@@ -38,7 +38,20 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 	public GUI() // Constructor
 	{
 		setup(); // Run the setup method
-	}	
+	}
+
+	public static void setGlobalFont( Font font )
+	{  
+		Enumeration keys = UIManager.getDefaults().keys();  
+		while (keys.hasMoreElements() ) 
+		{  
+			Object key = keys.nextElement();  
+			Object value = UIManager.get( key );  
+			if ( value instanceof Font ) {  
+				UIManager.put( key, font );  
+			}  
+		}  
+	}  	
 	
 	private void setup()
 	{
@@ -62,6 +75,10 @@ public class GUI extends JFrame implements ChangeListener, ActionListener, Windo
 		users = new UserList();
 		
 		getIcons();
+		
+		System.out.println(javax.swing.UIManager.getDefaults().getFont("Label.font"));
+		
+		setGlobalFont(new Font("Verdana", Font.BOLD, 16));
 		
 		try {
 			Thread.sleep(1000);
