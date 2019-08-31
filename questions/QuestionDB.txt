@@ -7,3 +7,4 @@ Q69482524,5,Checkboxes,Days available
 Q18028811,7,Photo ID,Photo ID Upload
 Q41647821,8,File upload,CV upload
 Q38851184,3,Email,test
+Q66469479,3,Email,Email address
