@@ -60,7 +60,7 @@ public class JValidatedFileChooser extends JPanel implements JValidatedComponent
 
 			if (type.equals("image"))
 			{
-				filter = new FileNameExtensionFilter("Images", "jpg", "gif", "png");
+				filter = new FileNameExtensionFilter("Images", "jpg", "jpeg", "jpe", "gif", "png");
 			}
 			else if (type.equals("document")) 
 			{
