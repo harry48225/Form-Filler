@@ -31,7 +31,7 @@ public class Register extends JFrame implements ActionListener
 		System.out.println("[INFO] <REGISTER> Running prepareGUI");
 		
 		this.setLayout(new BorderLayout());
-		this.setSize(300,400);
+		this.setSize(400,500);
 		this.setMinimumSize(new Dimension(300,400));
 		this.setLocationRelativeTo(null); // Center it
 		
@@ -62,6 +62,9 @@ public class Register extends JFrame implements ActionListener
 		{
 			attendanceBoxes[i] = new JCheckBox(allUsers[i].getFirstName() + " " + allUsers[i].getLastName()); // Make a new check box with their full name
 			attendanceBoxes[i].setName(allUsers[i].getUsername());
+			Font currentFont = attendanceBoxes[i].getFont();
+			attendanceBoxes[i].setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		
 			userPanel.add(attendanceBoxes[i]); // Add the check box to the window
 			userPanel.add(Box.createRigidArea(new Dimension(0,5))); // Add some padding
 		}
