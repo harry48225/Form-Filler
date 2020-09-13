@@ -3,6 +3,8 @@ import java.util.*;
 
 public class UserList
 {
+	/* This list class stores and manipulates all of the user objects in the system */
+	
 	private String databaseFileName = "users/UserDB.txt";
 	private String credentialDatabaseName = "users/Credentials.txt";
 	private String questionStatDatabaseName = "users/QuestionStats.txt";
@@ -22,16 +24,20 @@ public class UserList
 	
 	public boolean isDecrypted()
 	{
+		/* Returns whether the database is decrypted */
 		return decrypted;
 	}
 	
 	public void setKey(String newKey)
 	{
+		/* Sets a new encryption key */
 		encryptionKey = newKey;
 	}
 	
-	public User[] filterByFirstName(String firstname) // Gets all of the users with a specified first name
+	public User[] filterByFirstName(String firstname)
 	{
+		/* Returns an array of all the users with a specified first name */
+		
 		System.out.println("[INFO] <USER_LIST> Running filterByFirstname");
 		
 		User[] searchResults = new User[nextUserLocation]; // Create array large enough to store the matches
@@ -61,17 +67,20 @@ public class UserList
 		return searchResultsTrimmed;
 	}
 	
-	public void removeUser(String userID) // Removes a user based on id
+	public void removeUser(String userID)
 	{
+		/* Removes a user based on id */
+		
 		System.out.println("[INFO] <USER_LIST> Running removeUser");
 		
 		User[] newArray = new User[userArray.length]; // Create a new array of the required size
 		
 		int j = 0; // The location in newArray
 		
+		// Copy over all of the users to the new array apart from the one to delete
 		for (int i = 0; i < nextUserLocation; i++)
 		{
-			if (!userArray[i].getID().equals(userID)) // If the user isn't the one that we don't want
+			if (!userArray[i].getID().equals(userID)) // If the user isn't the one to delete
 			{
 				newArray[j] = userArray[i]; // Copy the user into the new array
 				j++;
@@ -82,9 +91,9 @@ public class UserList
 		nextUserLocation--; // There is one less user in the array so a free spot has opened
 	}
 	
-	public User getUserByID(String id) // Returns the User corresponding to an ID
+	public User getUserByID(String id)
 	{
-		//System.out.println("[INFO] <USER_LIST> Running getUserByID"); // Debug
+		/* Returns the User corresponding to an ID */
 		
 		User result = null; // The user that was found
 		
@@ -102,8 +111,10 @@ public class UserList
 		
 	}
 	
-	public User getUserByUsername(String username) // Returns the User corresponding to a username
+	public User getUserByUsername(String username)
 	{
+		/* Returns the User corresponding to a username */
+		
 		System.out.println("[INFO] <USER_LIST> Running getUserByUsername"); // Debug
 		
 		User result = null; // The user that was found
@@ -121,8 +132,10 @@ public class UserList
 		return result;
 	}
 	
-	private String generateId() // Randomly generates an 8 digit id
+	private String generateId()
 	{
+		/* Randomly generates an 8 digit user id */
+		
 		System.out.println("[INFO] <USER_LIST> Running generateId");
 	
 		String id = "U"; // The id
@@ -136,8 +149,10 @@ public class UserList
 		return id; 
 	}
 	
-	public String getFreeID() // Gets a free id
+	public String getFreeID()
 	{
+		/* Gets a free user id */
+		
 		System.out.println("[INFO] <USER_LIST> Running getFreeID"); // Debug
 		Random r = new Random();
 		
@@ -160,13 +175,18 @@ public class UserList
 	
 	public User[] getArray()
 	{
+		/* Returns the user array */
+		
 		return userArray;
 	}
 	
-	public User[] getUsers() // Returns a trimmed version of the array
+	public User[] getUsers()
 	{
+		/* Returns a trimmed version of the user array */
+		
 		User[] trimmedArray = new User[nextUserLocation];
 		
+		// Copy over all of the users to the trimmed array
 		for (int i = 0; i < nextUserLocation; i++)
 		{
 			trimmedArray[i] = userArray[i];
@@ -177,6 +197,8 @@ public class UserList
 	
 	private void writeCredentialDatabase()
 	{
+		/* Writes just the credential database to file */
+		
 		System.out.println("[INFO] <USER_LIST> Running writeCredentialDatabase");
 		
 		try
@@ -185,7 +207,7 @@ public class UserList
 			
 			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
 			{
-				fw.write(userArray[i].getCredentialString());
+				fw.write(userArray[i].getCredentialString()); // Write their credential string to file
 				
 				fw.write("\r\n"); // Move onto a new line
 			}
@@ -201,15 +223,19 @@ public class UserList
 	
 	public void writeSensitiveDatabase(String encryptionKey)
 	{
+		/* Writes just the sensitive user database to file and encrypts it with the encryption key */
+		
 		System.out.println("[INFO] <USER_LIST> Running writeSensitiveDatabase");
 		
-		Encrypter enc = new Encrypter();
+		Encrypter enc = new Encrypter(); // Create a new encrypter
+		
 		try
 		{
 			FileWriter fw = new FileWriter(sensitiveDatabaseName);
 			
 			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
 			{
+				// Get their sensitive data, encrypt it, and then write it to file
 				String userData = userArray[i].getSensitiveString();
 				String encryptedUserData = enc.encode(userData, encryptionKey);
 				fw.write(encryptedUserData);
@@ -228,6 +254,8 @@ public class UserList
 	
 	private void writeQuestionStatDatabase()
 	{
+		/* Writes just the question stat database to file */
+		
 		System.out.println("[INFO] <USER_LIST> Running writeQuestionStatDatabase");
 		
 		try
@@ -236,6 +264,7 @@ public class UserList
 			
 			for (int i = 0; i < nextUserLocation; i++) // For each User in the array
 			{
+				// Write the user id and their question stat database
 				fw.write(userArray[i].getID() + "||" + userArray[i].getQuestionStats().toString());
 				
 				fw.write("\r\n"); // Move onto a new line
@@ -251,19 +280,24 @@ public class UserList
 	
 	public void writeDatabase()
 	{
+		/* Writes all of the user databases to file */
+		
 		System.out.println("[INFO] <USER_LIST> Running writeDatabase");
 		
 		writeCredentialDatabase();
 		writeQuestionStatDatabase();
 		
+		// Only write the sensitive database if it's decrypted
 		if (decrypted)
 		{
 			writeSensitiveDatabase(encryptionKey);
 		}
 	}
 	
-	private void loadCredentialDatabase() // Loads just the non sensitive information
+	private void loadCredentialDatabase()
 	{
+		/* Loads just the non sensitive, general, information about the users */
+		
 		System.out.println("[INFO] <USER_LIST> Running loadCredentialDatabase");
 		
 		nextUserLocation = 0; // Ensure that the users get added to the start of the array
@@ -276,9 +310,9 @@ public class UserList
 			
 			while (line != null) // While there is data to read from the file
 			{
-				addUser(new User(line));
+				addUser(new User(line)); // Load each user from file
 				
-				line = br.readLine();
+				line = br.readLine(); // Read the next line
 				
 			}
 			
@@ -291,11 +325,13 @@ public class UserList
 		}
 	}
 	
-	public void loadSensitiveDatabase(String key) // Loads the sensitive information
+	public void loadSensitiveDatabase(String key)
 	{
+		/* Loads the sensitive information and decrypts it with the key passed as a parameter */
+		
 		System.out.println("[INFO] <USER_LIST> Running loadSensitiveDatabase");
 		
-		Encrypter enc = new Encrypter();
+		Encrypter enc = new Encrypter(); // Create a new encrypter
 		
 		try
 		{
@@ -306,16 +342,19 @@ public class UserList
 			while (line != null) // While there is data to read from the file
 			{
 				
+				// Decode the line and load the user id
 				String decryptedLine = enc.decode(line, key);
 				String[] splitData = decryptedLine.split("\\|\\|");
 				String userID = splitData[0];
 				
+				// Add the data to the correct user in the list
 				getUserByID(userID).addSensitiveInformation(splitData[1]);
 				
 				line = br.readLine();
 				
 			}
 			
+			// Store the key and that the decryption was successful
 			encryptionKey = key;
 			decrypted = true;
 			
@@ -326,8 +365,10 @@ public class UserList
 		}
 	}
 	
-	private void loadQuestionStatDatabase() // Loads just the question stats
+	private void loadQuestionStatDatabase()
 	{
+		/* Loads just the question stats */
+		
 		System.out.println("[INFO] <USER_LIST> Running loadQuestionStatDatabase");
 		
 		try
@@ -339,7 +380,7 @@ public class UserList
 			while (line != null) // While there is data to read from the file
 			{
 				String[] splitLine = line.split("\\|\\|"); // Split at ||
-				
+	 			
 				QuestionStatList questionStats = new QuestionStatList(); // Empty question stat list
 				
 				if (splitLine.length > 1) // If there is a saved QuestionStatList
@@ -347,6 +388,7 @@ public class UserList
 					questionStats = new QuestionStatList(splitLine[1]); // Load the question stat list 
 				}
 				
+				// Get the user id and add the loaded question stats to the correct user
 				String userID = splitLine[0];
 				getUserByID(userID).setQuestionStats(questionStats);
 				
@@ -363,6 +405,8 @@ public class UserList
 	
 	public void loadDatabase()
 	{
+		/* Loads the non-encrypted databases */
+		
 		System.out.println("[INFO] <USER_LIST> Running loadDatabase");
 		
 		loadCredentialDatabase();
@@ -372,7 +416,7 @@ public class UserList
 	
 	public void addUser(User newUser)
 	{
-		//System.out.println("[INFO] <USER_LIST> Running addUser");
+		/* Adds a user to the user list */
 		
 		userArray[nextUserLocation] = newUser;
 		nextUserLocation++;
@@ -380,6 +424,8 @@ public class UserList
 	
 	public void sortByFirstName()
 	{
+		/* Performs a bubble sort to sort the users into alphabetical order */
+		
 		System.out.println("[INFO] <USER_LIST> Running sortByFirstName"); // Debug
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
@@ -396,6 +442,8 @@ public class UserList
 				
 				if (!user1FirstName.equals(user2FirstName) && !Utils.isBeforeInDictionary(user1FirstName, user2FirstName)) // If user 1 doesn't come before user 2
 				{
+					// Swap the users
+					
 					User temp = userArray[i+1]; // Store the value in a temp variable
 					userArray[i + 1] = userArray[i]; // Swap the values
 					userArray[i] = temp; // Swap

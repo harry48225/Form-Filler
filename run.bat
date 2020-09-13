@@ -1,1 +1,1 @@
-java Main 
+java -cp  ".;lib/*" Main 

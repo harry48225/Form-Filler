@@ -1,7 +1,0 @@
-F55994369
-Q36849304;0;0~Q36849304$label:Gender||radiobuttons:Male;false.Female;false.Other;false
-Q03183593;0;0~Q03183593$label:Birthday||datepicker:0.0.0
-Q77076291;0;0~Q77076291$label:First name||textfield:;none
-Q98078854;0;0~Q98078854$label:Jame's question||radiobuttons:1;false.2;false.3;false.34;false.324;false
-F86072350;0;0~header:Ignore me,Q98078854$label:Jame's question||radiobuttons:1;false.2;false.3;false.34;false.324;false
-F55994369;0;0~header:a header,Q77076291$label:First name||textfield:;none,Q36849304$label:Gender||radiobuttons:Male;false.Female;false.Other;false,Q98078854$label:Jame's question||radiobuttons:1;false.2;false.3;false.34;false.324;false

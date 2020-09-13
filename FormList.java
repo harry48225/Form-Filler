@@ -3,6 +3,8 @@ import java.util.*;
 
 public class FormList
 {
+	/* Stores and manipulates all of the form objects in the system */
+	
 	private String databaseFileName = "forms/FormDB.txt"; // The filename of the forms database
 	
 	private Form[] formArray = new Form[100]; // Store 100 Forms
@@ -14,8 +16,10 @@ public class FormList
 		loadDatabase(); // Load the database from file
 	}
 	
-	public Form getFormByID(String id) // Returns the form corresponding to an ID
+	public Form getFormByID(String id)
 	{
+		/* Returns the form corresponding to an ID by performing a linear search */
+		
 		System.out.println("[INFO] <FORM_LIST> Running getFormByID"); // Debug
 		
 		Form result = null; // The form that was found
@@ -34,8 +38,10 @@ public class FormList
 		
 	}
 	
-	public void loadDatabase() // Loads the forms that are saved in the database
+	public void loadDatabase()
 	{
+		/* Loads the forms that are saved in the database */
+		
 		System.out.println("[INFO] <FORM_LIST> Running loadDatabase"); // Debug
 		
 		nextFormLocation = 0; // Start at the beginning of the array
@@ -63,8 +69,10 @@ public class FormList
 	
 
 	
-	public void sortByDifficulty() // Bubble sort to sort by difficulty
+	public void sortByDifficulty()
 	{
+		/* Bubble sort to sort by difficulty */
+		
 		System.out.println("[INFO] <FORM_LIST> Running sortByDifficulty"); // Debug
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
@@ -89,8 +97,10 @@ public class FormList
 		}
 	}
 
-	public Form[] filterByType(String[] searchTypes) // Filters by the types present in the array
+	public Form[] filterByType(String[] searchTypes)
 	{
+		/* Filters by the types present in the array */
+		
 		Form[] searchResults = new Form[nextFormLocation]; // Create array large enough to store the matches
 
 		int nextResultLocation = 0;
@@ -134,9 +144,12 @@ public class FormList
 	
 	public Form[] filterByDifficulty(int difficulty)
 	{
+		/* Returns an array of forms that have the difficulty specified in the parameter */
+		
 		System.out.println("[INFO] <FORM_LIST> Running filterByDifficulty");
 		
-		// Linear search
+		// Linear search through the forms for the ones that are the correct difficulty
+		// and append them to the results array
 		
 		Form[] results = new Form[nextFormLocation]; // Store the results of the search
 		int nextResultLocation = 0;
@@ -150,6 +163,7 @@ public class FormList
 			}
 		}
 		
+		// Trim the array to remove null elements
 		Form[] trimmedResults = new Form[nextResultLocation]; // Create a new array of the correct size
 		
 		for (int i = 0; i < nextResultLocation; i++)
@@ -160,8 +174,10 @@ public class FormList
 		return trimmedResults; // Return the results
 	}
 	
-	public void writeDatabase() // Writes the form data to file
+	public void writeDatabase()
 	{
+		/* Writes the form data to file */
+		
 		System.out.println("[INFO] <FORM_LIST> Running writeDatabase");
 		
 		try
@@ -184,26 +200,29 @@ public class FormList
 
 	}
 	
-	public void addForm(Form tempForm) // Adds a form to the program
+	public void addForm(Form tempForm)
 	{
-		//System.out.println("[INFO] <FORM_LIST> Running addForm"); // Debug
+		/* Adds a form to the program */
 		
 		formArray[nextFormLocation] = tempForm; // Add the form to the next free location
 		
 		nextFormLocation++;
 	}
 	
-	public void removeForm(String formID) // Removes a form from the database
+	public void removeForm(String formID)
 	{
+		/* Removes a form from the database */
+		
 		System.out.println("[INFO] <FORM_LIST> Running removeForm");
 		
 		Form[] newArray = new Form[formArray.length]; // Create a new array of the required size
 		
 		int j = 0; // The location in newArray
 		
+		// Copy over all of the forms to the new array apart from the one to delete
 		for (int i = 0; i < nextFormLocation; i++)
 		{
-			if (!formArray[i].getID().equals(formID)) // If the form isn't the one that we don't want
+			if (!formArray[i].getID().equals(formID)) // If the form isn't the one to delete
 			{
 				newArray[j] = formArray[i];
 				j++;
@@ -216,11 +235,15 @@ public class FormList
 	
 	public Form[] getArray()
 	{
+		/* Returns the array of forms */
+		
 		return formArray;
 	}
 	
-	public Form[] getTrimmedArray() // Returns a version of the array with no null elements
+	public Form[] getTrimmedArray()
 	{
+		/* Returns a version of the array with no null elements */
+		
 		Form[] trimmedArray = new Form[nextFormLocation]; // Create an array just large enough to store all the elements
 		
 		for (int i = 0; i < nextFormLocation; i++) // Iterate over each element
@@ -230,10 +253,11 @@ public class FormList
 		
 		return trimmedArray;
 	}
-	public String getFreeID() // Gets a free id
+	public String getFreeID()
 	{
+		/* Gets a free id */
+		
 		System.out.println("[INFO] <FORM_LIST> Running getFreeID"); // Debug
-		Random r = new Random();
 		
 		String id = null; // The new id
 		
@@ -252,8 +276,10 @@ public class FormList
 		return id; // Return the id
 	}
 	
-	private String generateId() // Randomly generates an 8 digit id
+	private String generateId()
 	{
+		/* Randomly generates an 8 digit id */
+		
 		System.out.println("[INFO] <FORM_LIST> Running generateId");
 	
 		String id = "F"; // The id

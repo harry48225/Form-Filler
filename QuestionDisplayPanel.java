@@ -13,7 +13,8 @@ import java.util.*;
 
 public class QuestionDisplayPanel extends JPanel implements ActionListener, TableColumnModelListener, Helper
 {
-	//private final String HELP_STRING = "<html><center>This is the view questions screen. From here you can select questions and attempt them by<br>selecting them in the table and pressing the attempt button. You can<br>filter and sort questions by using the buttons on the right.</html></center>";
+	/* This is a panel which displays questions to the user and allows them to sort and search them, and attempt them*/
+	
 	private final String HELP_STRING = "This is the view questions screen. From here you can select questions and attempt them by selecting them in the table and pressing the attempt button. You can filter and sort questions by using the buttons on the right.";
 	
 	private QuestionList questions;
@@ -67,11 +68,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	public String getHelpString()
 	{
+		/* Returns the help string associated with this panel */
 		return HELP_STRING;
 	}
 	
-	private void prepareGUI() // Makes the window
+	private void prepareGUI()
 	{
+		/* Prepares the panel to be displayed */
+		
 		System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Running prepareGUI"); // Debug
 			
 		this.setLayout(new BorderLayout());
@@ -81,33 +85,39 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		mainPanel.setLayout(layout); // Set the layout
 		
 		GridBagConstraints mainPanelConstraints = new GridBagConstraints();
-		mainPanelConstraints.fill = GridBagConstraints.BOTH;
-
+		mainPanelConstraints.fill = GridBagConstraints.BOTH; // Make components fill empty space to the sides and top and bottom
+	
+		// Setup the constraints
 		mainPanelConstraints.weightx = 1;
 		mainPanelConstraints.weighty = 1;
 		mainPanelConstraints.gridx = 0;
 		mainPanelConstraints.gridy = 0;
 
-		mainPanelConstraints.gridheight = 3;
+		mainPanelConstraints.gridheight = 3; // Make the component take up 3 rows
 
 		mainPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		
 		mainPanel.add(questionTableScrollPane, mainPanelConstraints); // Add the table to the view
 		
+		
+		// Prepare the sort and filter panel
 		sortAndFilterPanel = new JPanel(); // Create a new JPanel
 		sortAndFilterPanel.setLayout(new GridBagLayout());
 		
+		// Prepare the border and its title
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Sort and Filter");
 		Font currentFont = border.getTitleFont();
-		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
+		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 18)); // Make the font larger and bold
 		
 		border.setTitleJustification(TitledBorder.CENTER); // Put the title in the center
 		
 		sortAndFilterPanel.setBorder(border); // Set the border
 		
+		
+		// Setup a new set of constraints for the sort and filter panel
 		GridBagConstraints sortAndFilterPanelConstraints = new GridBagConstraints();
 
-		sortAndFilterPanelConstraints.fill = GridBagConstraints.BOTH;
+		sortAndFilterPanelConstraints.fill = GridBagConstraints.BOTH; // Fill horizontal and vertical
 		sortAndFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
 		sortAndFilterPanelConstraints.gridx = 0;
 		sortAndFilterPanelConstraints.gridy = 0;
@@ -116,7 +126,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 
 		prepareSortPanel();
 		
-		sortAndFilterPanel.add(sortPanel, sortAndFilterPanelConstraints);
+		sortAndFilterPanel.add(sortPanel, sortAndFilterPanelConstraints); // Add the sort panel to the sort and filter panel
 		
 		// Prepare the filters
 		
@@ -125,7 +135,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		sortAndFilterPanelConstraints.gridx = 1;
 		sortAndFilterPanelConstraints.gridwidth = 2; // Span two columns
 		
-		sortAndFilterPanel.add(difficultyFilterPanel, sortAndFilterPanelConstraints);
+		sortAndFilterPanel.add(difficultyFilterPanel, sortAndFilterPanelConstraints); // Add the difficulty panel to the sort and filter panel
 		
 		// Prepare the type filter
 		
@@ -135,21 +145,22 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		sortAndFilterPanelConstraints.gridy = 1;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		
-		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints);
+		sortAndFilterPanel.add(typeFilterPanel, sortAndFilterPanelConstraints); // Add the type filter panel to the sort and filter panel
 		
+		// Prepare the reset sorts and filters button
 		resetButton.addActionListener(this);
 		resetButton.setBackground(new Color(255,127,127)); // Make the button red
-		resetButton.setForeground(Color.WHITE);
+		resetButton.setForeground(Color.WHITE); // Make the text white
 		sortAndFilterPanelConstraints.gridy = 2;
 		sortAndFilterPanelConstraints.gridwidth = 3; // Span three columns
 		
-		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints);
+		sortAndFilterPanel.add(resetButton, sortAndFilterPanelConstraints); // Add the reset button to the sort and filter panel
 		
 		attemptButton.addActionListener(this);
-		attemptButton.setBackground(new Color(130,183,75));
+		attemptButton.setBackground(new Color(130,183,75)); // Make it green
 
 		mainPanelConstraints.gridheight = 1;
-		mainPanelConstraints.weightx = 0.1;
+		mainPanelConstraints.weightx = 0.1; // This component shouldn't take up much more horizontal space when the window is resized
 		
 		mainPanelConstraints.gridx = 1;
 		mainPanel.add(sortAndFilterPanel, mainPanelConstraints);
@@ -161,8 +172,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		if (adminMode) // Add the delete question button if the user is an admin
 		{
 			deleteButton.addActionListener(this);
-			deleteButton.setBackground(new Color(174,59,46));
-			deleteButton.setForeground(Color.WHITE);
+			deleteButton.setBackground(new Color(174,59,46)); // Make it red
+			deleteButton.setForeground(Color.WHITE); // Make the text white
 			mainPanel.add(deleteButton, mainPanelConstraints);
 		}
 		
@@ -180,9 +191,11 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTable()
 	{
+		/* Prepares the table to display the questions */
 		
 		questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
 		questionTable.setDefaultEditor(Object.class, null); // Disable editing
+		
 		// Make double clicking on a row open that question to be attempted.
 		questionTable.addMouseListener(new MouseAdapter() {
 							public void mousePressed(MouseEvent mouseEvent) {
@@ -192,26 +205,31 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 								}
 							}
 						});
+		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
-
 		tcm.removeColumn(tcm.getColumn(0));
 		
+		// Give each column the word wrap renderer so that the heights of the rows are automatically adjusted so that all text fits.
 		for (int i = 0; i < questionTable.getColumnCount(); i++)
 		{
 			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
 			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
 		}
-		tcm.addColumnModelListener(this);
+		tcm.addColumnModelListener(this); // Add a listener so that we can detect when the columns are resized
 		
 		populateTable(questions.getArray()); // Populate the table with the questions
 	}
 	
 	private void prepareSortPanel()
 	{
+		/* Prepares the panel that contains the sort buttons */
+		
+		// Create the panel
 		sortPanel = new JPanel();
 		sortPanel.setLayout(new GridBagLayout());
 		
+		// Prepare the grid bag constraints
 		GridBagConstraints sortPanelConstraints = new GridBagConstraints();
 		sortPanelConstraints.fill = GridBagConstraints.BOTH;
 		sortPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
@@ -220,27 +238,33 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		sortPanelConstraints.weightx = 1;
 		sortPanelConstraints.weighty = 1; 
 		
+		// Create the sorts label with bold size 17 font
 		JLabel sortsLabel = new JLabel("Sorts", SwingConstants.CENTER);
 		Font currentFont = sortsLabel.getFont();
-		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		sortsLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		sortPanel.add(sortsLabel, sortPanelConstraints);
-		sortPanelConstraints.gridy = 1;
 		
+		// Prepare the sort buttons
+		sortPanelConstraints.gridy = 1;
 		sortDifficultyButton.addActionListener(this);
-		sortDifficultyButton.setBackground(new Color(169,196,235));
+		sortDifficultyButton.setBackground(new Color(169,196,235)); // Blue
 		sortPanel.add(sortDifficultyButton, sortPanelConstraints);
+		
 		sortPanelConstraints.gridy = 2;
 		sortTypeButton.addActionListener(this);
-		sortTypeButton.setBackground(new Color(169,196,235));
+		sortTypeButton.setBackground(new Color(169,196,235)); // Blue
 		sortPanel.add(sortTypeButton, sortPanelConstraints);
 	}
 	
 	private void prepareDifficultyFilterPanel()
 	{
+		/* Prepares the panel that contains the difficulty filter */
+		
 		// Prepare the difficulty filter
 		difficultyFilterPanel = new JPanel();
 		difficultyFilterPanel.setLayout(new GridBagLayout()); // Create a grid bag layout
 		
+		// Prepare the gridbag constraints
 		GridBagConstraints difficultyFilterPanelConstraints = new GridBagConstraints();
 		difficultyFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 
@@ -251,13 +275,15 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		difficultyFilterPanelConstraints.weightx = 1;
 		difficultyFilterPanelConstraints.weighty = 1; 
 		
+		// Create the difficulty filter label with bold size 17 text
 		JLabel difficultyFilterLabel = new JLabel("Difficulty Filter", SwingConstants.CENTER);
 		Font currentFont = difficultyFilterLabel.getFont();
-		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		difficultyFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		difficultyFilterPanel.add(difficultyFilterLabel, difficultyFilterPanelConstraints);
 		difficultyFilterPanelConstraints.gridy += 1;
 		
+		// Prepare the difficulty slider
 		difficultySlider.setMajorTickSpacing(1);
 		difficultySlider.setPaintTicks(true); // Add the ticks
 		difficultySlider.setPaintLabels(true);
@@ -274,16 +300,18 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTypeFilterPanel()
 	{
-		// Prepare the type filter
+		/*  Prepare the type filter panel */
 		
 		prepareTypeRadioButtons();
-
+	
+		// Prepare the type filter button
 		typeFilterButton.addActionListener(this);
-		typeFilterButton.setBackground(new Color(169,196,235));
+		typeFilterButton.setBackground(new Color(169,196,235)); // Blue
 		
 		typeFilterPanel = new JPanel();
 		typeFilterPanel.setLayout(new GridBagLayout());
 		
+		// Prepare the grid bag constraints
 		GridBagConstraints typeFilterPanelConstraints = new GridBagConstraints();
 		typeFilterPanelConstraints.fill = GridBagConstraints.BOTH;
 		typeFilterPanelConstraints.insets = new Insets(5,5,5,5); // 5 px padding all around
@@ -292,9 +320,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		typeFilterPanelConstraints.weightx = 1;
 		typeFilterPanelConstraints.weighty = 1; 
 		
+		// Prepare the label with bold size 17 text
 		JLabel typeFilterLabel = new JLabel("Type filter", SwingConstants.CENTER);
 		Font currentFont = typeFilterLabel.getFont();
-		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 14)); // Make the font larger and bold
+		typeFilterLabel.setFont(currentFont.deriveFont(Font.BOLD, 17)); // Make the font larger and bold
 		
 		typeFilterPanelConstraints.gridx = 2; // Put it in the middle column
 		typeFilterPanel.add(typeFilterLabel, typeFilterPanelConstraints);
@@ -308,9 +337,32 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		typeFilterPanel.add(typeFilterButton, typeFilterPanelConstraints);
 	}
 	
-	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	public void refresh()
 	{
-		Question[] questionData = questions.getArray();
+		/* Refreshes the tab with the most recent information */
+		refreshTable();
+		
+		refreshTypeFilterButtons();
+	}
+	
+	private void refreshTypeFilterButtons()
+	{
+		/* Calls the reset tab method if new types have been added to the system so that new radio buttons are added for those types to filter by */
+		if (typeRadioButtons.length != questions.getTypes().length)
+		{
+			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Types have changed, resetting panel");
+			gui.resetTab(this); // Reset the tab.
+		}
+	}
+	
+	private void refreshTable()
+	{
+		/* Refreshes the table. Preserves sorts and filters */
+		
+		Question[] questionData = questions.getArray(); // Get the most recent question data
+		
+		
+		// If they have selected a sort / filter apply it
 		
 		if (typeSort)
 		{
@@ -331,6 +383,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 			Question[] intersection = new Question[questions.getArray().length]; // At most it could contain every question
 			int nextIntersectionLocation = 0;
 			
+			// Look through the questions in the arrays and add them to the intersection array if they are in both arrays
 			for (Question qD : difficulty)
 			{
 				for (Question qT : type)
@@ -361,11 +414,14 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 			questionData = questions.filterByType(getTypeSelected());
 		}
 		
-		populateTable(questionData);
+		populateTable(questionData); // Populate the table with the results of the sorts/filters
 	}
 	
 	private void prepareTypeRadioButtons()
 	{
+		/* Creates a radio button for each type of question in the system */
+		
+		typeRadioButtonPanel = new JPanel();
 		typeRadioButtonPanel.setLayout(new GridLayout(0,3)); // 3 rows infinite columns
 		
 		String[] questionTypes = questions.getTypes(); // Get the types
@@ -381,8 +437,9 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	}
 	
 	
-	private void populateTable(Question[] data) // Populates the table with data
+	private void populateTable(Question[] data)
 	{
+		/* Populates the table with data */
 		
 		System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Running populateTable"); // Debug
 		
@@ -403,8 +460,10 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		resizeRows();
 	}
 	
-	private void openQuestionInWindow(String questionID) // Opens a question to practise in a window
+	private void openQuestionInWindow(String questionID)
 	{
+		/* Opens a question to practise in a window */
+		
 		System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> Running openQuestionInWindow");
 		
 		// Create a form that has only the question in it. Set the id of the question as the id of the form too
@@ -413,10 +472,12 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		gui.openForm(questionForm); // Open the form
 	}
 	
-	private String getTypeSelected() // Gets which type radio button is selected
+	private String getTypeSelected()
 	{
+		/*  Gets which type radio button is selected */
 		String typeSelected = "";
 		
+		// For each radio button
 		for (JRadioButton rB : typeRadioButtons)
 		{
 			if (rB.isSelected()) //  If the button is selected
@@ -431,6 +492,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void resetTable()
 	{
+		/* Resets the table by setting all of the sorts and filters to false. */
+		
 		typeRadioButtonGroup.clearSelection();
 		
 		typeSort = false;
@@ -448,6 +511,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		if (evt.getSource() == sortDifficultyButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> sortDifficultyButton pressed"); // Debug
+			
+			// Disable type sort and enable difficulty sort and then refresh the table
 			typeSort = false;
 			difficultySort = true;
 			refreshTable();
@@ -455,6 +520,8 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		else if (evt.getSource() == sortTypeButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> sortTypeButton pressed"); // Debug
+			
+			// Disable difficulty sort and enable type sort and then refresh the table
 			typeSort = true;
 			difficultySort = false;
 			refreshTable();
@@ -462,18 +529,23 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		else if (evt.getSource() == typeFilterButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> typeFilterButton pressed"); // Debug
+			
+			// Enable the type filter and refresh the table
 			typeFilter = true;
 			refreshTable();
 		}
 		else if (evt.getSource() == difficultyFilterButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> difficultyFilterButton pressed"); // Debug
+			// Enable the difficulty filter and refresh the table
 			difficultyFilter = true;
 			refreshTable();
 		}
 		else if (evt.getSource() == attemptButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> attemptButton pressed"); // Debug
+			
+			// Get the index of the selected row
 			int row = questionTable.getSelectedRow();
 			
 			if (row != -1) // If a question has been selected
@@ -485,10 +557,22 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 		else if (evt.getSource() == deleteButton)
 		{
 			System.out.println("[INFO] <QUESTION_DISPLAY_PANEL> deleteButton pressed"); // Debug
+			
 			int row = questionTable.getSelectedRow();
-			String selectedQuestion = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
-			questions.removeQuestion(selectedQuestion); // Delete the question
-			refreshTable();
+			
+			if (row != -1) // If a row was actually selected
+			{
+				String selectedQuestionID = questionTable.getModel().getValueAt(row, 0).toString(); // Get the id of the question that the user selected
+				Question selectedQuestion = questions.getQuestionByID(selectedQuestionID);
+				int delete = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \"" + selectedQuestion.getTitle() + "\"?" , "Are you sure?", JOptionPane.YES_NO_OPTION); // Confirm the delete
+				
+				if (delete == 0) // If they pressed yes
+				{
+					questions.removeQuestion(selectedQuestionID); // Delete the question
+				}
+				
+				refreshTable();
+			}
 			
 		}
 		else if (evt.getSource() == resetButton)
@@ -500,6 +584,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	private void resizeRows()
 	{
+		// Adjusts the sizes of the rows so that all of the text can be seen.
 		for (int row = 0; row < questionTable.getRowCount(); row ++)
 		{
 			int requiredHeight = 0;
@@ -529,6 +614,7 @@ public class QuestionDisplayPanel extends JPanel implements ActionListener, Tabl
 	
 	public void columnMarginChanged(ChangeEvent e)
 	{
+		/* If the width of the columns has been changed, resize the rows */
 		resizeRows();
 	}
 	public void columnAdded(TableColumnModelEvent e) {}

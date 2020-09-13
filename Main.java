@@ -1,5 +1,6 @@
-public class Main // Main class to run program
+public class Main
 {
+	/* Main class to run program */
 	public static void main(String[] args)
 	{
 		GUI gui = new GUI();

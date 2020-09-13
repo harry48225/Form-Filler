@@ -12,8 +12,10 @@ import javax.swing.border.EtchedBorder;
 
 import java.util.*;
 
-public class QuestionPanel extends JPanel implements ActionListener, Serializable, JSaveableComponent // Holds the components of the question
+public class QuestionPanel extends JPanel implements JSaveableComponent
 {
+	/* Holds the graphical components of the question */
+	
 	private final String questionID; // Stores the id of the question that it belongs to.
 	private JComponent[] components; // Stores the components in the array
 	
@@ -26,8 +28,11 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 	
 	public QuestionPanel(String saveString)
 	{
+		/* Load's a questionPanel from its save string */
+		
 		// The save string is in this format
 		// questionID$Component1||Component2
+		// Extract all of the information
 		
 		String[] splitString = saveString.split("\\$");
 
@@ -37,6 +42,7 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		
 		components = new JComponent[componentList.length];
 		
+		// Load each component in the string
 		for (int i = 0; i < componentList.length; i++)
 		{
 			components[i] = importComponent(componentList[i]);
@@ -47,10 +53,16 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 	
 	private JComponent importComponent(String componentString)
 	{
+		/* Imports a component from its savestring */
+		// Save string is formatted as so <componentname>:<componentdata>
+		
+		// Get the component name
 		String componentName = componentString.split(":")[0];
 		
 		JComponent component = null;
 		
+		
+		// Create the correct type of component based on the component name
 		switch (componentName)
 		{
 			case "label":
@@ -85,8 +97,10 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		return component;
 	}
 	
-	private void setup(JComponent[] components) // Adds all the components to itself
+	private void setup(JComponent[] components)
 	{
+		/* Adds all of the components to the question string */
+		
 		System.out.println("[INFO] <QUESTION_PANEL> Running setup");
 		
 		this.setLayout(new GridLayout(0,2));
@@ -96,41 +110,45 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			this.add(component); // Add it to the panel
 		}
 
+		// Make the panel the correct size
 		this.setMaximumSize(new Dimension(700,300));
 	}
 	
-	public QuestionPanel clone() // Return a deep copy of the question panel
+	public QuestionPanel clone()
 	{
+		/* Returns a deep copy of the question panel */
+		
 		return new QuestionPanel(toString()); // Return a copy of the quesiton panel
 	}
 	
 	public String getQuestionID()
 	{
+		/* Returns the id of the question that the panel belongs to */
 		return questionID;
 	}
 	
 	public int getQuestionIDNumber()
 	{
+		/* Get's just the id number of the question that the panel belongs to */
 		return Integer.parseInt(questionID.replace("Q","")); // Remove the Q from the id and convert to int
-	}
-
-	public void actionPerformed(ActionEvent evt)
-	{
-		// To do
 	}
 	
 	public JComponent[] getComponents()
 	{
+		/* Returns the array of components in the question panel */
 		return components;
 	}
 	
-	public boolean validateAnswers() // Validates what the user has entered
+	public boolean validateAnswers()
 	{
+		/* Validates what the user has entered into the question panel */
 		boolean passed = true;
 		
+		
+		// Iterate over the components in the question and validate the ones with validation available
 		for (JComponent c : components) // For each component
 		{
-			if (c instanceof JValidatedComponent)
+			if (c instanceof JValidatedComponent) // If it has validation available
 			{
 				JValidatedComponent validatedComponent = (JValidatedComponent) c; // Cast to JValidatedComponent
 				if (validatedComponent.validateAnswer() == false) // If they got an answer wrong
@@ -140,6 +158,7 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			}
 		}
 		
+		// Put a red border around the question panel if the validation check failed
 		if (!passed)
 		{
 			this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -149,13 +168,21 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			this.setBorder(null);
 		}
 		
+		// Force a redraw
 		this.revalidate();
+		
+		
 		return passed;
 	}
 	
 	public String getErrorString()
 	{
+		/* Returns the error strings of the components in the question panel
+			concatenated together. */
+			
 		String errorString = "";
+		
+		// Append the error string of each validated component
 		for (JComponent c : components)
 		{
 			if (c instanceof JValidatedComponent)
@@ -170,14 +197,17 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 	
 	public boolean presenceChecks()
 	{
+		/* Performs the presence check of each validated component in the panel */
+		
 		boolean passed = true;
 		
+		// Do a presence check on each validated component in the question panel
 		for (JComponent c : components) // For each component
 		{
-			if (c instanceof JValidatedComponent)
+			if (c instanceof JValidatedComponent) // If the component has validation available
 			{
 				JValidatedComponent validatedComponent = (JValidatedComponent) c; // Cast to JValidatedComponent
-				if (validatedComponent.presenceCheck() == false) // If they got an answer wrong
+				if (validatedComponent.presenceCheck() == false) // If the question wasn't filled in
 				{
 					passed = false;
 					this.setBorder(null);
@@ -185,21 +215,23 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			}
 		}
 		
-		
 		return passed;
 	}
 	
-	public String toString() // Outputs a string which can be used to recreate the question panel
+	public String toString()
 	{
+		/* Outputs a string which fully describes, and can be used to recreate, the question panel */
+		
 		String outputString = questionID + "$";
 		
+		// Append the save string of all of the saveable components in the question panel
 		for (JComponent c : components)
 		{
-			if (c instanceof JSaveableComponent)
+			if (c instanceof JSaveableComponent) // If the QuestionPanel can be saved
 			{
 				JSaveableComponent cSave = (JSaveableComponent) c;
 				
-				outputString += (cSave.toString() + "||");
+				outputString += (cSave.toString() + "||"); // Append the save string of the component with a || between them
 			}
 		}
 		
@@ -208,9 +240,11 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 		return outputString;
 	}
 	
-	public static class QuestionPanelBuilder // Simplifies the creation of question panels
+	public static class QuestionPanelBuilder
 	{
-		private final String questionID; // Must be set in constructor
+		/* Simplifies the creation of question panels and allows them to be produced asynchronously */
+	
+	private final String questionID; // Must be set in constructor
 		private JComponent[] components = new JComponent[10]; // Store 10 components
 		private int nextComponentLocation = 0;
 		
@@ -220,10 +254,12 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			
 		}
 		
-		public QuestionPanelBuilder add(JComponent component) // Adds a component to the panel
+		public QuestionPanelBuilder add(JComponent component)
 		{
+			/* Adds a component to the panel */
 			System.out.println("[INFO] <QUESTION_PANEL_BUILDER> Running add");
 			
+			// Set the size of the component
 			component.setMaximumSize(new Dimension(700,300));
 			components[nextComponentLocation] = component;
 			nextComponentLocation++;
@@ -232,8 +268,9 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			return this; // Needed as the class is static
 		}
 		
-		public QuestionPanel build() // Builds a QuestionPanel
+		public QuestionPanel build()
 		{
+			/* Builds a QuestionPanel */
 			System.out.println("[INFO] <QUESTION_PANEL_BUILDER> Running build");
 			
 			trimArray();
@@ -241,8 +278,10 @@ public class QuestionPanel extends JPanel implements ActionListener, Serializabl
 			return new QuestionPanel(this);
 		}
 		
-		private void trimArray() // Trims the array to the correct length so that there are no null elements
+		private void trimArray()
 		{
+			/* Trims the array to the correct length so that there are no null elements */
+			
 			System.out.println("[INFO] <QUESTION_PANEL_BUILDER> Running trimArray");
 		
 			JComponent[] newArray = new JComponent[nextComponentLocation]; // Create a new array of the correct size

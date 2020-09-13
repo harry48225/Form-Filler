@@ -1,12 +1,11 @@
-Q71983400,1,Gender
-Q81558701,1,Name
-Q47136949,3,Birthday
-Q02468955,4,Country of Birth
-Q34809197,4,Password
-Q41608457,6,Email
-Q48773770,8,File Upload
-Q47753468,3,Photo upload
-Q53560658,2,Phone
-Q61686048,1,Gender
-Q91158524,4,File Upload
-Q07218815,3,Video upload
+Q67918670,1,Radio-buttons,Gender
+Q53642376,2,Drop-down,Title
+Q64356881,2,Name,Name
+Q18503635,4,Password,Password
+Q77874280,4,Phone,Phone number
+Q14805999,5,Address,Address
+Q69482524,5,Checkboxes,Days available
+Q84848110,6,Email,Email
+Q18028811,7,Photo ID,Photo ID Upload
+Q71119615,8,Calendar,Date of Birth
+Q41647821,8,File upload,CV upload

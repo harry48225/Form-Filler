@@ -15,9 +15,11 @@ import javax.swing.border.EtchedBorder;
 
 public class ReportWindow extends JFrame implements ActionListener, Printable
 {
-	// For the table
+	/* Displays the report to the user and allows them to print it */
+	
+	// For the actual report
 	private String[][] reportData; // The data about how the user is performing with the questions
-	private JPanel reportTablePanel = new JPanel(); // Stores the table
+	private JPanel reportTablePanel = new JPanel(); // Stores the report
 	
 	private JPanel reportPreviewPanel = new JPanel();
 	
@@ -38,9 +40,11 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 	
 	private void prepareGUI()
 	{
-			
+		/* Prepares the panel visually */
+		
 		System.out.println("[INFO] <REPORT_WINDOW> Running prepareGUI");
 		
+		// Give the window an appropriate title
 		this.setTitle(username + "\'s report");
 		
 		this.setLayout(new BorderLayout());
@@ -48,14 +52,19 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		
 		this.setResizable(false);
 		
+		// Set the size and center the window
 		this.setSize(600,800);
 		this.setLocationRelativeTo(null); // Center it
 		
+		// Produce a report for the user
 		reportTablePanel = new Report(reportData, username);
 		
+		// Add it to the panel
 		reportPreviewPanel.setLayout(new GridLayout(1,1));
 		reportPreviewPanel.add(reportTablePanel);
 		
+		
+		// Create a preview border
 		TitledBorder border = BorderFactory.createTitledBorder(loweredetched, "Report preview");
 		Font currentFont = border.getTitleFont();
 		border.setTitleFont(currentFont.deriveFont(Font.BOLD, 16)); // Make the font larger and bold
@@ -64,12 +73,13 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 		
 		reportPreviewPanel.setBorder(border); // Set the border
 		
-		
+		// Add the report to this panel
 		this.add(reportPreviewPanel, BorderLayout.CENTER);
-			
+		
+		// Prepare and add the print button
 		printButton.addActionListener(this);
 		printButton.setBackground(new Color(130,183,75)); // green
-		this.add(printButton, BorderLayout.SOUTH);
+		this.add(printButton, BorderLayout.SOUTH); // Add the button to the bottom of the window
 
 		this.setVisible(true);
 		
@@ -77,10 +87,15 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 	
 	public int print(Graphics g, PageFormat pf, int page) throws PrinterException 
 	{
+		/* Called when the report gets printed */
+		
+		// As the report only has one page return NO_SUCH_PAGE if a page greater than 1 is called to printed
 		if (page > 0) {
 			return NO_SUCH_PAGE;
 		}
 
+		// Stretch the report panel without altering the 
+		// aspect ratio to fill an a4 piece of paper.
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.translate(pf.getImageableX(), pf.getImageableY());
 		double scaleFactor = pf.getImageableWidth()/reportTablePanel.getWidth();
@@ -94,19 +109,24 @@ public class ReportWindow extends JFrame implements ActionListener, Printable
 	
 	private void runPrint()
 	{
+		/* Allows the user to print the report */
 		System.out.println("[INFO] <REPORT_WINDOW> Running runPrint");
 		
+		// Get a new printer job
 		PrinterJob job = PrinterJob.getPrinterJob();
 		
 		PageFormat pf = job.defaultPage();
 		pf.setOrientation(PageFormat.PORTRAIT); // Make the print job portrait
 		
+		// Make the job printable
 		job.setPrintable(this, pf);
 		
+		// Show the print dialog
 		boolean doPrint = job.printDialog();
 		
-		if (doPrint)
+		if (doPrint) // If the user didn't press cancel
 		{
+			// Try to print the job
 			try
 			{
 				job.print();

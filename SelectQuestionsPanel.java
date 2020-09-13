@@ -7,6 +7,8 @@ import java.awt.event.*;
 
 public class SelectQuestionsPanel extends JPanel implements ActionListener, TableColumnModelListener
 {
+	/* Displays a table and provides sorts to the user that allow them to select a question */
+	
 	private QuestionList questions;
 
 	private String[] tableHeaders = new String[] {"ID","Title", "Difficulty", "Type"}; // The headers for the table
@@ -33,8 +35,14 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		prepareGUI();
 	}
 	
+	public JTable getTable()
+	{
+		return questionTable;
+	}
+	
 	private void prepareGUI()
 	{
+		/* Prepares the panel for display */
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		prepareTable();
@@ -46,17 +54,21 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		this.setVisible(true);
 	}
 	
-	public void addNewButton(JButton buttonToAdd) // Allows a button to be added to the button panel
+	public void addNewButton(JButton buttonToAdd)
 	{
+		/* Allows a new button to be added to the panel, this is useful for context specific buttons */
+		
 		buttonPanel.add(buttonToAdd);
 		this.revalidate();
 	}
 
 	private void prepareButtonPanel()
 	{
+		/* Prepares all of the buttons of the panel */
 		
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		
+		// Make all of the buttons blue
 		typeSortButton.setBackground(new Color(169,196,235));
 		difficultySortButton.setBackground(new Color(169,196,235));
 		previewButton.setBackground(new Color(169,196,235));
@@ -65,10 +77,12 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		difficultySortButton.addActionListener(this);
 		previewButton.addActionListener(this);
 		
+		// Make the buttons the correct size
 		typeSortButton.setMaximumSize(new Dimension(80, 40));
 		difficultySortButton.setMaximumSize(new Dimension(80, 40));
 		previewButton.setMaximumSize(new Dimension(80, 40));
 		
+		// Add each button with horizontal glue between them to fill the free space
 		buttonPanel.add(Box.createHorizontalGlue());
 		buttonPanel.add(typeSortButton);
 		buttonPanel.add(Box.createHorizontalGlue());
@@ -78,16 +92,19 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		buttonPanel.add(Box.createHorizontalGlue());
 	}
 	
-	public void refreshTable() // Refreshes the table. Preserves sorts and filters
+	public void refreshTable()
 	{
+		/* Refreshes the table. Preserves sorts and filters */
+		
 		Question[] questionData = questions.getArray();
 		
+		// Apply the type/difficulty sort if they are applied
 		if (typeSort)
 		{
 			questions.sortByType();
 			questionData = questions.getArray();
 		}
-		if (difficultySort)
+		else if (difficultySort)
 		{
 			questions.sortByDifficulty();
 			questionData = questions.getArray();
@@ -96,13 +113,15 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		populateTable(questionData);
 	}
 	
-	private void populateTable(Question[] data) // Populates the table with data
+	private void populateTable(Question[] data)
 	{
+		/* Populates the question table with the question data passed as the parameter */
 		
 		System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> Running populateTable"); // Debug
 		
 		questionTableModel.setRowCount(0); // Start a zero rows
 		
+		// Add each question to the table as its own row
 		for (int i =0; i < data.length; i++) // For each question in the array
 		{
 			if(data[i] != null) // If there is data
@@ -120,18 +139,23 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	
 	private void prepareTable()
 	{
+		/* Prepares the question table for display */
+		
 		questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Only allow one row at a time to be selected
 		questionTable.setDefaultEditor(Object.class, null); // Disable editing
+		
 		// Hide the first column as it contains the id and we don't want that displayed to the user
 		TableColumnModel tcm = questionTable.getColumnModel();
-
 		tcm.removeColumn(tcm.getColumn(0));
 		
+		// Set the cell renderer for each column to be the word wrap renderer
 		for (int i = 0; i < questionTable.getColumnCount(); i++)
 		{
 			tcm.getColumn(i).setCellRenderer(new WordWrapCellRenderer());
 			tcm.getColumn(i).setHeaderRenderer(new WordWrapHeaderRenderer());
 		}
+		
+		// Add a column listener so that we can tell when columns are resized
 		tcm.addColumnModelListener(this);
 		
 		populateTable(questions.getArray()); // Populate the table with the questions
@@ -143,6 +167,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		if (e.getSource() == difficultySortButton)
 		{
 			System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> difficultySortButton pressed"); // Debug
+			// Apply the difficulty sort and remove the type sort and then refresh the table
 			difficultySort = true;
 			typeSort = false;
 			refreshTable();
@@ -150,12 +175,15 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		else if (e.getSource() == typeSortButton)
 		{
 			System.out.println("[INFO] <SELECT_QUESTIONS_PANEL> typeSortButton pressed"); // Debug
+			// Apply the type sort and remove the difficulty sort and then refresh the table
 			typeSort = true;
 			difficultySort = false;
 			refreshTable();
 		}
 		else if (e.getSource() == previewButton)
 		{
+			// Opens the selected question to preview in a window
+			
 			int row = questionTable.getSelectedRow();
 			if (row != -1) // If they actually selected a row
 			{
@@ -164,25 +192,38 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 		}
 	}
 	
-	private void openQuestionInWindow(String qID) // Opens a question to practise in a window
+	private void openQuestionInWindow(String qID)
 	{
+		/* Opens a question to practise in a window */
+		
 		System.out.println("[INFO] <QUESTION_SELECTION_PANEL> Running openQuestionInWindow");
 		
-		JFrame questionFrame = new JFrame();
-		questionFrame.setLayout(new GridLayout(0,1));
-		questionFrame.setSize(300, 100);
-		questionFrame.add(questions.getPanelByID(qID));
-		questionFrame.setVisible(true);
+		// Get the question panel
+		JPanel questionPanel = questions.getPanelByID(qID);
+		
+		// Set the size of the window
+		int width = 400;
+		int height = 180;
+		questionPanel.setSize(width, height);
+		questionPanel.setMaximumSize(new Dimension(width, height));
+		questionPanel.setPreferredSize(new Dimension(width, height));
+		
+		// Open the window for the user to preview the question
+		JOptionPane.showMessageDialog(this, questionPanel, "Question Preview", JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	public String getSelectedQuestionID()
+	public String getSelectedQuestionID() 
 	{
+		/* Returns the id of the question that the user has selected in the table */
 		int row = questionTable.getSelectedRow();
 		return row == -1 ? null : questionTable.getModel().getValueAt(row, 0).toString(); // return null if no question is selected or the question id if a question is selected.
 	}
 	
 	private void resizeRows()
 	{
+		/* Resizes of the rows of the table so that all of the text can be read and is visible */
+		
+		// Resize each row
 		for (int row = 0; row < questionTable.getRowCount(); row ++)
 		{
 			int requiredHeight = 0;
@@ -212,6 +253,7 @@ public class SelectQuestionsPanel extends JPanel implements ActionListener, Tabl
 	
 	public void columnMarginChanged(ChangeEvent e)
 	{
+		/* If a column has changed width, resize the rows */
 		resizeRows();
 	}
 	public void columnAdded(TableColumnModelEvent e) {}

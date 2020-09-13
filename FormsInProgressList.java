@@ -2,6 +2,8 @@ import java.io.*;
 
 public class FormsInProgressList
 {
+	/* Stores and manipulates all of the formsInProgress objects */
+	
 	private String databaseFileName = "FormsInProgessDB.txt";
 	private String databasePath;
 	private FormInProgress[] formsInProgressArray = new FormInProgress[100];
@@ -12,22 +14,29 @@ public class FormsInProgressList
 	
 	public FormsInProgressList(String username)
 	{
+		/* Loads the forms in progress list for a given username */
+		
 		databasePath = "formsInProgress/" + username; // Create the path
 		loadDatabase();
 	}
 	
 	public FormInProgress[] getArray()
 	{
+		/* Returns the array */
 		return formsInProgressArray;
 	}
 	
-	public boolean isFormPresent(String searchFormID) // Checks to see if a form is in the array
+	public boolean isFormPresent(String searchFormID)
 	{
+		/* Checks to see if a form is in the array */
+		
 		return getByID(searchFormID) != null; // Returns true if when getting the form it doesn't return null i.e. the form is present
 	}
 	
 	public FormInProgress getByID(String searchID)
 	{
+		/* Returns a FormInProgress object by id. Performs a linear search */
+		
 		FormInProgress result = null;
 		
 		for (int i = 0; i < nextFormInProgressLocation; i++) // For each formInProgress in the array
@@ -47,16 +56,22 @@ public class FormsInProgressList
 	
 	public void setMostRecentAttempted(String formID)
 	{
+		/* Sets which form is the most recently attempted form */
+		
 		mostRecentForm = formID;
 	}
 	
 	public String getMostRecentFormID()
 	{
+		/* Gets the id of the form that the user most recently attempted */
+		
 		return mostRecentForm;
 	}
 	
 	public void addFormInProgress(FormInProgress formInProgressToAdd)
 	{
+		/* Adds a form in progress object to the list */
+		
 		formsInProgressArray[nextFormInProgressLocation] = formInProgressToAdd; // Add the form at the next free location
 		
 		nextFormInProgressLocation++; 
@@ -64,6 +79,8 @@ public class FormsInProgressList
 	
 	public void writeDatabase()
 	{
+		/* Writes the FormInProgress objects to the user's FormsInProgress database */
+		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> Running writeDatabase");
 		
 		// It can't certain that the directories exist
@@ -76,10 +93,14 @@ public class FormsInProgressList
 		
 		try
 		{
+			// Open a filter writer
 			FileWriter fw = new FileWriter(databasePath + "/" + databaseFileName);
 			
+			// Write the most recent form id to the top of the file
 			fw.write(mostRecentForm + "\r\n");
 			
+			
+			// Write each form to the file
 			for (int i = 0; i < nextFormInProgressLocation; i++) // For each form in the array
 			{
 				String currentPositionFormData = formsInProgressArray[i].toString(); // Get the attribute string
@@ -100,6 +121,7 @@ public class FormsInProgressList
 	
 	private void loadDatabase()
 	{
+		/* Loads a user's form in progress database from file */
 		
 		System.out.println("[INFO] <FORMS_IN_PROGRESS_LIST> Running loadDatabase");
 		
@@ -111,10 +133,12 @@ public class FormsInProgressList
 			
 			String line = br.readLine(); // Read the line from the database
 			
+			// This first line is the id of the most recent form that the user has attempted
 			mostRecentForm = line;
 			
 			line = br.readLine();
 			
+			// Load each form from each line of the database
 			while (line != null) // While there is still data to load from the file
 			{
 				

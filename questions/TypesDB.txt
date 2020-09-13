@@ -1,1 +1,1 @@
-Email,Name,Phone,Gender,File Upload,Password,Calendar,Checkboxes,Drop-down,Radio Buttons,Birthday,Address,date of birth,Country of Birth,Photo upload,Video upload,An example new type
+Address,Email,Drop-down,Radio-buttons,Birthday,Name,File Upload,Photo ID,Calendar,Checkboxes,Password,File upload,Phone

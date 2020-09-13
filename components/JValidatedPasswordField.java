@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class JValidatedPasswordField extends JPanel implements JValidatedComponent, JSaveableComponent
 {
+	/* Saveable and validated password fields */
+	
 	JPasswordField[] passwordFields = {new JPasswordField(), new JPasswordField()}; // The two password fields
 	
 	private final String ERROR_STRING = "Passwords: Please enter two matching passwords";
@@ -16,29 +18,42 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	
 	public JValidatedPasswordField(String saveString)
 	{
+		/* Loads a set of password fields from their savestring */
+		
 		// The save string is in the format
 		// password:password1;password2
 		
 		String[] passwords = saveString.split(":")[1].split(";");
 		
-		passwordFields[0].setText(passwords[0]);
-		passwordFields[1].setText(passwords[1]);
+		// Load the passwords and unescape them if they are present
+		if (passwords.length > 0) // If there are actually passwords saved
+		{
+            passwordFields[0].setText(StringEscaper.unescape(passwords[0]));
+            
+            if (passwords.length > 1) // If there is a second password
+            {
+                passwordFields[1].setText(StringEscaper.unescape(passwords[1]));
+            }
+		}
 		
 		preparePanel();
 	}
 	
 	private void preparePanel()
 	{
-			this.setLayout(new GridLayout(2,1)); // Two rows 1 column
-			
-			for (JPasswordField passwordfield : passwordFields) // For each password field
-			{
-				this.add(passwordfield); // Add the password field
-			}
+		/* Prepares the visual element of the password fields */
+		
+		this.setLayout(new GridLayout(2,1)); // Two rows 1 column
+		
+		for (JPasswordField passwordfield : passwordFields) // For each password field
+		{
+			this.add(passwordfield); // Add the password field
+		}
 	}
 	
 	public boolean validateAnswer()
 	{
+		/* Validates the passwords in the fields  */
 		String password1 = new String(passwordFields[0].getPassword());
 		String password2 = new String(passwordFields[1].getPassword());
 		
@@ -47,6 +62,7 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	
 	public boolean presenceCheck()
 	{
+		/* Performs a presence check  */
 		String password1 = new String(passwordFields[0].getPassword());
 		String password2 = new String(passwordFields[1].getPassword());
 		
@@ -55,12 +71,14 @@ public class JValidatedPasswordField extends JPanel implements JValidatedCompone
 	
 	public String getErrorString()
 	{
+		/* Returns the error string */
 		return ERROR_STRING;
 	}
 	
 	public String toString()
 	{
-		String asString = "password:" + new String(passwordFields[0].getPassword()) + ";" + new String(passwordFields[1].getPassword());
+		/* Returns an escaped string that fully describes the password fields and their contents. */
+		String asString = "password:" + StringEscaper.escape(new String(passwordFields[0].getPassword())) + ";" + StringEscaper.escape(new String(passwordFields[1].getPassword()));
 		
 		return asString;
 	}

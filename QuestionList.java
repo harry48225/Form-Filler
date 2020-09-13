@@ -3,7 +3,9 @@ import java.util.*;
 
 public class QuestionList
 {
-
+	
+	/* Stores and manipulates all of the question objects in the system */
+	
 	private String typesFileName = "questions/TypesDB.txt";
 	
 	private String[] types; // The types that a question could be
@@ -18,13 +20,14 @@ public class QuestionList
 	
 	public QuestionList() // Constructor
 	{
-		loadDatabase(); // Load the database from file
 		loadTypes();
+		loadDatabase(); // Load the database from file
 		panels = new QuestionPanelList(); // Create a new question panel list
 	}
 	
-	public QuestionPanel getPanel(Question q) // Returns the Panel corresponding to the question
+	public QuestionPanel getPanel(Question q)
 	{
+		/* Returns the Panel corresponding to the question */
 		System.out.println("[INFO] <QUESTION_LIST> Running getPanel"); // Debug
 		
 		return getPanelByID(q.getID());
@@ -32,6 +35,7 @@ public class QuestionList
 	
 	public void removeQuestion(String questionID)
 	{
+		/* Removes a question from the system given its question id */
 		System.out.println("[INFO] <QUESTION_LIST> Running removeQuestion");
 		
 		Question[] newArray = new Question[questionArray.length]; // Create a new array of the required size
@@ -40,8 +44,9 @@ public class QuestionList
 		
 		for (int i = 0; i < nextQuestionLocation; i++)
 		{
-			if (!questionArray[i].getID().equals(questionID)) // If the question isn't the one that we don't want
+			if (!questionArray[i].getID().equals(questionID)) // If the question isn't the one that we want to delete
 			{
+				// Copy it to the new array
 				newArray[j] = questionArray[i];
 				j++;
 			}
@@ -50,14 +55,14 @@ public class QuestionList
 		questionArray = newArray; // Overwrite the old array
 		nextQuestionLocation--; // There is one less question in the array so a free spot has opened
 		
-		writeDatabase();
-		
 		panels.removeQuestionPanel(questionID); // Remove it from the question panel database also
+		
+		writeDatabase();
 	}
 	
-	public Question getQuestionByID(String id) // Returns an a question that corresponds to the id
+	public Question getQuestionByID(String id)
 	{
-		//System.out.println("[INFO] <QUESTION_LIST> Running getQuestionByID"); // Debug
+		/* Returns an a question that corresponds to the id */
 		
 		Question result = null;
 		
@@ -79,15 +84,17 @@ public class QuestionList
 		return result; // Return the result
 	}
 	
-	public QuestionPanel getPanelByID(String id) // Returns the panel corresponding to a question id
+	public QuestionPanel getPanelByID(String id)
 	{
+		/* Returns the panel corresponding to a question id */
 		System.out.println("[INFO] <QUESTION_LIST> Running getPanelByID"); // Debug
 		
 		return panels.getByID(id);
 	}
 	
-	public void loadDatabase() // Loads the questions that are saved in the database
+	public void loadDatabase()
 	{
+		/////////* Loads the questions that are saved in the  d a t a b a s  e */
 		System.out.println("[INFO] <QUESTION_LIST> Running loadDatabase"); // Debug
  		
 		nextQuestionLocation = 0; // Start at the beginning of the array
@@ -112,13 +119,15 @@ public class QuestionList
 		catch (Exception e)
 		{
 			System.out.println("[ERROR] <QUESTION_LIST> Error loading database " + e); // Error message
+			e.printStackTrace();
 		}
 		
 		System.out.println("[INFO] <QUESTION_LIST> " + nextQuestionLocation + " Questions loaded from file");
 	}
 	
-	public void writeDatabase() // Writes the questions to file
+	public void writeDatabase()
 	{
+		/* Writes the questions to file */
 		System.out.println("[INFO] <QUESTION_LIST> Running writeDatabase"); // Debug
 		
 		try
@@ -147,8 +156,9 @@ public class QuestionList
 		panels.writeDatabase();
 	}
 	
-	public void sortByDifficulty() // Bubble sort to sort by difficulty
+	public void sortByDifficulty()
 	{
+		/* Bubble sort to sort by difficulty */
 		System.out.println("[INFO] <QUESTION_LIST> Running sortByDifficulty"); // Debug
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
@@ -173,8 +183,9 @@ public class QuestionList
 		}
 	}
 	
-	public void sortByType() // Bubble sort to sort by type
+	public void sortByType()
 	{
+		/* Bubble sort to sort by type */
 		System.out.println("[INFO] <QUESTION_LIST> Running sortByType"); // Debug
 		
 		boolean swapped = true; // Toggle that contains whether a value has been swapped
@@ -202,8 +213,9 @@ public class QuestionList
 		}
 	}
 	
-	public Question[] filterByType(String searchType) // Finds all the questions of the search type
+	public Question[] filterByType(String searchType)
 	{
+		/* Finds all the questions of the search type */
 		System.out.println("[INFO] <QUESTION_LIST> Running filterByType");
 		
 		Question[] searchResults = new Question[nextQuestionLocation]; // Create array large enough to store the matches
@@ -235,6 +247,7 @@ public class QuestionList
 	
 	public Question[] filterByDifficulty(int difficulty)
 	{
+		/* Returns a copy of the question array sorted by difficulty */
 		System.out.println("[INFO] <QUESTION_LIST> Running filterByDifficulty");
 		
 		// Linear search
@@ -261,8 +274,10 @@ public class QuestionList
 		return trimmedResults; // Return the results
 	}
 	
-	public void printQuestions() // To print the questions
+	public void printQuestions()
 	{
+		/* Prints the questions to console as debug*/
+		
 		System.out.println("[INFO] <QUESTION_LIST> Running printQuestions"); // Debug
 		
 		for (int i = 0; i < nextQuestionLocation; i++) // For each question in the array
@@ -271,25 +286,42 @@ public class QuestionList
 		}	
 	}
 	
-	public void addQuestion(Question tempQuestion) // Adds a question to the program
+	public void addQuestion(Question tempQuestion)
 	{
-		//System.out.println("[INFO] <QUESTION_LIST> Running addQuestion"); // Debug
-		
+		/* Adds a question to the program */
 		questionArray[nextQuestionLocation] = tempQuestion; // Add the question to the array at the next free position
+		// Check whether the type of the question is already in the types database. It may not be if the question was imported.
+		boolean inDatabase = false;
+		for (String type : types)
+		{
+			if(type.equals(tempQuestion.getType()))
+			{
+				inDatabase = true;
+				break;
+			}	
+		}
 		
+		// If the type wasn't in the database add it to the database
+		if (!inDatabase)
+		{
+			addType(tempQuestion.getType());
+		}
 		nextQuestionLocation++; // Increment the location
 	}
 	
-	public void addQuestion(Question tempQuestion, QuestionPanel tempQuestionPanel) // Adds a question and question panel to the program
+	public void addQuestion(Question tempQuestion, QuestionPanel tempQuestionPanel)
 	{
+ 		/* Adds a question and question panel to the program */
 		addQuestion(tempQuestion); // Add the question
 		panels.addQuestionPanel(tempQuestionPanel); // Add the question panel to the database
 		
 		System.out.println("[INFO] <QUESTION_LIST> Successfully added question and questionPanel");
 	}
 	
-	public String getFreeID() // Gets a free id
+	public String getFreeID()
 	{
+		/* Gets a free id */
+		
 		Random r = new Random();
 		
 		String id = null; // The new id
@@ -309,8 +341,10 @@ public class QuestionList
 		return id; // Return the id
 	}
 	
-	private String generateId() // Randomly generates an 8 digit id
+	private String generateId()
 	{
+		/* Randomly generates an 8 digit id */
+		
 		System.out.println("[INFO] <QUESTION_LIST> Running generateId");
 	
 		String id = "Q"; // The id
@@ -324,15 +358,18 @@ public class QuestionList
 		return id; 
 	}
 	
-	public Question[] getArray() // Returns the question array
+	public Question[] getArray()
 	{
+		/* Returns the question array */
 		return questionArray; // Return the array
 	}
 	
-	private void loadTypes() // Loads the types from file
+	private void loadTypes()
 	{
-		System.out.println("[INFO] <QUESTION_LIST> Running loadTypes"); // Debug
+		/* Loads the types from file */
 		
+		System.out.println("[INFO] <QUESTION_LIST> Running loadTypes"); // Debug
+		types = new String[0];
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(typesFileName)); // Open the database file name
@@ -349,8 +386,9 @@ public class QuestionList
 		System.out.println("[INFO] <QUESTION_LIST> " + types.length + " types loaded from file");
 	}
 	
-	public void writeTypes() // Writes the types list to file
+	public void writeTypes()
 	{
+		/* Writes the types list to file */
 		System.out.println("[INFO] <QUESTION_LIST> Running writeTypes");
 		
 		try
@@ -368,10 +406,13 @@ public class QuestionList
 		}
 	}
 	
-	private String typesArrayToString() // Converts the skills array to string
+	private String typesArrayToString()
 	{
+		/* Converts the types array to string */
+		
 		String arrayAsString = "";
 		
+		// Append each type to the string separated by commas
 		for (String t : types)
 		{
 			arrayAsString += t + ",";
@@ -385,11 +426,14 @@ public class QuestionList
 	
 	public String[] getTypes()
 	{
+		/* Returns a string array of types */
 		return types;
 	}
 
-	public void addType(String newType) // Adds a new type to the type database
+	public void addType(String newType)
 	{
+		/* Adds a new type to the type database */
+		
 		System.out.println("[INFO] <QUESTION_LIST> Running addType"); // Debug
 
 		String[] newTypes = new String[types.length + 1]; // Make a longer string array to store the new type
