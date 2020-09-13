@@ -59,7 +59,7 @@ public class JValidatedLocationEntry extends JPanel implements JValidatedCompone
 	{
 		/* Sets up the google maps api context */
 		
-		context = new GeoApiContext.Builder().apiKey("AIzaSyBgcCPoJcVPvdsClek4TljQ7E7XzcMbU4I").build();
+		context = new GeoApiContext.Builder().apiKey("<redacted>").build();
 	}
 	
 	/*
