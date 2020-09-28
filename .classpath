@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="/home/harry/eclipse-workspace/formfiller/lib/jfreechart-1.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/harry/eclipse-workspace/formfiller/lib/jcommon-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/harry/eclipse-workspace/formfiller/lib/LGoodDatePicker-10.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/harry/eclipse-workspace/formfiller/lib/google-maps-services-java-0.9.1-0.9.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

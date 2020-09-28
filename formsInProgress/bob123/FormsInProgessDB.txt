@@ -1,37 +1,10 @@
-F07377236
+Q14805999
 Q18503635;0;0~Q18503635$label:Password||password:;
-F69383296;75;0~Q64356881$label:Name||textfield:Harris;none,Q67918670$label:Gender||radiobuttons:Male;true.Female;false.Other;false,Q84848110$label:Email Address||textfield:;email,header:More about you,Q71119615$label:Birthday||datepicker:2019-01-15
-Q71119615;0;3~Q71119615$label:Birthday||datepicker:-1
-Q84848110;0;1~Q84848110$label:Email Address||textfield:;email
-Q77874280;100;1~Q77874280$label:Phone number||textfield:01204849618;phone
-F88648330;16;0~Q71204856$label:Title||combobox:Select an option.Mr..Mrs..Miss..Ms;3,Q64356881$label:Name||textfield:;none,Q67918670$label:Gender||radiobuttons:Male;false.Female;false.Other;false,Q84848110$label:Email Address||textfield:;email,Q18028811$label:Photo ID||filechooser:image+null,header:null,Q14805999$label:Address||locationentry:
-F72529830;0;0~Q64356881$label:Name||textfield:;none,Q67918670$label:Gender||radiobuttons:Male;false.Female;false.Other;false
-Q64356881;0;1~Q64356881$label:Name||textfield:;none
-Q67918670;0;0~Q67918670$label:Gender||radiobuttons:Male;false.Female;false.Other;false
-Q69482524;100;2~Q69482524$label:Days available||checkboxes:Monday;false.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;false
-Q71204856;100;1~Q71204856$label:Title||combobox:Select an option.Mr..Mrs..Miss..Ms;2
-Q41647821;0;1~Q41647821$label:CV||filechooser:document+null
-Q14805999;0;4~Q14805999$label:Address||locationentry:
-F11932880;66;11~header:General Information,Q53642376$label:Title||combobox:Select an option.Mr.Mrs.Ms.Miss;1,Q64356881$label:Name||textfield:ttryt;none,Q67918670$label:Gender||radiobuttons:Male;true.Female;false.Other;false,header:Q77874280,header:Contact information,header:Q84848110,Q14805999$label:Address||locationentry:,header:Job information,Q69482524$label:Days available||checkboxes:Monday;true.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;true,Q41647821$label:CV||filechooser:document+null
-USER_WEAKNESSES;0;1~Q84848110$label:Email Address||textfield:;email,Q77874280$label:Phone number||textfield:;phone,Q71119615$label:Birthday||datepicker:-1
-Q06321948;100;1~Q06321948$label:Test||locationentry:RUnshaw dsfd fdsf
-F92895411;75;1~Q64356881$label:Name||textfield:Harris;none,Q14805999$label:Address||locationentry:,Q84848110$label:Email Address||textfield:test@test\u002ecom;email,Q69482524$label:Days available||checkboxes:Monday;true.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;false
-F07377236;50;4~Q64356881$label:Name||textfield:Test \u002e\u002e \u002c \u002cd\u002cf sf\u002c\u002esd f\u002c\u002esdf \u0024\u0024 \u007c\u007c;none,Q41647821$label:CV||filechooser:document+null
-Q44959113;0;0~Q44959113$label:Test question||textfield:;none
 Q53642376;0;0~Q53642376$label:Title||combobox:Select an option.Mr.Mrs.Ms.Miss;0
-Q68787690;0;0~Q68787690$label:Test text field||textfield:;email
-F29995399;0;0~Q64356881$label:Name||textfield:;none,Q67918670$label:Gender||radiobuttons:Male;false.Female;false.Other;false,Q14805999$label:Address||locationentry:
-F77675461;0;0~Q18503635$label:Password||password:123;12345
-Q33392646;0;0~Q33392646$label:Bradley||locationentry:
-F79996144;0;0~Q14805999$label:Address||locationentry:,Q71119615$label:Birthday||datepicker:-1,header:Q21354324,header:fgdfdg
-F60018747;50;0~Q64356881$label:Name||textfield:tyttrytryty;none,Q84848110$label:Email Address||textfield:;email
-Q03869306;100;2~Q03869306$label:Checkbox test||checkboxes:this is a very g;false.\u002e\u002e\u002e;false.bad \u002c \u0024 \u007c\u007c;false.Set of checkboxes \u002c\u002c\u002c \u007c;false
-Q99184684;0;0~Q99184684$label:Radio button test||radiobuttons:This shopuld\u002c ;false.\u002c be \u007c\u007c;false.e\u0024caped properly;false
-F07300981;25;4~Q18503635$label:Password||password:;,Q71119615$label:Birthday||datepicker:-1,Q14805999$label:Address||locationentry:,Q69428317$label:Combobox||combobox:Select an option.dsfdsf.\u002c\u002c.sdf\u002e\u002e.sdf\u002e.\u007c\u007c.\u0024sdfsd.\u0024\u002cdsfsdf;5
-Q69428317;0;0~Q69428317$label:Combobox||combobox:Select an option.dsfdsf.\u002c\u002c.sdf\u002e\u002e.sdf\u002e.\u007c\u007c.\u0024sdfsd.\u0024\u002cdsfsdf;0
-Q87998955;0;0~Q87998955$label:sdfsdfsdfsdf\u007c\u007clabel||textfield:;none
-Q76793157;0;0~Q76793157$label:testText||textfield:;none
-Q38851184;100;2~Q38851184$label:Test||textfield:dfgdfgdfg@@@@@\u002ecom;none
-Q97609324;0;0~Q97609324$label:TEst||locationentry:
-F30822918;0;0~Q14805999$label:Address||locationentry:
-Q66469479;100;1~Q66469479$label:Email||textfield:HarryBEst800@@@@gmail\u002ecom;email
+Q71119615;0;0~Q71119615$label:Birthday||datepicker:-1
+F92895411;25;1~Q64356881$label:Name||textfield:;none,Q14805999$label:Address||locationentry:,Q84848110$label:Email Address||textfield:;email,Q69482524$label:Days available||checkboxes:Monday;false.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;false
+Q64356881;0;0~Q64356881$label:Name||textfield:;none
+Q61074745;100;1~Q61074745$label:What maths object are you?||radiobuttons:Matrix;false.Set;false.Vector;false.Group;true
+Q69482524;100;2~Q69482524$label:Days available||checkboxes:Monday;false.Tuesday;false.Wednesday;false.Thursday;false.Friday;false.Saturday;false.Sunday;false
+Q18028811;0;0~Q18028811$label:Photo ID||filechooser:image+null
+Q14805999;0;0~Q14805999$label:Address||locationentry:

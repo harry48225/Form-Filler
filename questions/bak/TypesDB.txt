@@ -1,1 +1,0 @@
-Address,Email,Drop-down,Radio-buttons,Birthday,Name,File Upload,Photo ID,Calendar,Checkboxes,Password,File upload,Phone
